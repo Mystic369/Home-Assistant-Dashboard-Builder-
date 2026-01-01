@@ -3,107 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HA Dashboard Designer Pro v1.0</title>
-<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f0f1e 0%,#1a1a2e 100%);color:#fff;overflow:hidden;height:100vh}.app-container{display:grid;grid-template-columns:340px 1fr 340px;grid-template-rows:70px 1fr;height:100vh}.header{grid-column:1/-1;background:rgba(20,20,40,.95);border-bottom:2px solid rgba(67,238,255,.4);padding:0 30px;display:flex;align-items:center;justify-content:space-between}.logo{font-size:1.6em;font-weight:700;background:linear-gradient(135deg,#43eeff,#ff43ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.version{font-size:.7em;color:#666;margin-left:10px}.header-actions{display:flex;gap:12px}.header-btn{padding:10px 18px;background:rgba(67,238,255,.15);border:1px solid #43eeff;border-radius:8px;color:#43eeff;cursor:pointer;font-weight:600;transition:all .3s;font-size:.9em}.header-btn:hover{background:rgba(67,238,255,.3);transform:translateY(-2px)}.sidebar{background:rgba(20,20,40,.85);border-right:1px solid rgba(67,238,255,.2);padding:25px;overflow-y:auto}.sidebar h2{color:#ff43ee;margin-bottom:20px;font-size:1.3em}.canvas-container{background:#0a0a15;overflow:auto}.canvas{min-height:100%;min-width:100%;background-image:repeating-linear-gradient(0deg,rgba(67,238,255,.05) 0,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px),repeating-linear-gradient(90deg,rgba(67,238,255,.05) 0,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px);background-size:50px 50px;padding:40px;position:relative}.canvas-card{position:absolute;background:#43eeff;border-radius:14px;padding:18px;cursor:move;box-shadow:0 4px 20px rgba(67,238,255,.5);min-width:150px;min-height:100px;animation:cardFadeIn .4s}@keyframes cardFadeIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}.canvas-card:hover{box-shadow:0 8px 35px rgba(67,238,255,.7)}.canvas-card.selected{border:3px solid #ff43ee}.card-type-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.7);padding:4px 10px;border-radius:6px;font-size:.7em;color:#fff;text-transform:uppercase}.card-size-badge{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.7);padding:4px 10px;border-radius:6px;font-size:.7em;color:#fff}.card-title-display{color:#ff43ee;font-size:1.2em;font-weight:600;margin:20px 0 12px}.card-entity-display{font-size:.85em;margin:6px 0;padding:6px 10px;background:rgba(255,255,255,.25);border-radius:6px;color:#ffeb3b}.resize-handle{position:absolute;width:14px;height:14px;background:#ff43ee;border:2px solid #fff;border-radius:50%;display:none;z-index:10}.canvas-card.selected .resize-handle{display:block}.resize-se{bottom:-7px;right:-7px;cursor:se-resize}.resize-sw{bottom:-7px;left:-7px;cursor:sw-resize}.resize-ne{top:-7px;right:-7px;cursor:ne-resize}.resize-nw{top:-7px;left:-7px;cursor:nw-resize}.form-group{margin-bottom:18px}label{display:block;color:#a5b4fc;margin-bottom:6px;font-size:.9em}input,select,textarea{width:100%;padding:11px;border-radius:8px;border:1px solid rgba(67,238,255,.3);background:rgba(10,10,20,.9);color:#fff;font-size:.9em}textarea{resize:vertical;font-family:inherit}input[type=color]{height:50px;cursor:pointer}input[type=checkbox]{width:auto;margin-right:10px}.btn{width:100%;padding:13px;background:linear-gradient(135deg,#43eeff,#2fdaeb);border:none;border-radius:8px;color:#0a0a15;font-weight:600;cursor:pointer;margin:6px 0}.btn:hover{transform:translateY(-2px)}.btn-secondary{background:linear-gradient(135deg,#ff43ee,#eb2fda)}.btn-danger{background:linear-gradient(135deg,#f44,#c00);color:#fff}.checkbox-label{display:flex;align-items:center;padding:12px;background:rgba(67,238,255,.1);border-radius:8px;cursor:pointer}.properties-panel{background:rgba(20,20,40,.85);border-left:1px solid rgba(67,238,255,.2);padding:25px;overflow-y:auto}.no-selection{text-align:center;color:#666;padding:60px 20px}.no-selection-icon{font-size:4em;margin-bottom:15px}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:rgba(20,20,40,.98);border:2px solid #43eeff;border-radius:16px;padding:35px;max-width:700px;width:90%;max-height:85vh;overflow-y:auto}.modal h2{color:#ff43ee;margin-bottom:25px;font-size:1.8em}.yaml-output{background:#0a0a15;border:1px solid rgba(67,238,255,.4);border-radius:10px;padding:20px;font-family:monospace;color:#43eeff;white-space:pre-wrap;max-height:450px;overflow-y:auto;font-size:.85em}.card-type-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:25px}.card-type-btn{padding:18px;background:rgba(67,238,255,.08);border:2px solid rgba(67,238,255,.3);border-radius:10px;color:#43eeff;cursor:pointer;text-align:center}.card-type-btn:hover{background:rgba(67,238,255,.18)}.card-type-btn.active{background:rgba(67,238,255,.25);border-color:#ff43ee;color:#ff43ee}.card-type-icon{font-size:1.8em;display:block;margin-bottom:6px}.divider{height:1px;background:rgba(67,238,255,.2);margin:20px 0}.quick-btn{padding:15px;background:rgba(67,238,255,.1);border:1px solid rgba(67,238,255,.3);border-radius:8px;color:#43eeff;cursor:pointer}.quick-btn:hover{background:rgba(67,238,255,.2)}.prop-section{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(67,238,255,.15)}.prop-section h3{color:#ff43ee;margin-bottom:15px}</style>
+<title>HA Dashboard Designer Pro</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:linear-gradient(135deg,#0f0f1e,#1a1a2e);color:#fff;overflow:hidden;height:100vh}.app{display:grid;grid-template-columns:320px 1fr 320px;grid-template-rows:60px 1fr;height:100vh}.header{grid-column:1/-1;background:#141428;border-bottom:2px solid #43eeff;padding:0 20px;display:flex;align-items:center;justify-content:space-between}.logo{font-size:1.5em;font-weight:bold;color:#43eeff}.btn{padding:8px 16px;background:#43eeff;border:none;border-radius:6px;color:#000;cursor:pointer;margin:0 5px;font-weight:600}.btn:hover{background:#2fcfdf}.btn-danger{background:#f44;color:#fff}.sidebar{background:#0f0f1e;padding:20px;overflow-y:auto}.canvas-wrap{background:#0a0a15;overflow:auto}.canvas{min-height:100%;min-width:100%;background-image:repeating-linear-gradient(0deg,rgba(67,238,255,.05) 0,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px),repeating-linear-gradient(90deg,rgba(67,238,255,.05) 0,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px);background-size:50px 50px;padding:40px;position:relative}.card{position:absolute;background:#43eeff;border-radius:12px;padding:15px;cursor:move;box-shadow:0 4px 20px rgba(67,238,255,.5);min-width:150px;min-height:100px}.card.selected{border:3px solid #ff43ee}.card-title{color:#ff43ee;font-weight:600;margin:15px 0 10px}.card-entity{background:rgba(255,255,255,.2);padding:5px 10px;margin:5px 0;border-radius:5px;color:#ffeb3b;font-size:.9em}.form-group{margin:15px 0}label{display:block;color:#a5b4fc;margin-bottom:5px;font-size:.9em}input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid #43eeff;background:#0a0a15;color:#fff}textarea{resize:vertical;font-family:inherit}input[type=color]{height:50px;cursor:pointer}.add-btn{width:100%;padding:12px;background:#43eeff;border:none;border-radius:8px;color:#000;font-weight:600;cursor:pointer;margin-top:10px}.add-btn:hover{background:#2fcfdf}.properties{background:#0f0f1e;padding:20px;overflow-y:auto}.no-select{text-align:center;color:#666;padding:60px 20px}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:#1a1a2e;border:2px solid #43eeff;border-radius:12px;padding:30px;max-width:700px;width:90%;max-height:80vh;overflow-y:auto}.yaml-output{background:#0a0a15;border:1px solid #43eeff;border-radius:8px;padding:15px;font-family:monospace;color:#43eeff;white-space:pre-wrap;max-height:400px;overflow-y:auto;font-size:.85em}.type-btn{padding:15px;background:rgba(67,238,255,.1);border:2px solid rgba(67,238,255,.3);border-radius:8px;color:#43eeff;cursor:pointer;text-align:center;margin:5px}.type-btn:hover{background:rgba(67,238,255,.2)}.type-btn.active{background:rgba(67,238,255,.25);border-color:#ff43ee;color:#ff43ee}.resize-handle{position:absolute;width:12px;height:12px;background:#ff43ee;border:2px solid #fff;border-radius:50%;display:none;z-index:10}.card.selected .resize-handle{display:block}.resize-se{bottom:-6px;right:-6px;cursor:se-resize}
+</style>
 </head>
 <body>
-<div class="app-container">
+<div class="app">
 <div class="header">
-<div><span class="logo">🎨 HA Dashboard Designer Pro</span><span class="version">v1.0</span></div>
-<div class="header-actions">
-<button class="header-btn" onclick="showTemplates()">⭐</button>
-<button class="header-btn" onclick="toggleGridSnap()" id="gridSnapBtn">🧲 ON</button>
-<button class="header-btn" onclick="undo()">↶</button>
-<button class="header-btn" onclick="redo()">↷</button>
-<button class="header-btn" onclick="saveProject()">💾</button>
-<button class="header-btn" onclick="loadProject()">📂</button>
-<button class="header-btn" onclick="showYAML()">📄</button>
-<button class="header-btn" onclick="clearAll()">🗑️</button>
+<div class="logo">🎨 HA Designer</div>
+<div>
+<button class="btn" onclick="undo()">↶</button>
+<button class="btn" onclick="redo()">↷</button>
+<button class="btn" onclick="saveProject()">💾</button>
+<button class="btn" onclick="showYAML()">📄 YAML</button>
+<button class="btn btn-danger" onclick="clearAll()">Clear</button>
 </div>
 </div>
 <div class="sidebar">
-<h2>➕ Add Card</h2>
-<div class="card-type-selector">
-<div class="card-type-btn active" onclick="selectCardType('entities')"><span class="card-type-icon">📋</span>Entities</div>
-<div class="card-type-btn" onclick="selectCardType('thermostat')"><span class="card-type-icon">🌡️</span>Thermo</div>
-<div class="card-type-btn" onclick="selectCardType('weather')"><span class="card-type-icon">🌤️</span>Weather</div>
-<div class="card-type-btn" onclick="selectCardType('camera')"><span class="card-type-icon">📷</span>Camera</div>
-<div class="card-type-btn" onclick="selectCardType('media')"><span class="card-type-icon">🎵</span>Media</div>
-<div class="card-type-btn" onclick="selectCardType('gauge')"><span class="card-type-icon">⏱️</span>Gauge</div>
-<div class="card-type-btn" onclick="selectCardType('button')"><span class="card-type-icon">🔘</span>Button</div>
-<div class="card-type-btn" onclick="selectCardType('clock')"><span class="card-type-icon">🕐</span>Clock</div>
+<h3 style="color:#ff43ee;margin-bottom:15px">Add Card</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+<div class="type-btn active" onclick="selectType('entities')">📋<br>Entities</div>
+<div class="type-btn" onclick="selectType('thermostat')">🌡️<br>Thermostat</div>
+<div class="type-btn" onclick="selectType('weather')">🌤️<br>Weather</div>
+<div class="type-btn" onclick="selectType('camera')">📷<br>Camera</div>
 </div>
-<div class="divider"></div>
-<div id="cardConfig"></div>
-<button class="btn" onclick="addCardToCanvas()">➕ Add to Canvas</button>
+<div id="config"></div>
+<button class="add-btn" onclick="addCard()">➕ Add Card</button>
 </div>
-<div class="canvas-container"><div class="canvas" id="canvas"></div></div>
-<div class="properties-panel" id="propertiesPanel"><div class="no-selection"><div class="no-selection-icon">👆</div><p>Click card to edit</p></div></div>
+<div class="canvas-wrap">
+<div class="canvas" id="canvas"></div>
 </div>
-<div class="modal" id="yamlModal"><div class="modal-content"><h2>📄 Export YAML</h2><div class="yaml-output" id="yamlOutput"></div><button class="btn" onclick="copyYAML()">📋 Copy</button><button class="btn btn-secondary" onclick="closeModal()">Close</button></div></div>
-<div class="modal" id="templatesModal"><div class="modal-content"><h2>⭐ Templates</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
-<div class="quick-btn" onclick="applyTemplate('kitchen')" style="padding:20px"><div style="font-size:2em">🍳</div>Kitchen</div>
-<div class="quick-btn" onclick="applyTemplate('bedroom')" style="padding:20px"><div style="font-size:2em">🛏️</div>Bedroom</div>
-<div class="quick-btn" onclick="applyTemplate('security')" style="padding:20px"><div style="font-size:2em">🔒</div>Security</div>
-<div class="quick-btn" onclick="applyTemplate('climate')" style="padding:20px"><div style="font-size:2em">🌡️</div>Climate</div>
-</div><button class="btn btn-secondary" onclick="closeTemplatesModal()">Close</button></div></div>
-<input type="file" id="fileInput" accept=".json" style="display:none">
+<div class="properties" id="props">
+<div class="no-select">👆<br>Click a card to edit</div>
+</div>
+</div>
+<div class="modal" id="yamlModal">
+<div class="modal-content">
+<h2 style="color:#ff43ee">📄 Export YAML</h2>
+<div class="yaml-output" id="yamlOutput"></div>
+<button class="btn" onclick="copyYAML()" style="margin-top:15px;width:100%">📋 Copy</button>
+<button class="btn" onclick="closeModal()" style="width:100%;margin-top:10px">Close</button>
+</div>
+</div>
 <script>
-let cards=[],selectedCard=null,selectedCardType='entities',draggedCard=null,resizingCard=null,resizeHandle=null,dragOffset={x:0,y:0},cardIdCounter=0,history=[],historyIndex=-1,gridSize=50,snapToGrid=true;
-const canvas=document.getElementById('canvas'),propertiesPanel=document.getElementById('propertiesPanel'),cardConfig=document.getElementById('cardConfig');
-const cardTypeConfigs={entities:{defaultSize:{width:300,height:200},fields:`<div class="form-group"><label>Title</label><input id="newCardTitle" value="Entities"></div><div class="form-group"><label>Entities</label><textarea id="newCardEntities" rows="6"></textarea></div>`},thermostat:{defaultSize:{width:300,height:280},fields:`<div class="form-group"><label>Title</label><input id="newCardTitle" value="Thermostat"></div><div class="form-group"><label>Entity</label><input id="thermostatEntity" value="climate.thermostat"></div>`},weather:{defaultSize:{width:350,height:250},fields:`<div class="form-group"><label>Title</label><input id="newCardTitle" value="Weather"></div><div class="form-group"><label>Entity</label><input id="weatherEntity" value="weather.forecast"></div>`},camera:{defaultSize:{width:400,height:300},fields:`<div class="form-group"><label>Title</label><input id="newCardTitle" value="Camera"></div><div class="form-group"><label>Entity</label><input id="cameraEntity" value="camera.front"></div>`},media:{defaultSize:{width:350,height:200},fields:`<div class="form-group"><label>Title</label><input id="newCardTitle" value="Media"></div><div class="form-group"><label>Entity</label><input id="mediaEntity" value="media_player.speaker"></div>`},gauge:{defaultSize:{width:250,height:250},fields:`<div class="form-group"><label>Title</label><input id="newCardTitle" value="Gauge"></div><div class="form-group"><label>Entity</label><input id="gaugeEntity" value="sensor.battery"></div><div class="form-group"><label>Min</label><input type="number" id="gaugeMin" value="0"></div><div class="form-group"><label>Max</label><input type="number" id="gaugeMax" value="100"></div>`},button:{defaultSize:{width:200,height:150},fields:`<div class="form-group"><label>Name</label><input id="newCardTitle" value="Button"></div><div class="form-group"><label>Entity</label><input id="buttonEntity" value="switch.device"></div>`},clock:{defaultSize:{width:300,height:250},fields:`<div class="form-group"><label>Title</label><input id="newCardTitle" value="Clock"></div><div class="form-group"><label>Format</label><select id="clockFormat"><option value="12">12h</option><option value="24">24h</option></select></div>`}};
-function selectCardType(t){selectedCardType=t;document.querySelectorAll('.card-type-btn').forEach(b=>b.classList.remove('active'));event.target.closest('.card-type-btn').classList.add('active');cardConfig.innerHTML=cardTypeConfigs[t].fields}
-cardConfig.innerHTML=cardTypeConfigs.entities.fields;history.push(JSON.stringify(cards));
-function saveState(){history=history.slice(0,historyIndex+1);history.push(JSON.stringify(cards));historyIndex++;if(history.length>50){history.shift();historyIndex--}}
-function undo(){if(historyIndex>0){historyIndex--;cards=JSON.parse(history[historyIndex]);renderCanvas()}}
-function redo(){if(historyIndex<history.length-1){historyIndex++;cards=JSON.parse(history[historyIndex]);renderCanvas()}}
-function addCardToCanvas(){const s=cardTypeConfigs[selectedCardType].defaultSize,t=document.getElementById('newCardTitle')?.value||'Card',c={id:cardIdCounter++,type:selectedCardType,title:t,x:50+(cards.length*30),y:50+(cards.length*30),width:s.width,height:s.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee'};
-if(selectedCardType==='entities'){const e=document.getElementById('newCardEntities').value;c.entities=e.split('\n').filter(x=>x.trim());if(!c.entities.length){alert('Add entities');return}}else if(['thermostat','weather','camera','media','gauge'].includes(selectedCardType)){c.entity=document.getElementById(selectedCardType+'Entity').value}else if(selectedCardType==='button'){c.entity=document.getElementById('buttonEntity').value}else if(selectedCardType==='clock'){c.format=document.getElementById('clockFormat').value}
-if(selectedCardType==='gauge'){c.min=document.getElementById('gaugeMin').value;c.max=document.getElementById('gaugeMax').value}
-cards.push(c);saveState();renderCanvas();selectCard(c)}
-function renderCanvas(){canvas.innerHTML='';cards.forEach(c=>canvas.appendChild(createCardElement(c)))}
-function createCardElement(c){const el=document.createElement('div');el.className='canvas-card';el.id=`card-${c.id}`;el.style.left=c.x+'px';el.style.top=c.y+'px';el.style.width=c.width+'px';el.style.height=c.height+'px';el.style.background=c.useGradient?`linear-gradient(135deg,${c.gradientColor1},${c.gradientColor2})`:c.bgColor;
-if(selectedCard&&selectedCard.id===c.id)el.classList.add('selected');
-const tb=document.createElement('div');tb.className='card-type-badge';tb.textContent=c.type;el.appendChild(tb);
-const sb=document.createElement('div');sb.className='card-size-badge';sb.textContent=`${c.width}×${c.height}`;el.appendChild(sb);
-if(c.type==='entities'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;el.appendChild(t);c.entities.forEach(e=>{const d=document.createElement('div');d.className='card-entity-display';d.textContent=e;d.style.color=c.entityColor;el.appendChild(d)})}else if(c.type==='thermostat'){el.innerHTML+=`<div class="card-title-display" style="color:${c.titleColor};text-align:center">${c.title}</div><div style="text-align:center;padding:15px"><div style="font-size:2.5em;font-weight:bold;color:${c.entityColor}">72°</div><div style="padding:8px;background:rgba(255,255,255,0.2);border-radius:6px;color:${c.entityColor};display:inline-block">HEAT</div></div>`}else if(c.type==='weather'){el.innerHTML+=`<div class="card-title-display" style="color:${c.titleColor};text-align:center">${c.title}</div><div style="text-align:center"><div style="font-size:3em">🌤️</div><div style="font-size:2em;font-weight:bold;color:${c.entityColor}">75°F</div></div>`}else if(c.type==='clock'){el.innerHTML+=`<div class="card-title-display" style="color:${c.titleColor};text-align:center">${c.title}</div><div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:3em;font-weight:bold;color:${c.entityColor};font-family:monospace">${new Date().toLocaleTimeString('en-US',{hour12:c.format==='12'})}</div>`;el.style.display='flex';el.style.flexDirection='column'}
-['nw','ne','sw','se'].forEach(p=>{const h=document.createElement('div');h.className=`resize-handle resize-${p}`;h.dataset.position=p;el.appendChild(h)});
-el.addEventListener('mousedown',e=>e.target.classList.contains('resize-handle')?startResize(e,c):startDrag(e,c));
-return el}
-function startDrag(e,c){if(e.target.classList.contains('resize-handle'))return;draggedCard=c;selectCard(c);const r=document.getElementById(`card-${c.id}`).getBoundingClientRect();dragOffset.x=e.clientX-r.left;dragOffset.y=e.clientY-r.top;document.addEventListener('mousemove',handleDrag);document.addEventListener('mouseup',stopDrag);e.preventDefault()}
-function handleDrag(e){if(!draggedCard)return;const r=canvas.getBoundingClientRect();draggedCard.x=snapToGrid?Math.round((e.clientX-r.left-dragOffset.x)/gridSize)*gridSize:e.clientX-r.left-dragOffset.x;draggedCard.y=snapToGrid?Math.round((e.clientY-r.top-dragOffset.y)/gridSize)*gridSize:e.clientY-r.top-dragOffset.y;renderCanvas()}
-function stopDrag(){if(draggedCard)saveState();draggedCard=null;document.removeEventListener('mousemove',handleDrag);document.removeEventListener('mouseup',stopDrag)}
-function startResize(e,c){resizingCard=c;resizeHandle=e.target.dataset.position;document.addEventListener('mousemove',handleResize);document.addEventListener('mouseup',stopResize);e.preventDefault();e.stopPropagation()}
-function handleResize(e){if(!resizingCard)return;const r=canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;if(resizeHandle.includes('e'))resizingCard.width=Math.max(150,snapToGrid?Math.round((mx-resizingCard.x)/gridSize)*gridSize:mx-resizingCard.x);if(resizeHandle.includes('s'))resizingCard.height=Math.max(100,snapToGrid?Math.round((my-resizingCard.y)/gridSize)*gridSize:my-resizingCard.y);renderCanvas()}
-function stopResize(){if(resizingCard)saveState();resizingCard=null;document.removeEventListener('mousemove',handleResize);document.removeEventListener('mouseup',stopResize)}
-function selectCard(c){selectedCard=c;renderCanvas();showProperties(c)}
-function showProperties(c){if(!c){propertiesPanel.innerHTML='<div class="no-selection"><div class="no-selection-icon">👆</div><p>Click card</p></div>';return}
-propertiesPanel.innerHTML=`<div class="prop-section"><h3>📝 Details</h3><div class="form-group"><label>Title</label><input id="prop-title" value="${c.title}"></div>${c.entities?`<div class="form-group"><label>Entities</label><textarea id="prop-entities" rows="6">${c.entities.join('\n')}</textarea></div>`:`<div class="form-group"><label>Entity</label><input id="prop-entity" value="${c.entity||''}"></div>`}</div><div class="prop-section"><h3>📐 Position</h3><div class="form-group"><label>X: ${c.x}px</label><input type="range" id="prop-x" min="0" max="1000" value="${c.x}"></div><div class="form-group"><label>Y: ${c.y}px</label><input type="range" id="prop-y" min="0" max="1000" value="${c.y}"></div><div class="form-group"><label>W: ${c.width}px</label><input type="range" id="prop-w" min="150" max="600" value="${c.width}"></div><div class="form-group"><label>H: ${c.height}px</label><input type="range" id="prop-h" min="100" max="500" value="${c.height}"></div></div><div class="prop-section"><h3>🎨 Colors</h3><div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-gradient" ${c.useGradient?'checked':''}>Gradient</label></div><div id="solidColor" style="display:${c.useGradient?'none':'block'}"><div class="form-group"><label>BG</label><input type="color" id="prop-bg" value="${c.bgColor}"></div></div><div id="gradientColors" style="display:${c.useGradient?'block':'none'}"><div class="form-group"><label>Color 1</label><input type="color" id="prop-gc1" value="${c.gradientColor1}"></div><div class="form-group"><label>Color 2</label><input type="color" id="prop-gc2" value="${c.gradientColor2}"></div></div><div class="form-group"><label>Title</label><input type="color" id="prop-tc" value="${c.titleColor}"></div><div class="form-group"><label>Entity</label><input type="color" id="prop-ec" value="${c.entityColor}"></div></div><button class="btn" onclick="duplicateCard()">📋 Duplicate</button><button class="btn btn-danger" onclick="deleteCard()">🗑️ Delete</button>`;
-document.getElementById('prop-title').oninput=e=>{c.title=e.target.value;renderCanvas()};
-document.getElementById('prop-x').oninput=e=>{c.x=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`X: ${c.x}px`};
-document.getElementById('prop-y').oninput=e=>{c.y=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`Y: ${c.y}px`};
-document.getElementById('prop-w').oninput=e=>{c.width=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`W: ${c.width}px`};
-document.getElementById('prop-h').oninput=e=>{c.height=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`H: ${c.height}px`};
-document.getElementById('prop-gradient').onchange=e=>{c.useGradient=e.target.checked;document.getElementById('solidColor').style.display=c.useGradient?'none':'block';document.getElementById('gradientColors').style.display=c.useGradient?'block':'none';renderCanvas()};
-document.getElementById('prop-bg').oninput=e=>{c.bgColor=e.target.value;renderCanvas()};
-document.getElementById('prop-gc1').oninput=e=>{c.gradientColor1=e.target.value;renderCanvas()};
-document.getElementById('prop-gc2').oninput=e=>{c.gradientColor2=e.target.value;renderCanvas()};
-document.getElementById('prop-tc').oninput=e=>{c.titleColor=e.target.value;renderCanvas()};
-document.getElementById('prop-ec').oninput=e=>{c.entityColor=e.target.value;renderCanvas()};
-if(c.entities)document.getElementById('prop-entities').oninput=e=>{c.entities=e.target.value.split('\n').filter(x=>x.trim());renderCanvas()};
-else document.getElementById('prop-entity').oninput=e=>{c.entity=e.target.value;renderCanvas()}}
-function deleteCard(){if(!selectedCard||!confirm('Delete?'))return;cards=cards.filter(c=>c.id!==selectedCard.id);selectedCard=null;saveState();renderCanvas();showProperties(null)}
-function duplicateCard(){if(!selectedCard)return;const n={...selectedCard,id:cardIdCounter++,x:selectedCard.x+30,y:selectedCard.y+30,entities:selectedCard.entities?[...selectedCard.entities]:undefined};cards.push(n);saveState();renderCanvas();selectCard(n)}
-function toggleGridSnap(){snapToGrid=!snapToGrid;document.getElementById('gridSnapBtn').textContent=snapToGrid?'🧲 ON':'🧲 OFF'}
-function clearAll(){if(!confirm('Clear all?'))return;cards=[];selectedCard=null;cardIdCounter=0;saveState();renderCanvas();showProperties(null)}
-function saveProject(){const d={cards,v:'1.0'};const b=new Blob([JSON.stringify(d)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='dashboard.json';a.click();URL.revokeObjectURL(u)}
-function loadProject(){const i=document.getElementById('fileInput');i.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);cards=d.cards||[];cardIdCounter=Math.max(...cards.map(c=>c.id),0)+1;saveState();renderCanvas();selectedCard=null;showProperties(null)}catch{alert('Invalid file')}};r.readAsText(f)};i.click()}
-function showYAML(){document.getElementById('yamlOutput').textContent=generateYAML();document.getElementById('yamlModal').classList.add('active')}
-function generateYAML(){let y='views:\n  - title: Dashboard\n    cards:\n';cards.forEach(c=>{y+=`      - type: ${c.type}\n        title: "${c.title}"\n`;if(c.entities){y+='        entities:\n';c.entities.forEach(e=>y+=`          - ${e}\n`)}else if(c.entity)y+=`        entity: ${c.entity}\n`;y+='\n'});return y}
-function copyYAML(){navigator.clipboard.writeText(document.getElementById('yamlOutput').textContent).then(()=>alert('Copied!')).catch(()=>alert('Failed'))}
+let cards=[],selected=null,type='entities',dragged=null,offset={x:0,y:0},id=0,history=[],hIdx=-1,resizing=null;
+const canvas=document.getElementById('canvas'),props=document.getElementById('props'),config=document.getElementById('config');
+const types={
+entities:{size:{w:300,h:200},html:`<div class="form-group"><label>Title</label><input id="title" value="Entities"></div><div class="form-group"><label>Entities (one per line)</label><textarea id="entities" rows="5"></textarea></div>`},
+thermostat:{size:{w:300,h:280},html:`<div class="form-group"><label>Title</label><input id="title" value="Thermostat"></div><div class="form-group"><label>Entity</label><input id="entity" value="climate.thermostat"></div>`},
+weather:{size:{w:350,h:250},html:`<div class="form-group"><label>Entity</label><input id="entity" value="weather.forecast"></div>`},
+camera:{size:{w:400,h:300},html:`<div class="form-group"><label>Title</label><input id="title" value="Camera"></div><div class="form-group"><label>Entity</label><input id="entity" value="camera.front"></div>`}
+};
+function selectType(t){type=t;document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');config.innerHTML=types[t].html}
+config.innerHTML=types.entities.html;
+function saveState(){history=history.slice(0,hIdx+1);history.push(JSON.stringify(cards));hIdx++;if(history.length>50){history.shift();hIdx--}}
+function undo(){if(hIdx>0){hIdx--;cards=JSON.parse(history[hIdx]);render()}}
+function redo(){if(hIdx<history.length-1){hIdx++;cards=JSON.parse(history[hIdx]);render()}}
+saveState();
+function addCard(){const s=types[type].size,title=document.getElementById('title')?.value||'Card',c={id:id++,type,title,x:50+cards.length*30,y:50+cards.length*30,w:s.w,h:s.h,bg:'#43eeff',tc:'#ff43ee',ec:'#ffeb3b'};
+if(type==='entities'){const t=document.getElementById('entities').value;c.entities=t.split('\n').filter(e=>e.trim());if(!c.entities.length){alert('Add entities');return}}else{c.entity=document.getElementById('entity').value}
+cards.push(c);saveState();render();selected=c;showProps(c)}
+function render(){canvas.innerHTML='';cards.forEach(c=>{const el=document.createElement('div');el.className='card';if(selected&&selected.id===c.id)el.className+=' selected';el.style.left=c.x+'px';el.style.top=c.y+'px';el.style.width=c.w+'px';el.style.height=c.h+'px';el.style.background=c.bg;
+const title=document.createElement('div');title.className='card-title';title.textContent=c.title;title.style.color=c.tc;el.appendChild(title);
+if(c.entities){c.entities.forEach(e=>{const d=document.createElement('div');d.className='card-entity';d.textContent=e;d.style.color=c.ec;el.appendChild(d)})}
+const rh=document.createElement('div');rh.className='resize-handle resize-se';rh.onmousedown=e=>{e.stopPropagation();resizing=c;document.onmousemove=handleResize;document.onmouseup=()=>{resizing=null;document.onmousemove=null;saveState()}};el.appendChild(rh);
+el.onmousedown=e=>{dragged=c;selected=c;render();showProps(c);const r=el.getBoundingClientRect();offset.x=e.clientX-r.left;offset.y=e.clientY-r.top;document.onmousemove=mv;document.onmouseup=()=>{dragged=null;document.onmousemove=null;saveState()}};
+canvas.appendChild(el)})}
+function mv(e){if(!dragged)return;dragged.x=e.clientX-canvas.getBoundingClientRect().left-offset.x;dragged.y=e.clientY-canvas.getBoundingClientRect().top-offset.y;render();showProps(dragged)}
+function handleResize(e){if(!resizing)return;const r=canvas.getBoundingClientRect();resizing.w=Math.max(150,e.clientX-r.left-resizing.x);resizing.h=Math.max(100,e.clientY-r.top-resizing.y);render()}
+function showProps(c){if(!c){props.innerHTML='<div class="no-select">👆<br>Click card</div>';return}
+props.innerHTML=`
+<div style="margin-bottom:20px"><h3 style="color:#ff43ee">Card Properties</h3></div>
+<div class="form-group"><label>Title</label><input type="text" id="prop-title" value="${c.title}"></div>
+${c.entities?`<div class="form-group"><label>Entities</label><textarea id="prop-entities" rows="6">${c.entities.join('\n')}</textarea></div>`:`<div class="form-group"><label>Entity</label><input type="text" id="prop-entity" value="${c.entity}"></div>`}
+<div class="form-group"><label>X Position</label><input type="number" id="prop-x" value="${c.x}"></div>
+<div class="form-group"><label>Y Position</label><input type="number" id="prop-y" value="${c.y}"></div>
+<div class="form-group"><label>Width</label><input type="number" id="prop-w" value="${c.w}"></div>
+<div class="form-group"><label>Height</label><input type="number" id="prop-h" value="${c.h}"></div>
+<div class="form-group"><label>Background</label><input type="color" id="prop-bg" value="${c.bg}"></div>
+<div class="form-group"><label>Title Color</label><input type="color" id="prop-tc" value="${c.tc}"></div>
+<div class="form-group"><label>Entity Color</label><input type="color" id="prop-ec" value="${c.ec}"></div>
+<button class="btn" onclick="duplicateCard()" style="width:100%;margin:10px 0">📋 Duplicate</button>
+<button class="btn btn-danger" onclick="deleteCard()" style="width:100%">🗑️ Delete</button>
+`;
+document.getElementById('prop-title').oninput=e=>{c.title=e.target.value;render()};
+document.getElementById('prop-x').oninput=e=>{c.x=parseInt(e.target.value);render()};
+document.getElementById('prop-y').oninput=e=>{c.y=parseInt(e.target.value);render()};
+document.getElementById('prop-w').oninput=e=>{c.w=parseInt(e.target.value);render()};
+document.getElementById('prop-h').oninput=e=>{c.h=parseInt(e.target.value);render()};
+document.getElementById('prop-bg').oninput=e=>{c.bg=e.target.value;render()};
+document.getElementById('prop-tc').oninput=e=>{c.tc=e.target.value;render()};
+document.getElementById('prop-ec').oninput=e=>{c.ec=e.target.value;render()};
+if(c.entities){document.getElementById('prop-entities').oninput=e=>{c.entities=e.target.value.split('\n').filter(e=>e.trim());render()}}else{document.getElementById('prop-entity').oninput=e=>{c.entity=e.target.value;render()}}}
+function deleteCard(){if(!selected)return;if(confirm('Delete this card?')){cards=cards.filter(c=>c.id!==selected.id);selected=null;saveState();render();showProps(null)}}
+function duplicateCard(){if(!selected)return;const n={...selected,id:id++,x:selected.x+20,y:selected.y+20,entities:selected.entities?[...selected.entities]:undefined};cards.push(n);saveState();render();selected=n;showProps(n)}
+function showYAML(){const yaml=generateYAML();document.getElementById('yamlOutput').textContent=yaml;document.getElementById('yamlModal').classList.add('active')}
+function generateYAML(){let yaml='views:\n  - title: Dashboard\n    cards:\n';cards.forEach(c=>{yaml+=`      - type: ${c.type}\n`;if(c.title)yaml+=`        title: "${c.title}"\n`;if(c.type==='entities'){yaml+=`        entities:\n`;c.entities.forEach(e=>yaml+=`          - ${e}\n`)}else{yaml+=`        entity: ${c.entity}\n`}yaml+=`        card_mod:\n          style: |\n            ha-card {\n              background: ${c.bg};\n            }\n\n`});return yaml}
+function copyYAML(){const yaml=document.getElementById('yamlOutput').textContent;navigator.clipboard.writeText(yaml).then(()=>alert('✅ Copied!')).catch(()=>alert('❌ Failed to copy'))}
 function closeModal(){document.getElementById('yamlModal').classList.remove('active')}
-function showTemplates(){document.getElementById('templatesModal').classList.add('active')}
-function closeTemplatesModal(){document.getElementById('templatesModal').classList.remove('active
-')} function applyTemplate(t){const tp={kitchen:[{type:'entities',title:'Kitchen',x:50,y:50,entities:['light.kitchen','switch.coffee']}],bedroom:[{type:'entities',title:'Bedroom',x:50,y:50,entities:['light.bedroom','switch.fan']},{type:'thermostat',title:'Climate',x:400,y:50,entity:'climate.bedroom'}],security:[{type:'camera',title:'Front',x:50,y:50,entity:'camera.front'},{type:'entities',title:'Security',x:500,y:50,entities:['binary_sensor.door','binary_sensor.motion']}],climate:[{type:'thermostat',title:'Living',x:50,y:50,entity:'climate.living'},{type:'weather',title:'Weather',x:400,y:50,entity:'weather.home'}]};const d=tp[t];if(d){cards.push(...d.map(c=>({...c,id:cardIdCounter++,width:cardTypeConfigs.defaultSize.width,height:cardTypeConfigs.defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee'})));saveState();renderCanvas();closeTemplatesModal()}} document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey){if(e.key==='z'&&!e.shiftKey){e.preventDefault();undo()}else if(e.key==='y'||(e.key==='z'&&e.shiftKey)){e.preventDefault();redo()}else if(e.key==='d'){e.preventDefault();duplicateCard()}}else if(e.key==='Delete'&&selectedCard)deleteCard()}); </script>
-</body> 
+function saveProject(){const data={cards};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='dashboard-'+Date.now()+'.json';a.click();URL.revokeObjectURL(url)}
+function clearAll(){if(confirm('Clear all cards?')){cards=[];selected=null;id=0;saveState();render();showProps(null)}}
+render();
+</script>
+</body>
 </html>
