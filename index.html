@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>HA Dashboard Designer</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui;background:#1a1a2e;color:#fff;height:100vh;overflow:hidden}
+.app{display:grid;grid-template-columns:300px 1fr 300px;grid-template-rows:60px 1fr;height:100vh}
+.header{grid-column:1/-1;background:#141428;border-bottom:2px solid #43eeff;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:1.5em;font-weight:bold;color:#43eeff}
+.btn{padding:8px 16px;background:#43eeff;border:none;border-radius:6px;color:#000;cursor:pointer;margin:0 5px}
+.btn:hover{background:#2fcfdf}
+.sidebar{background:#0f0f1e;padding:20px;overflow-y:auto}
+.canvas-wrap{background:#0a0a15;overflow:auto}
+.canvas{min-height:100%;min-width:100%;background-image:repeating-linear-gradient(0deg,rgba(67,238,255,.05) 0,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px),repeating-linear-gradient(90deg,rgba(67,238,255,.05) 0,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px);background-size:50px 50px;padding:40px;position:relative}
+.card{position:absolute;background:#43eeff;border-radius:12px;padding:15px;cursor:move;box-shadow:0 4px 20px rgba(67,238,255,.5);min-width:150px;min-height:100px}
+.card.selected{border:3px solid #ff43ee}
+.card-title{color:#ff43ee;font-weight:600;margin:15px 0 10px}
+.card-entity{background:rgba(255,255,255,.2);padding:5px 10px;margin:5px 0;border-radius:5px;color:#ffeb3b;font-size:.9em}
+.form-group{margin:15px 0}
+label{display:block;color:#a5b4fc;margin-bottom:5px;font-size:.9em}
+input,select,textarea{width:100%;padding:10px;border-radius:6px;border:1px solid #43eeff;background:#0a0a15;color:#fff}
+textarea{resize:vertical;font-family:inherit}
+input[type=color]{height:50px;cursor:pointer}
+.add-btn{width:100%;padding:12px;background:#43eeff;border:none;border-radius:8px;color:#000;font-weight:600;cursor:pointer;margin-top:10px}
+.properties{background:#0f0f1e;padding:20px;overflow-y:auto}
+.no-select{text-align:center;color:#666;padding:60px 20px}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:#1a1a2e;border:2px solid #43eeff;border-radius:12px;padding:30px;max-width:700px;width:90%;max-height:80vh;overflow-y:auto}
+.yaml-output{background:#0a0a15;border:1px solid #43eeff;border-radius:8px;padding:15px;font-family:monospace;color:#43eeff;white-space:pre-wrap;max-height:400px;overflow-y:auto;font-size:.85em}
+.type-btn{padding:15px;background:rgba(67,238,255,.1);border:2px solid rgba(67,238,255,.3);border-radius:8px;color:#43eeff;cursor:pointer;text-align:center;margin:5px}
+.type-btn:hover{background:rgba(67,238,255,.2)}
+.type-btn.active{background:rgba(67,238,255,.25);border-color:#ff43ee;color:#ff43ee}
+</style>
+</head><body>
+  <div class="app">
+<div class="header">
+<div class="logo">🎨 HA Designer</div>
+<div>
+<button class="btn" onclick="undo()">↶</button>
+<button class="btn" onclick="redo()">↷</button>
+<button class="btn" onclick="saveProject()">💾 Save</button>
+<button class="btn" onclick="showYAML()">📄 Export</button>
+</div>
+</div>
+<div class="sidebar">
+<h3 style="color:#ff43ee;margin-bottom:15px">Add Card</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+<div class="type-btn active" onclick="selectType('entities')">📋<br>Entities</div>
+<div class="type-btn" onclick="selectType('thermostat')">🌡️<br>Thermostat</div>
+<div class="type-btn" onclick="selectType('weather')">🌤️<br>Weather</div>
+<div class="type-btn" onclick="selectType('camera')">📷<br>Camera</div>
+</div>
+<div id="config"></div>
+<button class="add-btn" onclick="addCard()">➕ Add to Canvas</button>
+</div>
+<div class="canvas-wrap">
+<div class="canvas" id="canvas"></div>
+</div>
+<div class="properties" id="props">
+<div class="no-select">👆<br>Click a card to edit</div>
+</div>
+</div>
+<div class="modal" id="yamlModal">
+<div class="modal-content">
+<h2 style="color:#ff43ee">📄 Export YAML</h2>
+<div class="yaml-output" id="yamlOutput"></div>
+<button class="btn" onclick="copyYAML()" style="margin-top:15px;width:100%">📋 Copy</button>
+<button class="btn" onclick="closeModal()" style="width:100%">Close</button>
+</div>
+</div>
+<script>
+let cards=[],selected=null,type='entities',dragged=null,offset={x:0,y:0},id=0,history=[],hIdx=-1;
+const canvas=document.getElementById('canvas'),props=document.getElementById('props'),config=document.getElementById('config');
+
+const types={
+entities:{size:{w:300,h:200},html:`<div class="form-group"><label>Title</label><input id="title" value="Entities"></div><div class="form-group"><label>Entities (one per line)</label><textarea id="entities" rows="5"></textarea></div>`},
+thermostat:{size:{w:300,h:280},html:`<div class="form-group"><label>Title</label><input id="title" value="Thermostat"></div><div class="form-group"><label>Entity</label><input id="entity" value="climate.thermostat"></div>`},
+weather:{size:{w:350,h:250},html:`<div class="form-group"><label>Entity</label><input id="entity" value="weather.forecast"></div>`},
+camera:{size:{w:400,h:300},html:`<div class="form-group"><label>Title</label><input id="title" value="Camera"></div><div class="form-group"><label>Entity</label><input id="entity" value="camera.front"></div>`}
+};
+
+function selectType(t){type=t;document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');config.innerHTML=types[t].html}
+config.innerHTML=types.entities.html;
+
+function saveState(){history=history.slice(0,hIdx+1);history.push(JSON.stringify(cards));hIdx++;if(history.length>50){history.shift();hIdx--}}
+function undo(){if(hIdx>0){hIdx--;cards=JSON.parse(history[hIdx]);render()}}
+function redo(){if(hIdx<history.length-1){hIdx++;cards=JSON.parse(history[hIdx]);render()}}
+saveState();
+
+function addCard(){const s=types[type].size,title=document.getElementById('title')?.value||'Card',c={id:id++,type,title,x:50+cards.length*30,y:50+cards.length*30,w:s.w,h:s.h,bg:'#43eeff',tc:'#ff43ee',ec:'#ffeb3b'};
+if(type==='entities'){const t=document.getElementById('entities').value;c.entities=t.split('\n').filter(e=>e.trim());if(!c.entities.length){alert('Add entities');return}}else{c.entity=document.getElementById('entity').value}
+cards.push(c);saveState();render();selected=c;showProps(c)}
+
+function render(){canvas.innerHTML='';cards.forEach(c=>{const el=document.createElement('div');el.className='card';if(selected&&selected.id===c.id)el.className+=' selected';el.style.left=c.x+'px';el.style.top=c.y+'px';el.style.width=c.w+'px';el.style.height=c.h+'px';el.style.background=c.bg;
+const title=document.createElement('div');title.className='card-title';title.textContent=c.title;title.style.color=c.tc;el.appendChild(title);
+if(c.entities){c.entities.forEach(e=>{const d=document.createElement('div');d.className='card-entity';d.textContent=e;d.style.color=c.ec;el.appendChild(d)})}
+el.onmousedown=e=>{dragged=c;selected=c;render();showProps(c);const r=el.getBoundingClientRect();offset.x=e.clientX-r.left;offset.y=e.clientY-r.top;document.onmousemove=mv;document.onmouseup=()=>{dragged=null;document.onmousemove=null;saveState()}};
+canvas.appendChild(el)})}
+  
