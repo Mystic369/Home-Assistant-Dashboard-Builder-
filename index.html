@@ -701,31 +701,59 @@ function showTemplateLibrary(){document.getElementById('templateModal').classLis
 function applyTemplate(n){const tpls={living:[{type:'entities',title:'Living',x:50,y:50,entities:['light.living_room','switch.tv']}],kitchen:[{type:'entities',title:'Kitchen',x:50,y:50,entities:['light.kitchen']}],bedroom:[{type:'entities',title:'Bedroom',x:50,y:50,entities:['light.bedroom']}],security:[{type:'camera',title:'Cam',x:50,y:50,entity:'camera.front'}],energy:[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power'}],outdoor:[{type:'weather',title:'Weather',x:50,y:50,entity:'weather.home'}]};const tpl=tpls[n];if(tpl){cards.push(...tpl.map(c=>({...c,id:cardIdCounter++,width:cardTypeConfigs[c.type].defaultSize.width,height:cardTypeConfigs[c.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',zIndex:cards.length,locked:false,hoverEffect:'none',icon:'',titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},borderRadius:14,cornerStyle:'rounded',tapAction:{action:'toggle'},conditions:''})));saveState();renderCanvas();closeModal('templateModal')}}
 function showImportModal(){document.getElementById('importModal').classList.add('active')}
 function importYAML(){const yaml=document.getElementById('importYaml').value,preserveC=document.getElementById('importPreserveColors').checked,preserveF=document.getElementById('importPreserveFonts').checked;
+if(!yaml.trim()){showNotification('Paste YAML first','error');return}
 try{
 const lines=yaml.split('\n');
+let cardsList=[];
 let currentCard=null;
 let inEntities=false;
-let cardsList=[];
+let lastIndent=0;
 
 for(let i=0;i<lines.length;i++){
 const line=lines[i];
 const trimmed=line.trim();
 const indent=line.search(/\S/);
+if(indent===-1)continue;
 
-// Detect new card
-if(trimmed.startsWith('- type:')){
-if(currentCard){
+// Detect new card by "- type:" pattern
+if(trimmed.match(/^-\s*type:\s*/)){
+// Save previous card if it has content
+if(currentCard&&(currentCard.entities?.length>0||currentCard.entity)){
 cardsList.push(currentCard);
 }
-const type=trimmed.split(':')[1].trim().replace(/['"]/g,'').replace('custom:','');
+// Get card type
+let type=trimmed.replace(/^-\s*type:\s*/,'').replace(/['"]/g,'').trim();
+// Handle custom cards and type variations
+type=type.replace('custom:','').replace('mushroom-','').replace('-card','');
+if(type==='weather-forecast')type='weather';
+if(type==='history-graph')type='chart';
+if(type==='media-player')type='media';
+// Skip headings
+if(type==='heading'||type==='vertical-stack'||type==='horizontal-stack'||type==='grid'){
+currentCard=null;
+continue;
+}
+// Handle tile cards as button type
+let cardType=type;
+if(type==='tile')cardType='button';
+// Map to supported types or default to entities
+const supportedTypes=['entities','thermostat','weather','camera','media','gauge','button','clock','markdown','picture','glance','chart','map','iframe','light'];
+if(!supportedTypes.includes(cardType)){
+if(type.includes('light'))cardType='light';
+else if(type.includes('media'))cardType='media';
+else cardType='entities';
+}
+const size=cardTypeConfigs[cardType]?.defaultSize||{width:300,height:200};
 currentCard={
 id:cardIdCounter++,
-type,
-title:type.charAt(0).toUpperCase()+type.slice(1),
-x:50+cardsList.length*30,
-y:50+Math.floor(cardsList.length/3)*200,
-width:cardTypeConfigs[type]?.defaultSize.width||300,
-height:cardTypeConfigs[type]?.defaultSize.height||200,
+type:cardType,
+title:cardType.charAt(0).toUpperCase()+cardType.slice(1),
+x:50+(cardsList.length%4)*320,
+y:50+Math.floor(cardsList.length/4)*240,
+width:size.width,
+height:size.height,
+entities:[],
+entity:'',
 bgColor:preserveC?lastCardSettings.bgColor:'#43eeff',
 titleColor:preserveC?lastCardSettings.titleColor:'#ff43ee',
 entityColor:preserveC?lastCardSettings.entityColor:'#ffeb3b',
@@ -734,7 +762,6 @@ entityFont:preserveF?lastCardSettings.entityFont:"'Segoe UI', sans-serif",
 titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},
 entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},
 zIndex:cardsList.length,
-entities:[],
 locked:false,
 hoverEffect:'none',
 borderRadius:14,
@@ -743,61 +770,93 @@ tapAction:{action:'toggle'},
 conditions:''
 };
 inEntities=false;
+continue;
 }
-// Get title or name
-else if((trimmed.startsWith('title:')||trimmed.startsWith('name:'))&&currentCard){
-const val=trimmed.split(':').slice(1).join(':').trim().replace(/['"]/g,'');
-if(val)currentCard.title=val;
+
+if(!currentCard)continue;
+
+// Get title or name for the card
+if(trimmed.match(/^(title|name):\s*/)&&!trimmed.startsWith('-')){
+const val=trimmed.replace(/^(title|name):\s*/,'').replace(/['"]/g,'').trim();
+if(val){
+currentCard.title=val;
 }
-// Get single entity (for thermostat, weather, etc)
-else if(trimmed.startsWith('entity:')&&currentCard&&!inEntities){
-const ent=trimmed.split(':').slice(1).join(':').trim().replace(/['"]/g,'');
-if(ent){
+continue;
+}
+
+// Detect entities list start
+if(trimmed==='entities:'){
+inEntities=true;
+continue;
+}
+
+// Parse single entity for tile/thermostat/weather/etc (not in entities list)
+if(trimmed.match(/^entity:\s*/)&&!inEntities){
+const ent=trimmed.replace(/^entity:\s*/,'').replace(/['"]/g,'').trim();
+if(ent&&ent.includes('.')){
 currentCard.entity=ent;
-// Also add to entities array for thermostat
-if(currentCard.type==='thermostat'){
+// For thermostat/button, also add to entities array
+if(currentCard.type==='thermostat'||currentCard.type==='button'){
 currentCard.entities=[ent];
 }
+// Use entity name as title if title is generic
+const parts=ent.split('.');
+if(currentCard.title===currentCard.type.charAt(0).toUpperCase()+currentCard.type.slice(1)){
+currentCard.title=parts[1]?.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase())||currentCard.title;
 }
 }
-// Detect entities list start
-else if(trimmed==='entities:'&&currentCard){
-inEntities=true;
+continue;
 }
-// Parse entity in list - format: "- entity: light.xxx" or "- light.xxx"
-else if(trimmed.startsWith('-')&&currentCard&&inEntities){
-let ent='';
-if(trimmed.includes('entity:')){
-// Format: - entity: light.xxx
-ent=trimmed.split('entity:')[1]?.trim().replace(/['"]/g,'')||'';
-}else{
-// Format: - light.xxx
-ent=trimmed.substring(1).trim().replace(/['"]/g,'');
+
+// Parse entity in entities list: "- entity: light.xxx" format
+if(inEntities&&trimmed.match(/^-\s*entity:\s*/)){
+const ent=trimmed.replace(/^-\s*entity:\s*/,'').replace(/['"]/g,'').trim();
+if(ent&&ent.includes('.')){
+currentCard.entities.push(ent);
 }
+continue;
+}
+
+// Parse simple entity format: "- light.xxx" or "- sensor.xxx"
+if(inEntities&&trimmed.match(/^-\s*[a-z_]+\.[a-z0-9_]+/i)){
+const ent=trimmed.replace(/^-\s*/,'').replace(/['"]/g,'').trim();
 if(ent&&ent.includes('.')&&!ent.includes(':')){
 currentCard.entities.push(ent);
 }
+continue;
 }
-// Exit entities section when we hit another property
-else if(currentCard&&inEntities&&trimmed&&!trimmed.startsWith('-')&&trimmed.includes(':')){
+
+// Check if we've exited entities section
+if(inEntities&&!trimmed.startsWith('-')&&trimmed.includes(':')&&!trimmed.startsWith('name')){
+const propName=trimmed.split(':')[0].trim();
+if(['state_color','show_header_toggle','card_mod','theme','secondary_info','style'].includes(propName)){
+// Still card properties, not a new card section
+}else if(indent<lastIndent){
 inEntities=false;
 }
 }
 
-// Don't forget last card
-if(currentCard){
+lastIndent=indent;
+}
+
+// Don't forget the last card
+if(currentCard&&(currentCard.entities?.length>0||currentCard.entity)){
 cardsList.push(currentCard);
 }
 
-// Add all parsed cards
+if(cardsList.length===0){
+showNotification('No valid cards found in YAML','error');
+return;
+}
+
 cards.push(...cardsList);
 saveState();
 renderCanvas();
 updateCardCount();
 closeModal('importModal');
-showNotification(`Imported ${cardsList.length} cards`,'success');
+showNotification(`Imported ${cardsList.length} cards with entities!`,'success');
 }catch(e){
-console.error(e);
+console.error('Import error:',e);
 showNotification('Error: '+e.message,'error');
 }}
 
@@ -947,5 +1006,3 @@ applyBackground();renderCanvas();updateCardCount();updateSelectedCount();
 </script>
 </body>
 </html>
-
-
