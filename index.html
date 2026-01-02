@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HA Dashboard Builder v4.3 MEGA</title>
+<title>HA Dashboard Builder v4.4 WYSIWYG</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Nunito:wght@400;700&family=Raleway:wght@400;600;700&family=Ubuntu:wght@400;500;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;color:#fff;overflow:hidden;height:100vh;position:relative}
@@ -66,7 +66,7 @@
 <div class="bg-layer"><div class="bg-image" id="bgImage"></div><div class="bg-overlay" id="bgOverlay"></div></div>
 <div class="app-container">
 <div class="header">
-<div class="logo" onclick="showDashboardManager()">🎨 HA Dashboard Builder<span class="version">v4.3</span><span class="badge">MEGA</span></div>
+<div class="logo" onclick="showDashboardManager()">🎨 HA Dashboard Builder<span class="version">v4.4</span><span class="badge">WYSIWYG</span></div>
 <div class="header-center"><div class="dashboard-selector" onclick="showDashboardManager()" id="currentDashboard">My Dashboard</div></div>
 <div class="header-actions">
 <button class="header-btn yaml-btn" onclick="downloadYAMLDirect()" data-tooltip="Download YAML">📄 YAML</button>
@@ -454,28 +454,161 @@ if(selectedCard?.id===c.id)el.classList.add('selected');if(selectedCards.some(s=
 const scale=getScaleFactor(c),titleFont=c.titleFont||"'Segoe UI', sans-serif",entityFont=c.entityFont||"'Segoe UI', sans-serif",titleShadow=getTextShadowCSS(c.titleShadow),entityShadow=getTextShadowCSS(c.entityShadow);
 const titleSize=(c.titleSize||1.2)*scale,entitySize=(c.entitySize||0.85)*scale;
 const iconHtml=c.icon&&iconEmojis[c.icon]?`<span class="card-icon">${iconEmojis[c.icon]}</span>`:'';
-el.innerHTML=`<div class="card-type-badge">${c.type}</div><div class="card-size-badge">${c.width}×${c.height}</div><div class="card-z-badge">Z:${c.zIndex||0}</div>${c.group?`<div class="card-group-badge">G:${c.group}</div>`:''}`;
+el.innerHTML=`<div class="card-type-badge">${c.type}</div>`;
 
-const titleEl=document.createElement('div');titleEl.className='card-title-display';titleEl.innerHTML=iconHtml+c.title;titleEl.style.cssText=`color:${c.titleColor};font-family:${titleFont};text-shadow:${titleShadow};font-size:${titleSize}em`;el.appendChild(titleEl);
+const titleEl=document.createElement('div');titleEl.className='card-title-display';titleEl.innerHTML=iconHtml+c.title;titleEl.style.cssText=`color:${c.titleColor};font-family:${titleFont};text-shadow:${titleShadow};font-size:${titleSize}em;margin-top:8px`;el.appendChild(titleEl);
 
-if(c.type==='entities'||c.type==='light'||c.type==='thermostat'){
-(c.entities||[]).forEach((ent,idx)=>{const d=document.createElement('div');d.className='card-entity-display';d.textContent=ent;d.style.cssText=`color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow};font-size:${entitySize}em;padding:${6*scale}px ${10*scale}px`;d.draggable=true;d.ondragstart=ev=>{draggedEntity=ent;draggedFromCard=c;draggedEntityIndex=idx;ev.target.classList.add('dragging-entity')};d.ondragend=ev=>ev.target.classList.remove('dragging-entity');d.oncontextmenu=ev=>{ev.preventDefault();ev.stopPropagation();contextCard=c;contextEntityIndex=idx;contextEntity=ent;const m=document.getElementById('contextMenu');m.style.left=ev.pageX+'px';m.style.top=ev.pageY+'px';m.classList.add('active')};el.appendChild(d)})}
-else if(c.type==='glance'){const g=document.createElement('div');g.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px';(c.entities||[]).forEach(e=>{const i=document.createElement('div');i.style.cssText=`text-align:center;padding:${8*scale}px;background:rgba(255,255,255,.2);border-radius:6px;color:${c.entityColor};font-size:${entitySize}em`;i.textContent=e.split('.')[1]||e;g.appendChild(i)});el.appendChild(g)}
-else if(c.type==='weather'){el.innerHTML+=`<div style="text-align:center;margin-top:10px"><div style="font-size:${3*scale}em">🌤️</div><div style="font-size:${entitySize*1.5}em;font-weight:bold;color:${c.entityColor}">72°F</div></div>`}
-else if(c.type==='clock'){const now=new Date(),t=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});el.innerHTML+=`<div style="display:flex;align-items:center;justify-content:center;flex:1;font-size:${entitySize*2}em;font-weight:bold;color:${c.entityColor}">${t}</div>`;el.style.display='flex';el.style.flexDirection='column'}
-else if(c.type==='gauge'){el.innerHTML+=`<div style="text-align:center;margin-top:20px"><div style="font-size:${3*scale}em">⏱️</div><div style="font-size:${entitySize*1.5}em;color:${c.entityColor}">75%</div></div>`}
-else if(c.type==='camera'){el.innerHTML+=`<div style="flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:${3*scale}em;color:rgba(255,255,255,.3);margin-top:10px;border-radius:8px">📷</div>`;el.style.display='flex';el.style.flexDirection='column'}
-else if(c.type==='markdown'){el.innerHTML+=`<div style="color:${c.entityColor};padding:10px;font-size:${0.9*scale}em">${c.content||'Markdown'}</div>`}
-else{el.innerHTML+=`<div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:${2*scale}em;color:rgba(255,255,255,.3)">${c.type==='media'?'🎵':c.type==='chart'?'📊':c.type==='map'?'🗺️':c.type==='iframe'?'🌐':c.type==='picture'?'🖼️':c.type==='button'?'🔘':'📋'}</div>`}
+if(c.type==='entities'||c.type==='light'){
+const container=document.createElement('div');container.style.cssText=`margin-top:10px;max-height:${c.height-70}px;overflow-y:auto`;
+(c.entities||[]).forEach((ent,idx)=>{
+const entEl=createHAEntityRow(ent,idx,c,entityFont,entityShadow,entitySize,scale);
+entEl.ondragstart=ev=>{draggedEntity=ent;draggedFromCard=c;draggedEntityIndex=idx;ev.target.style.opacity='0.5'};
+entEl.ondragend=ev=>ev.target.style.opacity='1';
+entEl.oncontextmenu=ev=>{ev.preventDefault();ev.stopPropagation();contextCard=c;contextEntityIndex=idx;contextEntity=ent;const m=document.getElementById('contextMenu');m.style.left=ev.pageX+'px';m.style.top=ev.pageY+'px';m.classList.add('active')};
+container.appendChild(entEl);
+});el.appendChild(container);
+}
+else if(c.type==='thermostat'){el.appendChild(createHAThermostat(c,scale,entitySize))}
+else if(c.type==='weather'){el.appendChild(createHAWeather(c,scale,entitySize))}
+else if(c.type==='button'){el.appendChild(createHAButton(c,scale,entitySize))}
+else if(c.type==='gauge'){el.appendChild(createHAGauge(c,scale,entitySize))}
+else if(c.type==='glance'){el.appendChild(createHAGlance(c,scale,entitySize))}
+else if(c.type==='media'){el.appendChild(createHAMedia(c,scale,entitySize))}
+else if(c.type==='clock'){el.appendChild(createHAClock(c,scale))}
+else if(c.type==='camera'){el.appendChild(createHACamera(c,scale))}
+else if(c.type==='markdown'){el.innerHTML+=`<div style="color:${c.entityColor};padding:10px;font-size:${entitySize}em;opacity:0.9">${(c.content||'**Markdown** content').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`}
+else{el.innerHTML+=`<div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:${2*scale}em;color:rgba(255,255,255,.3)">${c.type==='chart'?'📊':c.type==='map'?'🗺️':c.type==='iframe'?'🌐':c.type==='picture'?'🖼️':'📋'}</div>`}
 
 ['nw','ne','sw','se'].forEach(p=>{const h=document.createElement('div');h.className=`resize-handle resize-${p}`;h.dataset.position=p;el.appendChild(h)});
-
 el.ondragover=ev=>{if(draggedEntity&&['entities','light','thermostat'].includes(c.type)){ev.preventDefault();el.classList.add('drag-over')}};
 el.ondragleave=()=>el.classList.remove('drag-over');
 el.ondrop=ev=>{if(draggedEntity&&['entities','light','thermostat'].includes(c.type)){ev.preventDefault();el.classList.remove('drag-over');if(draggedFromCard.id!==c.id){if(!c.entities)c.entities=[];c.entities.push(draggedEntity);if(draggedFromCard.entities)draggedFromCard.entities.splice(draggedEntityIndex,1);saveState();renderCanvas()}}draggedEntity=null};
-
-el.addEventListener('mousedown',e=>{if(c.locked&&!e.target.classList.contains('resize-handle'))return;if(e.target.classList.contains('resize-handle'))startResize(e,c);else if(!e.target.classList.contains('card-entity-display'))startDrag(e,c)});
+el.addEventListener('mousedown',e=>{if(c.locked&&!e.target.classList.contains('resize-handle'))return;if(e.target.classList.contains('resize-handle'))startResize(e,c);else if(!e.target.closest('.ha-entity-row')&&!e.target.closest('.ha-toggle'))startDrag(e,c)});
 return el}
+
+function getEntityIcon(entity){
+const domain=entity.split('.')[0];
+const icons={light:'💡',switch:'🔌',sensor:'📊',binary_sensor:'⚡',climate:'🌡️',weather:'🌤️',camera:'📷',media_player:'🎵',fan:'🌀',lock:'🔒',cover:'🪟',vacuum:'🤖',person:'👤',device_tracker:'📍',automation:'⚙️',script:'📜',scene:'🎬',input_boolean:'🔘',input_number:'🔢',button:'⏺️',update:'🔄',humidifier:'💨',water_heater:'🚿',select:'📋',number:'🔢',input_select:'📋'};
+return icons[domain]||'📋';
+}
+
+function getMockState(entity){
+const domain=entity.split('.')[0];const name=entity.split('.')[1]||'';
+if(domain==='light'||domain==='switch'||domain==='input_boolean'||domain==='fan')return Math.random()>0.4?'on':'off';
+if(domain==='binary_sensor')return Math.random()>0.5?'on':'off';
+if(domain==='sensor'){
+if(name.includes('temp'))return Math.floor(65+Math.random()*20)+'°F';
+if(name.includes('humid'))return Math.floor(30+Math.random()*50)+'%';
+if(name.includes('battery'))return Math.floor(20+Math.random()*80)+'%';
+if(name.includes('power'))return Math.floor(100+Math.random()*2000)+'W';
+return Math.floor(Math.random()*100);
+}
+if(domain==='climate')return Math.floor(68+Math.random()*8)+'°F';
+if(domain==='lock')return Math.random()>0.5?'locked':'unlocked';
+if(domain==='person'||domain==='device_tracker')return Math.random()>0.5?'home':'away';
+return 'on';
+}
+
+function formatEntityName(entity){
+const name=entity.split('.')[1]||entity;
+return name.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase()).substring(0,22);
+}
+
+function createHAEntityRow(ent,idx,c,entityFont,entityShadow,entitySize,scale){
+const domain=ent.split('.')[0];
+const isToggleable=['light','switch','fan','input_boolean','automation','script'].includes(domain);
+const state=getMockState(ent);const isOn=state==='on';
+
+const row=document.createElement('div');row.className='ha-entity-row';row.draggable=true;
+row.style.cssText=`display:flex;align-items:center;justify-content:space-between;padding:${8*scale}px ${10*scale}px;margin:${3*scale}px 0;background:rgba(255,255,255,0.08);border-radius:8px;cursor:grab;transition:all 0.2s`;
+
+const leftSide=document.createElement('div');leftSide.style.cssText='display:flex;align-items:center;gap:8px;flex:1;min-width:0';
+const icon=document.createElement('span');icon.textContent=getEntityIcon(ent);icon.style.cssText=`font-size:${1.1*scale}em;${isOn?'filter:drop-shadow(0 0 4px rgba(255,200,0,0.6))':'opacity:0.5'}`;
+const nameSpan=document.createElement('span');nameSpan.textContent=formatEntityName(ent);nameSpan.style.cssText=`color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow};font-size:${entitySize}em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap`;
+leftSide.appendChild(icon);leftSide.appendChild(nameSpan);row.appendChild(leftSide);
+
+if(isToggleable){
+const toggle=document.createElement('div');toggle.className='ha-toggle';
+toggle.style.cssText=`width:${40*scale}px;height:${22*scale}px;background:${isOn?'#4CAF50':'rgba(255,255,255,0.15)'};border-radius:${11*scale}px;position:relative;cursor:pointer;transition:all 0.3s;flex-shrink:0`;
+const knob=document.createElement('div');knob.style.cssText=`width:${18*scale}px;height:${18*scale}px;background:#fff;border-radius:50%;position:absolute;top:${2*scale}px;left:${isOn?(20*scale):(2*scale)}px;transition:left 0.3s;box-shadow:0 2px 4px rgba(0,0,0,0.3)`;
+toggle.appendChild(knob);toggle.onclick=e=>{e.stopPropagation();showNotification('Toggled '+formatEntityName(ent))};
+row.appendChild(toggle);
+}else{
+const stateEl=document.createElement('span');stateEl.textContent=state;stateEl.style.cssText=`color:${c.entityColor};opacity:0.7;font-size:${entitySize*0.9}em;font-family:${entityFont}`;
+row.appendChild(stateEl);
+}
+row.onmouseenter=()=>row.style.background='rgba(255,255,255,0.12)';
+row.onmouseleave=()=>row.style.background='rgba(255,255,255,0.08)';
+return row;
+}
+
+function createHAThermostat(c,scale,entitySize){
+const container=document.createElement('div');container.style.cssText='display:flex;flex-direction:column;align-items:center;padding:10px;height:calc(100% - 55px)';
+const temp=Math.floor(68+Math.random()*8);const setpoint=72;
+const mode=['Heat','Cool','Auto'][Math.floor(Math.random()*3)];
+const modeColors={Heat:'#ff5722',Cool:'#2196f3',Auto:'#4caf50'};
+const dial=document.createElement('div');dial.style.cssText=`width:${100*scale}px;height:${100*scale}px;border-radius:50%;background:conic-gradient(from 180deg,${modeColors[mode]} 0deg,${modeColors[mode]} ${(temp/100)*360}deg,rgba(255,255,255,0.1) ${(temp/100)*360}deg);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 20px rgba(0,0,0,0.3)`;
+const inner=document.createElement('div');inner.style.cssText=`width:${75*scale}px;height:${75*scale}px;border-radius:50%;background:rgba(0,0,0,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center`;
+inner.innerHTML=`<div style="font-size:${1.8*scale}em;font-weight:bold;color:#fff">${setpoint}°</div><div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.6)">Now: ${temp}°</div>`;
+dial.appendChild(inner);container.appendChild(dial);
+const modeEl=document.createElement('div');modeEl.style.cssText=`margin-top:10px;padding:4px 14px;background:${modeColors[mode]};border-radius:15px;font-size:${0.8*scale}em;color:#fff;font-weight:600`;
+modeEl.textContent=mode;container.appendChild(modeEl);
+const controls=document.createElement('div');controls.style.cssText='display:flex;gap:15px;margin-top:8px';
+controls.innerHTML=`<button style="width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:1.1em;cursor:pointer">−</button><button style="width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,0.15);color:#fff;font-size:1.1em;cursor:pointer">+</button>`;
+container.appendChild(controls);return container;
+}
+
+function createHAWeather(c,scale,entitySize){
+const container=document.createElement('div');container.style.cssText='padding:8px;text-align:center';
+const conditions=['☀️ Sunny','⛅ Partly Cloudy','☁️ Cloudy','🌧️ Rainy'][Math.floor(Math.random()*4)];
+const temp=Math.floor(60+Math.random()*30);const humidity=Math.floor(30+Math.random()*50);const wind=Math.floor(5+Math.random()*20);
+container.innerHTML=`<div style="font-size:${2.5*scale}em;margin:5px 0">${conditions.split(' ')[0]}</div><div style="font-size:${2*scale}em;font-weight:bold;color:${c.entityColor}">${temp}°F</div><div style="font-size:${0.8*scale}em;color:rgba(255,255,255,0.6);margin-top:3px">${conditions.split(' ').slice(1).join(' ')}</div><div style="display:flex;justify-content:center;gap:15px;margin-top:10px"><div style="text-align:center"><div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5)">Humidity</div><div style="font-size:${0.95*scale}em;color:${c.entityColor}">${humidity}%</div></div><div style="text-align:center"><div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5)">Wind</div><div style="font-size:${0.95*scale}em;color:${c.entityColor}">${wind}mph</div></div></div>`;
+return container;
+}
+
+function createHAButton(c,scale,entitySize){
+const container=document.createElement('div');container.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100% - 55px);cursor:pointer';
+const entity=c.entities?.[0]||c.entity||'button.press';const state=getMockState(entity);const isOn=state==='on';
+container.innerHTML=`<div style="font-size:${2.2*scale}em;margin-bottom:8px;${isOn?'filter:drop-shadow(0 0 8px rgba(255,200,0,0.5))':'opacity:0.5'};transition:all 0.3s">${getEntityIcon(entity)}</div><div style="font-size:${0.9*scale}em;color:${c.entityColor};font-weight:500">${formatEntityName(entity)}</div><div style="font-size:${0.75*scale}em;color:rgba(255,255,255,0.5);margin-top:4px;text-transform:capitalize">${state}</div>`;
+container.onclick=()=>showNotification('Pressed '+formatEntityName(entity));return container;
+}
+
+function createHAGauge(c,scale,entitySize){
+const container=document.createElement('div');container.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100% - 55px)';
+const value=Math.floor(Math.random()*100);const pct=value;const color=pct>70?'#f44336':pct>40?'#ff9800':'#4caf50';
+container.innerHTML=`<div style="width:${90*scale}px;height:${45*scale}px;border-radius:${90*scale}px ${90*scale}px 0 0;background:conic-gradient(from 0.75turn,${color} 0deg,${color} ${pct*1.8}deg,rgba(255,255,255,0.1) ${pct*1.8}deg);position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:${1.6*scale}em;font-weight:bold;color:${c.entityColor}">${value}%</div></div>`;
+return container;
+}
+
+function createHAGlance(c,scale,entitySize){
+const container=document.createElement('div');container.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(55px,1fr));gap:8px;padding:8px;margin-top:8px';
+(c.entities||[]).forEach(ent=>{const state=getMockState(ent);const isOn=state==='on';
+const item=document.createElement('div');item.style.cssText='text-align:center;padding:6px;cursor:pointer;border-radius:6px;transition:background 0.2s';
+item.innerHTML=`<div style="font-size:${1.3*scale}em;${isOn?'filter:drop-shadow(0 0 4px rgba(255,200,0,0.5))':'opacity:0.5'}">${getEntityIcon(ent)}</div><div style="font-size:${0.65*scale}em;color:${c.entityColor};margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${formatEntityName(ent).substring(0,8)}</div>`;
+item.onmouseenter=()=>item.style.background='rgba(255,255,255,0.1)';item.onmouseleave=()=>item.style.background='transparent';
+container.appendChild(item);});return container;
+}
+
+function createHAMedia(c,scale,entitySize){
+const container=document.createElement('div');container.style.cssText='padding:12px;height:calc(100% - 55px);display:flex;flex-direction:column';
+const isPlaying=Math.random()>0.5;
+container.innerHTML=`<div style="display:flex;gap:12px;flex:1"><div style="width:${55*scale}px;height:${55*scale}px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:${1.3*scale}em">🎵</div><div style="flex:1;min-width:0"><div style="font-size:${0.9*scale}em;color:${c.entityColor};font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Now Playing</div><div style="font-size:${0.75*scale}em;color:rgba(255,255,255,0.6);margin-top:3px">Artist Name</div></div></div><div style="margin-top:auto"><div style="height:3px;background:rgba(255,255,255,0.15);border-radius:2px;overflow:hidden"><div style="width:35%;height:100%;background:${c.titleColor}"></div></div><div style="display:flex;justify-content:center;gap:12px;margin-top:10px"><button style="width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,0.1);color:#fff;cursor:pointer">⏮</button><button style="width:38px;height:38px;border-radius:50%;border:none;background:${c.titleColor};color:#000;cursor:pointer;font-size:1.1em">${isPlaying?'⏸':'▶'}</button><button style="width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,0.1);color:#fff;cursor:pointer">⏭</button></div></div>`;
+return container;
+}
+
+function createHAClock(c,scale){
+const container=document.createElement('div');container.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100% - 55px)';
+const now=new Date();const time=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+const date=now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+container.innerHTML=`<div style="font-size:${2.5*scale}em;font-weight:bold;color:${c.entityColor};letter-spacing:1px">${time}</div><div style="font-size:${0.8*scale}em;color:rgba(255,255,255,0.5);margin-top:8px">${date}</div>`;
+return container;
+}
+
+function createHACamera(c,scale){
+const container=document.createElement('div');container.style.cssText='flex:1;margin-top:8px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:6px;display:flex;flex-direction:column;overflow:hidden';
+container.innerHTML=`<div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative"><div style="font-size:${2.5*scale}em;color:rgba(255,255,255,0.15)">📷</div><div style="position:absolute;top:8px;left:8px;background:rgba(255,0,0,0.8);padding:2px 6px;border-radius:3px;font-size:${0.65*scale}em;display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse 1s infinite"></span>LIVE</div></div><div style="padding:6px 10px;background:rgba(0,0,0,0.25);font-size:${0.7*scale}em;color:rgba(255,255,255,0.6)">${c.entity||'camera.front'}</div>`;
+return container;
+}
 
 function startDrag(e,c){if(c.locked)return;draggedCard=c;if(e.shiftKey&&!selectedCards.some(s=>s.id===c.id))selectedCards.push(c);else if(!selectedCards.some(s=>s.id===c.id)){selectedCards=[];selectedCard=c}selectCard(c);const el=document.getElementById(`card-${c.id}`),r=el.getBoundingClientRect();dragOffset.x=e.clientX-r.left;dragOffset.y=e.clientY-r.top;document.addEventListener('mousemove',handleDrag);document.addEventListener('mouseup',stopDrag);e.preventDefault()}
 function handleDrag(e){if(!draggedCard)return;const r=canvas.getBoundingClientRect(),rawX=Math.max(0,e.clientX-r.left-dragOffset.x),rawY=Math.max(0,e.clientY-r.top-dragOffset.y),newX=snapVal(rawX),newY=snapVal(rawY),dx=newX-draggedCard.x,dy=newY-draggedCard.y;if(selectedCards.length>1)selectedCards.forEach(c=>{if(!c.locked){c.x+=dx;c.y+=dy}});else{draggedCard.x=newX;draggedCard.y=newY}renderCanvas();if(showAlignGuides)drawAlignGuides(draggedCard)}
@@ -498,6 +631,7 @@ if(selectedCards.length>1){showBulkProperties();return}
 c.titleFont=c.titleFont||"'Segoe UI', sans-serif";c.entityFont=c.entityFont||"'Segoe UI', sans-serif";
 c.titleShadow=c.titleShadow||{enabled:false,x:2,y:2,blur:4,color:'#000'};c.entityShadow=c.entityShadow||{enabled:false,x:1,y:1,blur:2,color:'#000'};
 c.borderRadius=c.borderRadius??14;c.cornerStyle=c.cornerStyle||'rounded';c.hoverEffect=c.hoverEffect||'none';c.tapAction=c.tapAction||{action:'toggle',service:'',entity:''};c.conditions=c.conditions||'';c.icon=c.icon||'';c.aspectRatioLock=c.aspectRatioLock||false;
+c.useGradient=c.useGradient||false;c.gradientColor1=c.gradientColor1||'#43eeff';c.gradientColor2=c.gradientColor2||'#ff43ee';c.titleSize=c.titleSize||1.2;c.entitySize=c.entitySize||0.85;
 
 const entField=c.entities?`<div class="form-group"><label>Entities</label><textarea id="prop-entities" rows="4">${c.entities.join('\n')}</textarea></div>`:c.entity!==undefined?`<div class="form-group"><label>Entity</label><input type="text" id="prop-entity" value="${c.entity||''}"></div>`:'';
 
@@ -757,6 +891,9 @@ entity:'',
 bgColor:preserveC?lastCardSettings.bgColor:'#43eeff',
 titleColor:preserveC?lastCardSettings.titleColor:'#ff43ee',
 entityColor:preserveC?lastCardSettings.entityColor:'#ffeb3b',
+useGradient:false,
+gradientColor1:'#43eeff',
+gradientColor2:'#ff43ee',
 titleFont:preserveF?lastCardSettings.titleFont:"'Segoe UI', sans-serif",
 entityFont:preserveF?lastCardSettings.entityFont:"'Segoe UI', sans-serif",
 titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},
