@@ -393,18 +393,18 @@ el.style.background=c.useGradient?`linear-gradient(135deg,${c.gradientColor1},${
 el.style.zIndex=c.zIndex||0;el.style.borderRadius=(c.cornerStyle==='square'?0:(c.borderRadius||14))+'px';
 if(selectedCard?.id===c.id)el.classList.add('selected');if(selectedCards.some(s=>s.id===c.id))el.classList.add('multi-selected');
 const scale=getScaleFactor(c),titleFont=c.titleFont||"'Segoe UI', sans-serif",entityFont=c.entityFont||"'Segoe UI', sans-serif",titleShadow=getTextShadowCSS(c.titleShadow),entityShadow=getTextShadowCSS(c.entityShadow);
+const titleSize=(c.titleSize||1.2)*scale,entitySize=(c.entitySize||0.85)*scale;
 const iconHtml=c.icon&&iconEmojis[c.icon]?`<span class="card-icon">${iconEmojis[c.icon]}</span>`:'';
-
 el.innerHTML=`<div class="card-type-badge">${c.type}</div><div class="card-size-badge">${c.width}×${c.height}</div><div class="card-z-badge">Z:${c.zIndex||0}</div>${c.group?`<div class="card-group-badge">G:${c.group}</div>`:''}`;
 
-const titleEl=document.createElement('div');titleEl.className='card-title-display';titleEl.innerHTML=iconHtml+c.title;titleEl.style.cssText=`color:${c.titleColor};font-family:${titleFont};text-shadow:${titleShadow};font-size:${1.2*scale}em`;el.appendChild(titleEl);
+const titleEl=document.createElement('div');titleEl.className='card-title-display';titleEl.innerHTML=iconHtml+c.title;titleEl.style.cssText=`color:${c.titleColor};font-family:${titleFont};text-shadow:${titleShadow};font-size:${titleSize}em`;el.appendChild(titleEl);
 
 if(c.type==='entities'||c.type==='light'||c.type==='thermostat'){
-(c.entities||[]).forEach((ent,idx)=>{const d=document.createElement('div');d.className='card-entity-display';d.textContent=ent;d.style.cssText=`color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow};font-size:${0.85*scale}em;padding:${6*scale}px ${10*scale}px`;d.draggable=true;d.ondragstart=ev=>{draggedEntity=ent;draggedFromCard=c;draggedEntityIndex=idx;ev.target.classList.add('dragging-entity')};d.ondragend=ev=>ev.target.classList.remove('dragging-entity');d.oncontextmenu=ev=>{ev.preventDefault();ev.stopPropagation();contextCard=c;contextEntityIndex=idx;contextEntity=ent;const m=document.getElementById('contextMenu');m.style.left=ev.pageX+'px';m.style.top=ev.pageY+'px';m.classList.add('active')};el.appendChild(d)})}
-else if(c.type==='glance'){const g=document.createElement('div');g.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px';(c.entities||[]).forEach(e=>{const i=document.createElement('div');i.style.cssText=`text-align:center;padding:${8*scale}px;background:rgba(255,255,255,.2);border-radius:6px;color:${c.entityColor};font-size:${0.75*scale}em`;i.textContent=e.split('.')[1]||e;g.appendChild(i)});el.appendChild(g)}
-else if(c.type==='weather'){el.innerHTML+=`<div style="text-align:center;margin-top:10px"><div style="font-size:${3*scale}em">🌤️</div><div style="font-size:${2*scale}em;font-weight:bold;color:${c.entityColor}">72°F</div></div>`}
-else if(c.type==='clock'){const now=new Date(),t=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});el.innerHTML+=`<div style="display:flex;align-items:center;justify-content:center;flex:1;font-size:${2.5*scale}em;font-weight:bold;color:${c.entityColor}">${t}</div>`;el.style.display='flex';el.style.flexDirection='column'}
-else if(c.type==='gauge'){el.innerHTML+=`<div style="text-align:center;margin-top:20px"><div style="font-size:${3*scale}em">⏱️</div><div style="font-size:${1.5*scale}em;color:${c.entityColor}">75%</div></div>`}
+(c.entities||[]).forEach((ent,idx)=>{const d=document.createElement('div');d.className='card-entity-display';d.textContent=ent;d.style.cssText=`color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow};font-size:${entitySize}em;padding:${6*scale}px ${10*scale}px`;d.draggable=true;d.ondragstart=ev=>{draggedEntity=ent;draggedFromCard=c;draggedEntityIndex=idx;ev.target.classList.add('dragging-entity')};d.ondragend=ev=>ev.target.classList.remove('dragging-entity');d.oncontextmenu=ev=>{ev.preventDefault();ev.stopPropagation();contextCard=c;contextEntityIndex=idx;contextEntity=ent;const m=document.getElementById('contextMenu');m.style.left=ev.pageX+'px';m.style.top=ev.pageY+'px';m.classList.add('active')};el.appendChild(d)})}
+else if(c.type==='glance'){const g=document.createElement('div');g.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px';(c.entities||[]).forEach(e=>{const i=document.createElement('div');i.style.cssText=`text-align:center;padding:${8*scale}px;background:rgba(255,255,255,.2);border-radius:6px;color:${c.entityColor};font-size:${entitySize}em`;i.textContent=e.split('.')[1]||e;g.appendChild(i)});el.appendChild(g)}
+else if(c.type==='weather'){el.innerHTML+=`<div style="text-align:center;margin-top:10px"><div style="font-size:${3*scale}em">🌤️</div><div style="font-size:${entitySize*1.5}em;font-weight:bold;color:${c.entityColor}">72°F</div></div>`}
+else if(c.type==='clock'){const now=new Date(),t=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});el.innerHTML+=`<div style="display:flex;align-items:center;justify-content:center;flex:1;font-size:${entitySize*2}em;font-weight:bold;color:${c.entityColor}">${t}</div>`;el.style.display='flex';el.style.flexDirection='column'}
+else if(c.type==='gauge'){el.innerHTML+=`<div style="text-align:center;margin-top:20px"><div style="font-size:${3*scale}em">⏱️</div><div style="font-size:${entitySize*1.5}em;color:${c.entityColor}">75%</div></div>`}
 else if(c.type==='camera'){el.innerHTML+=`<div style="flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:${3*scale}em;color:rgba(255,255,255,.3);margin-top:10px;border-radius:8px">📷</div>`;el.style.display='flex';el.style.flexDirection='column'}
 else if(c.type==='markdown'){el.innerHTML+=`<div style="color:${c.entityColor};padding:10px;font-size:${0.9*scale}em">${c.content||'Markdown'}</div>`}
 else{el.innerHTML+=`<div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:${2*scale}em;color:rgba(255,255,255,.3)">${c.type==='media'?'🎵':c.type==='chart'?'📊':c.type==='map'?'🗺️':c.type==='iframe'?'🌐':c.type==='picture'?'🖼️':c.type==='button'?'🔘':'📋'}</div>`}
@@ -486,7 +486,9 @@ ${entField}
 </div>
 <div class="prop-section"><h3>🔤 Typography</h3>
 <div class="form-group"><label>Title Font</label><select id="prop-title-font">${getFontOptionsHTML(c.titleFont)}</select></div>
+<div class="form-group"><label>Title Size: <span id="titleSizeVal">${c.titleSize||1.2}</span>em</label><input type="range" id="prop-title-size" min="0.6" max="3" step="0.1" value="${c.titleSize||1.2}"></div>
 <div class="form-group"><label>Entity Font</label><select id="prop-entity-font">${getFontOptionsHTML(c.entityFont)}</select></div>
+<div class="form-group"><label>Entity Size: <span id="entitySizeVal">${c.entitySize||0.85}</span>em</label><input type="range" id="prop-entity-size" min="0.5" max="2" step="0.05" value="${c.entitySize||0.85}"></div>
 </div>
 <div class="prop-section"><h3>👆 Tap Action</h3>
 <div class="form-group"><label>Action</label><select id="prop-tap-action"><option value="toggle" ${c.tapAction.action==='toggle'?'selected':''}>Toggle</option><option value="call-service" ${c.tapAction.action==='call-service'?'selected':''}>Call Service</option><option value="navigate" ${c.tapAction.action==='navigate'?'selected':''}>Navigate</option><option value="more-info" ${c.tapAction.action==='more-info'?'selected':''}>More Info</option><option value="none" ${c.tapAction.action==='none'?'selected':''}>None</option></select></div>
@@ -527,7 +529,9 @@ document.getElementById('prop-hover').onchange=e=>{c.hoverEffect=e.target.value;
 document.getElementById('prop-corner').onchange=e=>{c.cornerStyle=e.target.value;renderCanvas()};
 document.getElementById('prop-radius').oninput=e=>{c.borderRadius=+e.target.value;renderCanvas();e.target.previousElementSibling.textContent=`Border Radius: ${c.borderRadius}px`};
 document.getElementById('prop-title-font').onchange=e=>{c.titleFont=e.target.value;renderCanvas()};
+document.getElementById('prop-title-size').oninput=e=>{c.titleSize=parseFloat(e.target.value);document.getElementById('titleSizeVal').textContent=c.titleSize;renderCanvas()};
 document.getElementById('prop-entity-font').onchange=e=>{c.entityFont=e.target.value;renderCanvas()};
+document.getElementById('prop-entity-size').oninput=e=>{c.entitySize=parseFloat(e.target.value);document.getElementById('entitySizeVal').textContent=c.entitySize;renderCanvas()};
 document.getElementById('prop-tap-action').onchange=e=>{c.tapAction.action=e.target.value};
 document.getElementById('prop-tap-service').oninput=e=>{c.tapAction.service=e.target.value};
 document.getElementById('prop-conditions').oninput=e=>{c.conditions=e.target.value};
@@ -637,7 +641,106 @@ function cloneGalleryDashboard(t){const tpls={'smart-home':[{type:'entities',tit
 function showTemplateLibrary(){document.getElementById('templateModal').classList.add('active')}
 function applyTemplate(n){const tpls={living:[{type:'entities',title:'Living',x:50,y:50,entities:['light.living_room','switch.tv']}],kitchen:[{type:'entities',title:'Kitchen',x:50,y:50,entities:['light.kitchen']}],bedroom:[{type:'entities',title:'Bedroom',x:50,y:50,entities:['light.bedroom']}],security:[{type:'camera',title:'Cam',x:50,y:50,entity:'camera.front'}],energy:[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power'}],outdoor:[{type:'weather',title:'Weather',x:50,y:50,entity:'weather.home'}]};const tpl=tpls[n];if(tpl){cards.push(...tpl.map(c=>({...c,id:cardIdCounter++,width:cardTypeConfigs[c.type].defaultSize.width,height:cardTypeConfigs[c.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',zIndex:cards.length,locked:false,hoverEffect:'none',icon:'',titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},borderRadius:14,cornerStyle:'rounded',tapAction:{action:'toggle'},conditions:''})));saveState();renderCanvas();closeModal('templateModal')}}
 function showImportModal(){document.getElementById('importModal').classList.add('active')}
-function importYAML(){const yaml=document.getElementById('importYaml').value,preserveC=document.getElementById('importPreserveColors').checked,preserveF=document.getElementById('importPreserveFonts').checked;try{const lines=yaml.split('\n');let cur=null;lines.forEach(l=>{const t=l.trim();if(t.startsWith('- type:')){if(cur)cards.push(cur);const type=t.split(':')[1].trim().replace(/['"]/g,'').replace('custom:','');cur={id:cardIdCounter++,type,x:50+cards.length*30,y:50+cards.length*30,width:cardTypeConfigs[type]?.defaultSize.width||300,height:cardTypeConfigs[type]?.defaultSize.height||200,bgColor:preserveC?lastCardSettings.bgColor:'#43eeff',titleColor:preserveC?lastCardSettings.titleColor:'#ff43ee',entityColor:preserveC?lastCardSettings.entityColor:'#ffeb3b',titleFont:preserveF?lastCardSettings.titleFont:"'Segoe UI', sans-serif",entityFont:preserveF?lastCardSettings.entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},zIndex:cards.length,entities:[],locked:false,hoverEffect:'none',borderRadius:14,cornerStyle:'rounded',tapAction:{action:'toggle'},conditions:''}}else if(t.startsWith('title:')&&cur)cur.title=t.split(':').slice(1).join(':').trim().replace(/['"]/g,'');else if(t.startsWith('entity:')&&cur)cur.entity=t.split(':').slice(1).join(':').trim();else if(t.startsWith('- ')&&cur&&!t.includes(':')){cur.entities.push(t.substring(2).trim())}});if(cur)cards.push(cur);saveState();renderCanvas();closeModal('importModal');showNotification('Imported')}catch(e){showNotification('Error: '+e.message,'error')}}
+function importYAML(){const yaml=document.getElementById('importYaml').value,preserveC=document.getElementById('importPreserveColors').checked,preserveF=document.getElementById('importPreserveFonts').checked;
+try{
+const lines=yaml.split('\n');
+let currentCard=null;
+let inEntities=false;
+let cardsList=[];
+
+for(let i=0;i<lines.length;i++){
+const line=lines[i];
+const trimmed=line.trim();
+const indent=line.search(/\S/);
+
+// Detect new card
+if(trimmed.startsWith('- type:')){
+if(currentCard){
+cardsList.push(currentCard);
+}
+const type=trimmed.split(':')[1].trim().replace(/['"]/g,'').replace('custom:','');
+currentCard={
+id:cardIdCounter++,
+type,
+title:type.charAt(0).toUpperCase()+type.slice(1),
+x:50+cardsList.length*30,
+y:50+Math.floor(cardsList.length/3)*200,
+width:cardTypeConfigs[type]?.defaultSize.width||300,
+height:cardTypeConfigs[type]?.defaultSize.height||200,
+bgColor:preserveC?lastCardSettings.bgColor:'#43eeff',
+titleColor:preserveC?lastCardSettings.titleColor:'#ff43ee',
+entityColor:preserveC?lastCardSettings.entityColor:'#ffeb3b',
+titleFont:preserveF?lastCardSettings.titleFont:"'Segoe UI', sans-serif",
+entityFont:preserveF?lastCardSettings.entityFont:"'Segoe UI', sans-serif",
+titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},
+entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},
+zIndex:cardsList.length,
+entities:[],
+locked:false,
+hoverEffect:'none',
+borderRadius:14,
+cornerStyle:'rounded',
+tapAction:{action:'toggle'},
+conditions:''
+};
+inEntities=false;
+}
+// Get title or name
+else if((trimmed.startsWith('title:')||trimmed.startsWith('name:'))&&currentCard){
+const val=trimmed.split(':').slice(1).join(':').trim().replace(/['"]/g,'');
+if(val)currentCard.title=val;
+}
+// Get single entity (for thermostat, weather, etc)
+else if(trimmed.startsWith('entity:')&&currentCard&&!inEntities){
+const ent=trimmed.split(':').slice(1).join(':').trim().replace(/['"]/g,'');
+if(ent){
+currentCard.entity=ent;
+// Also add to entities array for thermostat
+if(currentCard.type==='thermostat'){
+currentCard.entities=[ent];
+}
+}
+}
+// Detect entities list start
+else if(trimmed==='entities:'&&currentCard){
+inEntities=true;
+}
+// Parse entity in list - format: "- entity: light.xxx" or "- light.xxx"
+else if(trimmed.startsWith('-')&&currentCard&&inEntities){
+let ent='';
+if(trimmed.includes('entity:')){
+// Format: - entity: light.xxx
+ent=trimmed.split('entity:')[1]?.trim().replace(/['"]/g,'')||'';
+}else{
+// Format: - light.xxx
+ent=trimmed.substring(1).trim().replace(/['"]/g,'');
+}
+if(ent&&ent.includes('.')&&!ent.includes(':')){
+currentCard.entities.push(ent);
+}
+}
+// Exit entities section when we hit another property
+else if(currentCard&&inEntities&&trimmed&&!trimmed.startsWith('-')&&trimmed.includes(':')){
+inEntities=false;
+}
+}
+
+// Don't forget last card
+if(currentCard){
+cardsList.push(currentCard);
+}
+
+// Add all parsed cards
+cards.push(...cardsList);
+saveState();
+renderCanvas();
+updateCardCount();
+closeModal('importModal');
+showNotification(`Imported ${cardsList.length} cards`,'success');
+}catch(e){
+console.error(e);
+showNotification('Error: '+e.message,'error');
+}}
 
 function showVersionHistory(){document.getElementById('versionList').innerHTML=versionHistory.slice().reverse().map((v,i)=>`<div class="version-item" onclick="restoreVersion(${versionHistory.length-1-i})"><div class="version-time">${new Date(v.time).toLocaleString()}</div><div class="version-cards">${v.cardCount} cards</div></div>`).join('')||'<p style="color:#666">No history</p>';document.getElementById('versionHistoryModal').classList.add('active')}
 function restoreVersion(i){const v=versionHistory[i];cards=JSON.parse(JSON.stringify(v.cards));saveState();renderCanvas();closeModal('versionHistoryModal')}
@@ -654,3 +757,4 @@ applyBackground();renderCanvas();updateCardCount();updateSelectedCount();
 </script>
 </body>
 </html>
+
