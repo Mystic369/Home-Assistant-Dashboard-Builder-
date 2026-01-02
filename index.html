@@ -3,15 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HA Dashboard Builder v4.0 MEGA</title>
+<title>HA Dashboard Builder v4.1 MEGA</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Nunito:wght@400;700&family=Raleway:wght@400;600;700&family=Ubuntu:wght@400;500;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;color:#fff;overflow:hidden;height:100vh;position:relative}
 .bg-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background:linear-gradient(135deg,#0f0f1e 0%,#1a1a2e 100%);transition:all .5s}.bg-image{position:absolute;top:0;left:0;width:100%;height:100%;background-size:cover;background-position:center;opacity:.3;transition:all .5s}.bg-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);transition:all .5s}
 .app-container{display:grid;grid-template-columns:380px 1fr 380px;grid-template-rows:70px 50px 1fr 40px;height:100vh;position:relative}.header{grid-column:1/-1;background:rgba(20,20,40,.95);backdrop-filter:blur(10px);border-bottom:2px solid rgba(67,238,255,.4);padding:0 30px;display:flex;align-items:center;justify-content:space-between;z-index:100}
 .logo{font-size:1.6em;font-weight:700;background:linear-gradient(135deg,#43eeff,#ff43ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;cursor:pointer}.version{font-size:.7em;color:#666;margin-left:10px}.badge{background:linear-gradient(135deg,#ff43ee,#43eeff);padding:2px 8px;border-radius:4px;font-size:.6em;color:#000;margin-left:8px;font-weight:800}
 .header-center{display:flex;gap:10px;align-items:center}.dashboard-selector{padding:8px 16px;background:rgba(67,238,255,.2);border:1px solid #43eeff;border-radius:6px;color:#43eeff;cursor:pointer;font-weight:600;font-size:.9em;min-width:200px;text-align:center}.dashboard-selector:hover{background:rgba(67,238,255,.3)}
-.header-actions{display:flex;gap:8px;flex-wrap:wrap}.header-btn{padding:8px 14px;background:rgba(67,238,255,.15);border:1px solid #43eeff;border-radius:8px;color:#43eeff;cursor:pointer;font-weight:600;transition:all .3s;font-size:.85em;white-space:nowrap}.header-btn:hover{background:rgba(67,238,255,.3);transform:translateY(-2px)}.header-btn.active{background:rgba(67,238,255,.4);border-color:#ff43ee}.header-btn.premium{background:linear-gradient(135deg,#ff43ee,#eb2fda);color:#fff;border:none}
-.toolbar{grid-column:1/-1;background:rgba(15,15,30,.9);border-bottom:1px solid rgba(67,238,255,.2);padding:8px 20px;display:flex;gap:12px;align-items:center;overflow-x:auto}.tool-group{display:flex;gap:6px;padding-right:12px;border-right:1px solid rgba(67,238,255,.2)}.tool-btn{padding:6px 12px;background:rgba(67,238,255,.1);border:1px solid rgba(67,238,255,.3);border-radius:6px;color:#43eeff;cursor:pointer;font-size:.8em;transition:all .2s;white-space:nowrap}.tool-btn:hover{background:rgba(67,238,255,.25)}.tool-btn.active{background:rgba(255,67,238,.2);border-color:#ff43ee;color:#ff43ee}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap}.header-btn{padding:8px 14px;background:rgba(67,238,255,.15);border:1px solid #43eeff;border-radius:8px;color:#43eeff;cursor:pointer;font-weight:600;transition:all .3s;font-size:.85em;white-space:nowrap;position:relative}.header-btn:hover{background:rgba(67,238,255,.3);transform:translateY(-2px)}.header-btn.active{background:rgba(67,238,255,.4);border-color:#ff43ee}.header-btn.premium{background:linear-gradient(135deg,#ff43ee,#eb2fda);color:#fff;border:none}.header-btn.yaml-btn{background:linear-gradient(135deg,#4caf50,#45a049);color:#fff;border:none}
+/* Tooltip styles */
+.header-btn::after,.tool-btn::after,.card-type-btn::after{content:attr(data-tooltip);position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#fff;padding:6px 12px;border-radius:6px;font-size:.75em;white-space:nowrap;opacity:0;visibility:hidden;transition:all .2s;pointer-events:none;z-index:1000;border:1px solid #43eeff}.header-btn:hover::after,.tool-btn:hover::after,.card-type-btn:hover::after{opacity:1;visibility:visible}.header-btn::before,.tool-btn::before,.card-type-btn::before{content:'';position:absolute;bottom:110%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:rgba(0,0,0,.9);opacity:0;visibility:hidden;transition:all .2s}.header-btn:hover::before,.tool-btn:hover::before,.card-type-btn:hover::before{opacity:1;visibility:visible}
+.toolbar{grid-column:1/-1;background:rgba(15,15,30,.9);border-bottom:1px solid rgba(67,238,255,.2);padding:8px 20px;display:flex;gap:12px;align-items:center;overflow-x:auto}.tool-group{display:flex;gap:6px;padding-right:12px;border-right:1px solid rgba(67,238,255,.2)}.tool-btn{padding:6px 12px;background:rgba(67,238,255,.1);border:1px solid rgba(67,238,255,.3);border-radius:6px;color:#43eeff;cursor:pointer;font-size:.8em;transition:all .2s;white-space:nowrap;position:relative}.tool-btn:hover{background:rgba(67,238,255,.25)}.tool-btn.active{background:rgba(255,67,238,.2);border-color:#ff43ee;color:#ff43ee}
 .sidebar{background:rgba(20,20,40,.85);backdrop-filter:blur(10px);border-right:1px solid rgba(67,238,255,.2);padding:20px;overflow-y:auto}.sidebar h2{color:#ff43ee;margin-bottom:15px;font-size:1.2em}.sidebar-tabs{display:flex;gap:8px;margin-bottom:15px}.sidebar-tab{padding:8px 16px;background:rgba(67,238,255,.1);border:none;border-radius:6px;color:#43eeff;cursor:pointer;font-size:.85em;flex:1;text-align:center}.sidebar-tab.active{background:rgba(67,238,255,.25);border:1px solid #ff43ee}
 .canvas-container{background:transparent;position:relative;overflow:auto}.canvas{min-height:100%;min-width:100%;background-image:repeating-linear-gradient(0deg,rgba(67,238,255,.05) 0px,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px),repeating-linear-gradient(90deg,rgba(67,238,255,.05) 0px,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px);background-size:50px 50px;position:relative;padding:40px;transition:all .3s}.canvas.mobile-preview{max-width:375px;margin:0 auto;background:rgba(0,0,0,.1);border:2px solid rgba(67,238,255,.3);border-radius:20px}.canvas.tablet-preview{max-width:768px;margin:0 auto;background:rgba(0,0,0,.1);border:2px solid rgba(67,238,255,.3);border-radius:12px}
 .canvas-card{position:absolute;background:#43eeff;border-radius:14px;padding:18px;cursor:move;box-shadow:0 4px 20px rgba(67,238,255,.5);min-width:150px;min-height:100px;transition:all .3s}.canvas-card.anim-fade{animation:fadeIn .5s}.canvas-card.anim-slide{animation:slideIn .5s}.canvas-card.anim-bounce{animation:bounceIn .6s}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.05)}70%{transform:scale(.9)}100%{transform:scale(1)}}
@@ -25,7 +28,7 @@
 .properties-panel{background:rgba(20,20,40,.85);backdrop-filter:blur(10px);border-left:1px solid rgba(67,238,255,.2);padding:20px;overflow-y:auto}.no-selection{text-align:center;color:#666;padding:50px 15px}.no-selection-icon{font-size:3.5em;margin-bottom:12px}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:rgba(20,20,40,.98);border:2px solid #43eeff;border-radius:16px;padding:30px;max-width:900px;width:90%;max-height:85vh;overflow-y:auto}.modal h2{color:#ff43ee;margin-bottom:20px;font-size:1.6em}
 .yaml-output{background:#0a0a15;border:1px solid rgba(67,238,255,.4);border-radius:10px;padding:18px;font-family:'Courier New',monospace;color:#43eeff;white-space:pre-wrap;max-height:450px;overflow-y:auto;font-size:.85em;line-height:1.5}
-.card-type-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}.card-type-btn{padding:12px;background:rgba(67,238,255,.08);border:2px solid rgba(67,238,255,.3);border-radius:10px;color:#43eeff;cursor:pointer;text-align:center;transition:all .25s;font-weight:500;font-size:.8em}.card-type-btn:hover{background:rgba(67,238,255,.18);border-color:#43eeff;transform:scale(1.03)}.card-type-btn.active{background:rgba(67,238,255,.25);border-color:#ff43ee;color:#ff43ee}.card-type-icon{font-size:1.3em;display:block;margin-bottom:5px}
+.card-type-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}.card-type-btn{padding:12px;background:rgba(67,238,255,.08);border:2px solid rgba(67,238,255,.3);border-radius:10px;color:#43eeff;cursor:pointer;text-align:center;transition:all .25s;font-weight:500;font-size:.8em;position:relative}.card-type-btn:hover{background:rgba(67,238,255,.18);border-color:#43eeff;transform:scale(1.03)}.card-type-btn.active{background:rgba(67,238,255,.25);border-color:#ff43ee;color:#ff43ee}.card-type-icon{font-size:1.3em;display:block;margin-bottom:5px}
 .divider{height:1px;background:rgba(67,238,255,.2);margin:15px 0}.prop-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid rgba(67,238,255,.15)}.prop-section h3{color:#ff43ee;margin-bottom:12px;font-size:1em}
 .template-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.template-card{padding:18px;background:rgba(67,238,255,.08);border:2px solid rgba(67,238,255,.3);border-radius:12px;cursor:pointer;transition:all .3s;text-align:center}.template-card:hover{background:rgba(67,238,255,.15);transform:translateY(-3px);border-color:#43eeff}.template-icon{font-size:2.5em;margin-bottom:8px}.template-title{font-weight:600;color:#43eeff;margin-bottom:4px;font-size:.9em}.template-desc{font-size:.75em;color:#999}
 .theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.theme-card{padding:15px;border-radius:10px;cursor:pointer;transition:all .3s;border:2px solid transparent;text-align:center}.theme-card:hover{transform:scale(1.05);border-color:#43eeff}.theme-name{font-size:.85em;margin-top:8px;font-weight:600}
@@ -37,6 +40,11 @@
 .notification{position:fixed;top:80px;right:20px;background:linear-gradient(135deg,#43eeff,#2fdaeb);color:#000;padding:15px 20px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:10001;animation:slideInRight .3s;font-weight:600;min-width:250px}@keyframes slideInRight{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}.notification.error{background:linear-gradient(135deg,#f44,#c00);color:#fff}.notification.success{background:linear-gradient(135deg,#4caf50,#45a049);color:#fff}
 .version-item{padding:12px;background:rgba(67,238,255,.08);border:1px solid rgba(67,238,255,.3);border-radius:8px;margin-bottom:10px;cursor:pointer;transition:all .2s}.version-item:hover{background:rgba(67,238,255,.15)}.version-time{font-size:.75em;color:#999;margin-bottom:5px}.version-cards{color:#43eeff;font-size:.85em}
 .gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;max-height:500px;overflow-y:auto}.gallery-item{background:rgba(67,238,255,.08);border:2px solid rgba(67,238,255,.3);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .3s}.gallery-item:hover{transform:translateY(-5px);border-color:#43eeff;box-shadow:0 8px 25px rgba(67,238,255,.3)}.gallery-preview{width:100%;height:150px;background:linear-gradient(135deg,#1a1a2e,#0f0f1e);display:flex;align-items:center;justify-content:center;font-size:3em;color:rgba(67,238,255,.3)}.gallery-info{padding:12px}.gallery-title{font-weight:600;color:#43eeff;margin-bottom:5px;font-size:.9em}.gallery-author{font-size:.75em;color:#999;margin-bottom:8px}.gallery-stats{display:flex;gap:15px;font-size:.75em;color:#666}.gallery-stat{display:flex;align-items:center;gap:4px}
+/* Shadow preview */
+.shadow-preview{padding:10px;background:rgba(0,0,0,.3);border-radius:8px;margin-top:8px;text-align:center;font-size:1.1em}
+/* Background settings */
+.bg-type-selector{display:flex;gap:8px;margin-bottom:15px}.bg-type-btn{flex:1;padding:10px;background:rgba(67,238,255,.1);border:1px solid rgba(67,238,255,.3);border-radius:6px;color:#43eeff;cursor:pointer;text-align:center;font-size:.8em;transition:all .2s}.bg-type-btn:hover{background:rgba(67,238,255,.2)}.bg-type-btn.active{background:rgba(67,238,255,.3);border-color:#ff43ee}
+.image-preview{width:100%;height:120px;background:#1a1a2e;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-top:10px;background-size:cover;background-position:center;color:#666;font-size:.85em;border:2px dashed rgba(67,238,255,.3)}
 </style>
 </head>
 <body>
@@ -46,53 +54,55 @@
 </div>
 <div class="app-container">
 <div class="header">
-<div class="logo" onclick="showDashboardManager()">🎨 HA Dashboard Builder<span class="version">v4.0</span><span class="badge">MEGA</span></div>
+<div class="logo" onclick="showDashboardManager()">🎨 HA Dashboard Builder<span class="version">v4.1</span><span class="badge">MEGA</span></div>
 <div class="header-center">
 <div class="dashboard-selector" onclick="showDashboardManager()" id="currentDashboard">My Dashboard</div>
 </div>
 <div class="header-actions">
-<button class="header-btn" onclick="showThemeMarketplace()">🎨 Themes</button>
-<button class="header-btn" onclick="showGallery()">🖼️ Gallery</button>
-<button class="header-btn" onclick="showTemplateLibrary()">⭐ Templates</button>
-<button class="header-btn" onclick="showImportModal()">📥 Import</button>
-<button class="header-btn" onclick="toggleAutoSave()" id="autoSaveBtn">💾 Auto</button>
-<button class="header-btn" onclick="showVersionHistory()">⏱️ History</button>
-<button class="header-btn" onclick="showShortcuts()">⌨️</button>
-<button class="header-btn" onclick="exportScreenshot()">📸</button>
-<button class="header-btn premium" onclick="showCloudSave()">☁️ Cloud</button>
+<button class="header-btn yaml-btn" onclick="downloadYAMLDirect()" data-tooltip="Download YAML configuration file">📄 YAML</button>
+<button class="header-btn" onclick="showBackgroundSettings()" data-tooltip="Customize dashboard background">🖼️ Background</button>
+<button class="header-btn" onclick="showThemeMarketplace()" data-tooltip="Browse and apply themes">🎨 Themes</button>
+<button class="header-btn" onclick="showGallery()" data-tooltip="Browse community dashboards">🖼️ Gallery</button>
+<button class="header-btn" onclick="showTemplateLibrary()" data-tooltip="Apply pre-made templates">⭐ Templates</button>
+<button class="header-btn" onclick="showImportModal()" data-tooltip="Import YAML configuration">📥 Import</button>
+<button class="header-btn" onclick="toggleAutoSave()" id="autoSaveBtn" data-tooltip="Toggle automatic saving">💾 Auto</button>
+<button class="header-btn" onclick="showVersionHistory()" data-tooltip="View and restore previous versions">⏱️ History</button>
+<button class="header-btn" onclick="showShortcuts()" data-tooltip="View keyboard shortcuts">⌨️</button>
+<button class="header-btn" onclick="exportScreenshot()" data-tooltip="Export dashboard as image">📸</button>
+<button class="header-btn premium" onclick="showCloudSave()" data-tooltip="Save to cloud storage">☁️ Cloud</button>
 </div>
 </div>
 <div class="toolbar">
 <div class="tool-group">
-<button class="tool-btn active" onclick="setPreviewMode('desktop')" id="previewDesktop">🖥️</button>
-<button class="tool-btn" onclick="setPreviewMode('tablet')" id="previewTablet">📱</button>
-<button class="tool-btn" onclick="setPreviewMode('mobile')" id="previewMobile">📱</button>
+<button class="tool-btn active" onclick="setPreviewMode('desktop')" id="previewDesktop" data-tooltip="Desktop view">🖥️</button>
+<button class="tool-btn" onclick="setPreviewMode('tablet')" id="previewTablet" data-tooltip="Tablet view">📱</button>
+<button class="tool-btn" onclick="setPreviewMode('mobile')" id="previewMobile" data-tooltip="Mobile view">📱</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn" onclick="selectAll()">Select All</button>
-<button class="tool-btn" onclick="deselectAll()">Deselect</button>
-<button class="tool-btn" onclick="groupSelected()">📦 Group</button>
-<button class="tool-btn" onclick="ungroupSelected()">📂 Ungroup</button>
+<button class="tool-btn" onclick="selectAll()" data-tooltip="Select all cards">Select All</button>
+<button class="tool-btn" onclick="deselectAll()" data-tooltip="Deselect all cards">Deselect</button>
+<button class="tool-btn" onclick="groupSelected()" data-tooltip="Group selected cards">📦 Group</button>
+<button class="tool-btn" onclick="ungroupSelected()" data-tooltip="Ungroup selected cards">📂 Ungroup</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn" onclick="alignCards('left')">⬅️</button>
-<button class="tool-btn" onclick="alignCards('center')">⬛</button>
-<button class="tool-btn" onclick="alignCards('right')">➡️</button>
-<button class="tool-btn" onclick="distributeCards()">↔️</button>
+<button class="tool-btn" onclick="alignCards('left')" data-tooltip="Align cards left">⬅️</button>
+<button class="tool-btn" onclick="alignCards('center')" data-tooltip="Align cards center">⬛</button>
+<button class="tool-btn" onclick="alignCards('right')" data-tooltip="Align cards right">➡️</button>
+<button class="tool-btn" onclick="distributeCards()" data-tooltip="Distribute cards evenly">↔️</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn" onclick="changeZIndex('up')">⬆️</button>
-<button class="tool-btn" onclick="changeZIndex('down')">⬇️</button>
+<button class="tool-btn" onclick="changeZIndex('up')" data-tooltip="Bring card forward">⬆️</button>
+<button class="tool-btn" onclick="changeZIndex('down')" data-tooltip="Send card backward">⬇️</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn active" onclick="setAnimation('fade')" id="animFade">Fade</button>
-<button class="tool-btn" onclick="setAnimation('slide')" id="animSlide">Slide</button>
-<button class="tool-btn" onclick="setAnimation('bounce')" id="animBounce">Bounce</button>
+<button class="tool-btn active" onclick="setAnimation('fade')" id="animFade" data-tooltip="Fade animation">Fade</button>
+<button class="tool-btn" onclick="setAnimation('slide')" id="animSlide" data-tooltip="Slide animation">Slide</button>
+<button class="tool-btn" onclick="setAnimation('bounce')" id="animBounce" data-tooltip="Bounce animation">Bounce</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn" onclick="toggleGridSnap()" id="gridSnapBtn">🧲 ON</button>
-<button class="tool-btn" onclick="undo()">↶</button>
-<button class="tool-btn" onclick="redo()">↷</button>
+<button class="tool-btn" onclick="toggleGridSnap()" id="gridSnapBtn" data-tooltip="Toggle grid snapping">🧲 ON</button>
+<button class="tool-btn" onclick="undo()" data-tooltip="Undo last action (Ctrl+Z)">↶</button>
+<button class="tool-btn" onclick="redo()" data-tooltip="Redo last action (Ctrl+Y)">↷</button>
 </div>
 </div>
 <div class="sidebar">
@@ -105,21 +115,21 @@
 <div id="cardsTab">
 <h2>➕ Add Card</h2>
 <div class="card-type-selector">
-<div class="card-type-btn active" onclick="selectCardType('entities')"><span class="card-type-icon">📋</span>Entities</div>
-<div class="card-type-btn" onclick="selectCardType('thermostat')"><span class="card-type-icon">🌡️</span>Thermo</div>
-<div class="card-type-btn" onclick="selectCardType('weather')"><span class="card-type-icon">🌤️</span>Weather</div>
-<div class="card-type-btn" onclick="selectCardType('camera')"><span class="card-type-icon">📷</span>Camera</div>
-<div class="card-type-btn" onclick="selectCardType('media')"><span class="card-type-icon">🎵</span>Media</div>
-<div class="card-type-btn" onclick="selectCardType('gauge')"><span class="card-type-icon">⏱️</span>Gauge</div>
-<div class="card-type-btn" onclick="selectCardType('button')"><span class="card-type-icon">🔘</span>Button</div>
-<div class="card-type-btn" onclick="selectCardType('clock')"><span class="card-type-icon">🕐</span>Clock</div>
-<div class="card-type-btn" onclick="selectCardType('markdown')"><span class="card-type-icon">📝</span>Markdown</div>
-<div class="card-type-btn" onclick="selectCardType('picture')"><span class="card-type-icon">🖼️</span>Picture</div>
-<div class="card-type-btn" onclick="selectCardType('glance')"><span class="card-type-icon">👁️</span>Glance</div>
-<div class="card-type-btn" onclick="selectCardType('chart')"><span class="card-type-icon">📊</span>Chart</div>
-<div class="card-type-btn" onclick="selectCardType('map')"><span class="card-type-icon">🗺️</span>Map</div>
-<div class="card-type-btn" onclick="selectCardType('iframe')"><span class="card-type-icon">🌐</span>Iframe</div>
-<div class="card-type-btn" onclick="selectCardType('light')"><span class="card-type-icon">💡</span>Light</div>
+<div class="card-type-btn active" onclick="selectCardType('entities')" data-tooltip="Entity list card"><span class="card-type-icon">📋</span>Entities</div>
+<div class="card-type-btn" onclick="selectCardType('thermostat')" data-tooltip="Climate control card"><span class="card-type-icon">🌡️</span>Thermo</div>
+<div class="card-type-btn" onclick="selectCardType('weather')" data-tooltip="Weather forecast card"><span class="card-type-icon">🌤️</span>Weather</div>
+<div class="card-type-btn" onclick="selectCardType('camera')" data-tooltip="Camera feed card"><span class="card-type-icon">📷</span>Camera</div>
+<div class="card-type-btn" onclick="selectCardType('media')" data-tooltip="Media player card"><span class="card-type-icon">🎵</span>Media</div>
+<div class="card-type-btn" onclick="selectCardType('gauge')" data-tooltip="Gauge/meter card"><span class="card-type-icon">⏱️</span>Gauge</div>
+<div class="card-type-btn" onclick="selectCardType('button')" data-tooltip="Toggle button card"><span class="card-type-icon">🔘</span>Button</div>
+<div class="card-type-btn" onclick="selectCardType('clock')" data-tooltip="Clock display card"><span class="card-type-icon">🕐</span>Clock</div>
+<div class="card-type-btn" onclick="selectCardType('markdown')" data-tooltip="Markdown text card"><span class="card-type-icon">📝</span>Markdown</div>
+<div class="card-type-btn" onclick="selectCardType('picture')" data-tooltip="Picture display card"><span class="card-type-icon">🖼️</span>Picture</div>
+<div class="card-type-btn" onclick="selectCardType('glance')" data-tooltip="Quick glance card"><span class="card-type-icon">👁️</span>Glance</div>
+<div class="card-type-btn" onclick="selectCardType('chart')" data-tooltip="Chart/graph card"><span class="card-type-icon">📊</span>Chart</div>
+<div class="card-type-btn" onclick="selectCardType('map')" data-tooltip="Location map card"><span class="card-type-icon">🗺️</span>Map</div>
+<div class="card-type-btn" onclick="selectCardType('iframe')" data-tooltip="Embed webpage card"><span class="card-type-icon">🌐</span>Iframe</div>
+<div class="card-type-btn" onclick="selectCardType('light')" data-tooltip="Light control card"><span class="card-type-icon">💡</span>Light</div>
 </div>
 <div class="divider"></div>
 <div id="cardConfig"></div>
@@ -147,6 +157,34 @@
 <div class="status-item"><span id="autoSaveStatus">Auto-save: ON</span></div>
 </div>
 </div>
+
+<!-- Background Settings Modal -->
+<div class="modal" id="backgroundModal"><div class="modal-content">
+<h2>🖼️ Background Settings</h2>
+<div class="bg-type-selector">
+<button class="bg-type-btn active" onclick="setBgType('gradient')" id="bgTypeGradient">Gradient</button>
+<button class="bg-type-btn" onclick="setBgType('solid')" id="bgTypeSolid">Solid Color</button>
+<button class="bg-type-btn" onclick="setBgType('image')" id="bgTypeImage">Image</button>
+</div>
+<div id="bgGradientSettings">
+<div class="form-group"><label>Color 1</label><input type="color" id="bgGrad1" value="#0f0f1e" onchange="updateBgSettings()"></div>
+<div class="form-group"><label>Color 2</label><input type="color" id="bgGrad2" value="#1a1a2e" onchange="updateBgSettings()"></div>
+<div class="form-group"><label>Angle: <span id="bgAngleVal">135</span>°</label><input type="range" id="bgAngle" min="0" max="360" value="135" oninput="updateBgSettings()"></div>
+</div>
+<div id="bgSolidSettings" style="display:none">
+<div class="form-group"><label>Background Color</label><input type="color" id="bgSolidColor" value="#1a1a2e" onchange="updateBgSettings()"></div>
+</div>
+<div id="bgImageSettings" style="display:none">
+<div class="form-group"><label>Image URL</label><input type="text" id="bgImageUrl" placeholder="https://example.com/image.jpg" onchange="updateBgSettings()"></div>
+<div class="form-group"><label>Or Upload Image</label><input type="file" id="bgImageUpload" accept="image/*" onchange="uploadBgImage(event)"></div>
+<div class="image-preview" id="bgImagePreview">No image selected</div>
+<div class="form-group"><label>Opacity: <span id="bgOpacityVal">30</span>%</label><input type="range" id="bgOpacity" min="0" max="100" value="30" oninput="updateBgSettings()"></div>
+<div class="form-group"><label>Blur: <span id="bgBlurVal">0</span>px</label><input type="range" id="bgBlur" min="0" max="20" value="0" oninput="updateBgSettings()"></div>
+</div>
+<div class="form-group"><label>Overlay Darkness: <span id="bgOverlayVal">50</span>%</label><input type="range" id="bgOverlayAmount" min="0" max="100" value="50" oninput="updateBgSettings()"></div>
+<button class="btn" onclick="closeModal('backgroundModal')">Apply & Close</button>
+</div></div>
+
 <div class="modal" id="dashboardManagerModal"><div class="modal-content">
 <h2>📊 Dashboard Manager</h2>
 <div class="form-group">
@@ -282,6 +320,25 @@
 </div>
 <div id="notification"></div>
 <script>
+// Available fonts list
+const availableFonts = [
+    { name: 'Segoe UI', value: "'Segoe UI', sans-serif" },
+    { name: 'Roboto', value: "'Roboto', sans-serif" },
+    { name: 'Open Sans', value: "'Open Sans', sans-serif" },
+    { name: 'Lato', value: "'Lato', sans-serif" },
+    { name: 'Montserrat', value: "'Montserrat', sans-serif" },
+    { name: 'Poppins', value: "'Poppins', sans-serif" },
+    { name: 'Inter', value: "'Inter', sans-serif" },
+    { name: 'Nunito', value: "'Nunito', sans-serif" },
+    { name: 'Raleway', value: "'Raleway', sans-serif" },
+    { name: 'Ubuntu', value: "'Ubuntu', sans-serif" },
+    { name: 'Source Sans Pro', value: "'Source Sans Pro', sans-serif" },
+    { name: 'Arial', value: "Arial, sans-serif" },
+    { name: 'Georgia', value: "Georgia, serif" },
+    { name: 'Times New Roman', value: "'Times New Roman', serif" },
+    { name: 'Courier New', value: "'Courier New', monospace" }
+];
+
 let cards=[],selectedCard=null,selectedCards=[],selectedCardType='entities',draggedCard=null,resizingCard=null,resizeHandle=null,dragOffset={x:0,y:0},cardIdCounter=0,history=[],historyIndex=-1,maxHistory=100,gridSize=50,snapToGrid=true;
 let draggedEntity=null,draggedFromCard=null,draggedEntityIndex=-1,contextEntity=null,contextCard=null,contextEntityIndex=-1;
 let bgSettings={type:'gradient',grad1:'#0f0f1e',grad2:'#1a1a2e',angle:135,imageUrl:'',solid:'#1a1a2e',opacity:30,blur:0,overlay:50};
@@ -290,6 +347,14 @@ let dashboards=[{id:1,name:'My Dashboard',cards:[],bg:bgSettings,created:Date.no
 let versionHistory=[],groups={},cloudDashboards=[];
 const canvas=document.getElementById('canvas'),propertiesPanel=document.getElementById('propertiesPanel'),cardConfig=document.getElementById('cardConfig');
 const themes={default:{bg1:'#0f0f1e',bg2:'#1a1a2e',card:'#43eeff',title:'#ff43ee',entity:'#ffeb3b'},light:{bg1:'#f5f5f5',bg2:'#e0e0e0',card:'#2196f3',title:'#e91e63',entity:'#ff9800'},neon:{bg1:'#ff006e',bg2:'#8338ec',card:'#00ff9f',title:'#ffbe0b',entity:'#fb5607'},ocean:{bg1:'#006994',bg2:'#003d5c',card:'#00b4d8',title:'#0077b6',entity:'#90e0ef'},forest:{bg1:'#1e4d2b',bg2:'#0d2818',card:'#52b788',title:'#95d5b2',entity:'#d8f3dc'},sunset:{bg1:'#ff6b35',bg2:'#f7931e',card:'#ffd60a',title:'#ff006e',entity:'#ffbe0b'},purple:{bg1:'#7209b7',bg2:'#3a0ca3',card:'#c77dff',title:'#e0aaff',entity:'#f72585'},minimal:{bg1:'#1a1a1a',bg2:'#1a1a1a',card:'#333',title:'#fff',entity:'#ccc'},cyberpunk:{bg1:'#00ff9f',bg2:'#00b8ff',card:'#ff006e',title:'#ffbe0b',entity:'#8338ec'}};
+
+// Generate font options HTML
+function getFontOptionsHTML(selectedFont = "'Segoe UI', sans-serif") {
+    return availableFonts.map(f => 
+        `<option value="${f.value}" ${f.value === selectedFont ? 'selected' : ''}>${f.name}</option>`
+    ).join('');
+}
+
 function snapToGridValue(v){return snapToGrid?Math.round(v/gridSize)*gridSize:v}
 function saveState(){const currentDash=dashboards.find(d=>d.id===currentDashboardId);if(currentDash){currentDash.cards=JSON.parse(JSON.stringify(cards));currentDash.bg=JSON.parse(JSON.stringify(bgSettings))}history=history.slice(0,historyIndex+1);history.push(JSON.stringify({cards,bg:bgSettings}));historyIndex++;if(history.length>maxHistory){history.shift();historyIndex--}versionHistory.push({time:Date.now(),cards:JSON.parse(JSON.stringify(cards)),cardCount:cards.length});if(versionHistory.length>20)versionHistory.shift();updateStatus('Saved')}
 function undo(){if(historyIndex>0){historyIndex--;const state=JSON.parse(history[historyIndex]);cards=state.cards||[];bgSettings=state.bg||bgSettings;renderCanvas();applyBackground();updateStatus('Undo');if(selectedCard){selectedCard=cards.find(c=>c.id===selectedCard.id);if(selectedCard)showProperties(selectedCard)}}}
@@ -304,22 +369,227 @@ person.john"></textarea></div>`},iframe:{defaultSize:{width:600,height:400},fiel
 light.bedroom"></textarea></div>`}};
 function selectCardType(t){selectedCardType=t;document.querySelectorAll('.card-type-btn').forEach(b=>b.classList.remove('active'));event.target.closest('.card-type-btn').classList.add('active');cardConfig.innerHTML=cardTypeConfigs[t].fields}
 cardConfig.innerHTML=cardTypeConfigs.entities.fields;saveState();
-function addCardToCanvas(){const size=cardTypeConfigs[selectedCardType].defaultSize,title=document.getElementById('newCardTitle')?.value||'Card',cardData={id:cardIdCounter++,type:selectedCardType,title,x:50+(cards.length*30),y:50+(cards.length*30),width:size.width,height:size.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType,group:null};
+function addCardToCanvas(){const size=cardTypeConfigs[selectedCardType].defaultSize,title=document.getElementById('newCardTitle')?.value||'Card',cardData={id:cardIdCounter++,type:selectedCardType,title,x:50+(cards.length*30),y:50+(cards.length*30),width:size.width,height:size.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType,group:null,
+// NEW: Font and styling properties
+titleFont:"'Segoe UI', sans-serif",
+entityFont:"'Segoe UI', sans-serif",
+titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},
+entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'},
+borderRadius:14,
+cornerStyle:'rounded'};
+
 if(selectedCardType==='entities'){const t=document.getElementById('newCardEntities').value;cardData.entities=t.split('\n').filter(e=>e.trim());if(!cardData.entities.length){showNotification('Add entities','error');return}}else if(['thermostat','weather','camera','media','gauge'].includes(selectedCardType)){const id=selectedCardType+'Entity';cardData.entity=document.getElementById(id).value}else if(selectedCardType==='button'){cardData.entity=document.getElementById('buttonEntity').value}else if(selectedCardType==='clock'){cardData.format=document.getElementById('clockFormat').value}else if(selectedCardType==='markdown'){cardData.content=document.getElementById('markdownContent').value}else if(selectedCardType==='picture'){cardData.imageUrl=document.getElementById('pictureUrl').value}else if(['glance','map','light'].includes(selectedCardType)){const id=selectedCardType+'Entities';const t=document.getElementById(id).value;cardData.entities=t.split('\n').filter(e=>e.trim())}else if(selectedCardType==='chart'){cardData.entity=document.getElementById('chartEntity').value;cardData.chartType=document.getElementById('chartType').value}else if(selectedCardType==='iframe'){cardData.iframeUrl=document.getElementById('iframeUrl').value}
 if(selectedCardType==='gauge'){cardData.min=document.getElementById('gaugeMin').value;cardData.max=document.getElementById('gaugeMax').value}
 cards.push(cardData);saveState();renderCanvas();selectCard(cardData);updateCardCount();showNotification('Card added','success')}
 function renderCanvas(){canvas.innerHTML='';cards.sort((a,b)=>a.zIndex-b.zIndex).forEach(c=>canvas.appendChild(createCardElement(c)));updateLayersList()}
-function createCardElement(c){const el=document.createElement('div');el.className='canvas-card';if(c.animation)el.classList.add(`anim-${c.animation}`);el.id=`card-${c.id}`;el.style.left=c.x+'px';el.style.top=c.y+'px';el.style.width=c.width+'px';el.style.height=c.height+'px';el.style.background=c.useGradient?`linear-gradient(135deg,${c.gradientColor1},${c.gradientColor2})`:c.bgColor;el.style.zIndex=c.zIndex||0;if(selectedCard&&selectedCard.id===c.id)el.classList.add('selected');if(selectedCards.some(s=>s.id===c.id))el.classList.add('multi-selected');
-const tb=document.createElement('div');tb.className='card-type-badge';tb.textContent=c.type;el.appendChild(tb);
-const sb=document.createElement('div');sb.className='card-size-badge';sb.textContent=`${c.width}×${c.height}`;el.appendChild(sb);
-const zb=document.createElement('div');zb.className='card-z-badge';zb.textContent=`Z:${c.zIndex||0}`;el.appendChild(zb);
-if(c.group){const gb=document.createElement('div');gb.className='card-group-badge';gb.textContent=`G:${c.group}`;el.appendChild(gb)}
-if(c.type==='entities'||c.type==='light'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;el.appendChild(t);c.entities.forEach((e,idx)=>{const d=document.createElement('div');d.className='card-entity-display';d.textContent=e;d.style.color=c.entityColor;d.draggable=true;d.ondragstart=ev=>startEntityDrag(ev,c,idx,e);d.ondragend=endEntityDrag;d.ondragover=ev=>entityDragOver(ev,idx);d.ondrop=ev=>entityDrop(ev,c,idx);d.oncontextmenu=ev=>{ev.preventDefault();ev.stopPropagation();showContextMenu(ev,c,idx,e)};el.appendChild(d)})}else if(c.type==='markdown'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;el.appendChild(t);const md=document.createElement('div');md.style.cssText=`color:${c.entityColor};padding:10px;font-size:.9em;line-height:1.6`;md.textContent=c.content||'Markdown';el.appendChild(md)}else if(c.type==='picture'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;el.appendChild(t);const img=document.createElement('div');img.style.cssText='flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:3em;color:rgba(255,255,255,0.3)';img.textContent='🖼️';if(c.imageUrl){img.style.backgroundImage=`url(${c.imageUrl})`;img.style.backgroundSize='cover';img.textContent=''}el.appendChild(img);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='glance'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;el.appendChild(t);const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:10px';c.entities?.forEach(e=>{const item=document.createElement('div');item.style.cssText=`text-align:center;padding:10px;background:rgba(255,255,255,0.2);border-radius:6px;color:${c.entityColor};font-size:.8em`;item.textContent=e.split('.')[1]||e;grid.appendChild(item)});el.appendChild(grid)}else if(c.type==='chart'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;el.appendChild(t);const chart=document.createElement('div');chart.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;font-size:2em;color:rgba(255,255,255,0.3)';chart.textContent='📊';el.appendChild(chart);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='map'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;el.appendChild(t);const map=document.createElement('div');map.style.cssText='flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:3em;color:rgba(255,255,255,0.3)';map.textContent='🗺️';el.appendChild(map);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='iframe'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;el.appendChild(t);const frame=document.createElement('div');frame.style.cssText='flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:2em;color:rgba(255,255,255,0.3)';frame.textContent='🌐 Iframe';el.appendChild(frame);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='thermostat'){el.innerHTML+=`<div class="card-title-display" style="color:${c.titleColor};text-align:center">${c.title}</div><div style="text-align:center;padding:15px"><div style="font-size:2.5em;font-weight:bold;color:${c.entityColor};margin:15px 0">72°</div><div style="padding:8px 16px;background:rgba(255,255,255,0.2);border-radius:6px;font-size:0.85em;color:${c.entityColor};display:inline-block">HEAT</div></div>`}else if(c.type==='weather'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.textAlign='center';el.appendChild(t);el.innerHTML+=`<div style="text-align:center"><div style="font-size:3em;margin:10px 0">🌤️</div><div style="font-size:2em;font-weight:bold;color:${c.entityColor}">75°F</div></div>`}else if(c.type==='camera'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;el.appendChild(t);const p=document.createElement('div');p.style.cssText='background:#1a1a2e;flex:1;display:flex;align-items:center;justify-content:center;font-size:3em;color:rgba(255,255,255,0.3)';p.textContent='📷';el.appendChild(p);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='clock'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.textAlign='center';el.appendChild(t);const now=new Date(),timeFormat=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});el.innerHTML+=`<div style="display:flex;align-items:center;justify-content:center;flex:1;font-size:3em;font-weight:bold;color:${c.entityColor};font-family:monospace">${timeFormat}</div>`;el.style.display='flex';el.style.flexDirection='column'}
-['nw','ne','sw','se'].forEach(p=>{const h=document.createElement('div');h.className=`resize-handle resize-${p}`;h.dataset.position=p;el.appendChild(h)});
-el.ondragover=ev=>{if(draggedEntity&&(c.type==='entities'||c.type==='light')){ev.preventDefault();el.classList.add('drag-over')}};
-el.ondragleave=()=>el.classList.remove('drag-over');
-el.ondrop=ev=>{if(draggedEntity&&(c.type==='entities'||c.type==='light')){ev.preventDefault();el.classList.remove('drag-over');if(draggedFromCard.id!==c.id){c.entities.push(draggedEntity);draggedFromCard.entities.splice(draggedEntityIndex,1);saveState();renderCanvas()}}};
-el.addEventListener('mousedown',e=>{if(e.target.classList.contains('resize-handle')){startResize(e,c)}else if(!e.target.classList.contains('card-entity-display')){startDrag(e,c)}});return el}
+
+function getTextShadowCSS(shadow) {
+    if (!shadow || !shadow.enabled) return 'none';
+    return `${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.color}`;
+}
+
+function createCardElement(c){
+    const el=document.createElement('div');
+    el.className='canvas-card';
+    if(c.animation)el.classList.add(`anim-${c.animation}`);
+    el.id=`card-${c.id}`;
+    el.style.left=c.x+'px';
+    el.style.top=c.y+'px';
+    el.style.width=c.width+'px';
+    el.style.height=c.height+'px';
+    el.style.background=c.useGradient?`linear-gradient(135deg,${c.gradientColor1},${c.gradientColor2})`:c.bgColor;
+    el.style.zIndex=c.zIndex||0;
+    
+    // Apply border radius based on cornerStyle
+    const radius = c.cornerStyle === 'square' ? 0 : (c.borderRadius || 14);
+    el.style.borderRadius = radius + 'px';
+    
+    if(selectedCard&&selectedCard.id===c.id)el.classList.add('selected');
+    if(selectedCards.some(s=>s.id===c.id))el.classList.add('multi-selected');
+
+    const tb=document.createElement('div');
+    tb.className='card-type-badge';
+    tb.textContent=c.type;
+    el.appendChild(tb);
+
+    const sb=document.createElement('div');
+    sb.className='card-size-badge';
+    sb.textContent=`${c.width}×${c.height}`;
+    el.appendChild(sb);
+
+    const zb=document.createElement('div');
+    zb.className='card-z-badge';
+    zb.textContent=`Z:${c.zIndex||0}`;
+    el.appendChild(zb);
+
+    if(c.group){const gb=document.createElement('div');gb.className='card-group-badge';gb.textContent=`G:${c.group}`;el.appendChild(gb)}
+
+    // Get font and shadow styles
+    const titleFont = c.titleFont || "'Segoe UI', sans-serif";
+    const entityFont = c.entityFont || "'Segoe UI', sans-serif";
+    const titleShadow = getTextShadowCSS(c.titleShadow);
+    const entityShadow = getTextShadowCSS(c.entityShadow);
+
+    if(c.type==='entities'||c.type==='light'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        c.entities.forEach((e,idx)=>{
+            const d=document.createElement('div');
+            d.className='card-entity-display';
+            d.textContent=e;
+            d.style.color=c.entityColor;
+            d.style.fontFamily=entityFont;
+            d.style.textShadow=entityShadow;
+            d.draggable=true;
+            d.ondragstart=ev=>startEntityDrag(ev,c,idx,e);
+            d.ondragend=endEntityDrag;
+            d.ondragover=ev=>entityDragOver(ev,idx);
+            d.ondrop=ev=>entityDrop(ev,c,idx);
+            d.oncontextmenu=ev=>{ev.preventDefault();ev.stopPropagation();showContextMenu(ev,c,idx,e)};
+            el.appendChild(d)
+        })
+    }else if(c.type==='markdown'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        const md=document.createElement('div');
+        md.style.cssText=`color:${c.entityColor};padding:10px;font-size:.9em;line-height:1.6;font-family:${entityFont};text-shadow:${entityShadow}`;
+        md.textContent=c.content||'Markdown';
+        el.appendChild(md)
+    }else if(c.type==='picture'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        const img=document.createElement('div');
+        img.style.cssText='flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:3em;color:rgba(255,255,255,0.3)';
+        img.textContent='🖼️';
+        if(c.imageUrl){img.style.backgroundImage=`url(${c.imageUrl})`;img.style.backgroundSize='cover';img.textContent=''}
+        el.appendChild(img);
+        el.style.display='flex';
+        el.style.flexDirection='column'
+    }else if(c.type==='glance'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        const grid=document.createElement('div');
+        grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:10px';
+        c.entities?.forEach(e=>{
+            const item=document.createElement('div');
+            item.style.cssText=`text-align:center;padding:10px;background:rgba(255,255,255,0.2);border-radius:6px;color:${c.entityColor};font-size:.8em;font-family:${entityFont};text-shadow:${entityShadow}`;
+            item.textContent=e.split('.')[1]||e;
+            grid.appendChild(item)
+        });
+        el.appendChild(grid)
+    }else if(c.type==='chart'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        const chart=document.createElement('div');
+        chart.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;font-size:2em;color:rgba(255,255,255,0.3)';
+        chart.textContent='📊';
+        el.appendChild(chart);
+        el.style.display='flex';
+        el.style.flexDirection='column'
+    }else if(c.type==='map'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        const map=document.createElement('div');
+        map.style.cssText='flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:3em;color:rgba(255,255,255,0.3)';
+        map.textContent='🗺️';
+        el.appendChild(map);
+        el.style.display='flex';
+        el.style.flexDirection='column'
+    }else if(c.type==='iframe'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        const frame=document.createElement('div');
+        frame.style.cssText='flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:2em;color:rgba(255,255,255,0.3)';
+        frame.textContent='🌐 Iframe';
+        el.appendChild(frame);
+        el.style.display='flex';
+        el.style.flexDirection='column'
+    }else if(c.type==='thermostat'){
+        el.innerHTML+=`<div class="card-title-display" style="color:${c.titleColor};text-align:center;font-family:${titleFont};text-shadow:${titleShadow}">${c.title}</div><div style="text-align:center;padding:15px"><div style="font-size:2.5em;font-weight:bold;color:${c.entityColor};margin:15px 0;font-family:${entityFont};text-shadow:${entityShadow}">72°</div><div style="padding:8px 16px;background:rgba(255,255,255,0.2);border-radius:6px;font-size:0.85em;color:${c.entityColor};display:inline-block;font-family:${entityFont};text-shadow:${entityShadow}">HEAT</div></div>`
+    }else if(c.type==='weather'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.textAlign='center';
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        el.innerHTML+=`<div style="text-align:center"><div style="font-size:3em;margin:10px 0">🌤️</div><div style="font-size:2em;font-weight:bold;color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow}">75°F</div></div>`
+    }else if(c.type==='camera'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        const p=document.createElement('div');
+        p.style.cssText='background:#1a1a2e;flex:1;display:flex;align-items:center;justify-content:center;font-size:3em;color:rgba(255,255,255,0.3)';
+        p.textContent='📷';
+        el.appendChild(p);
+        el.style.display='flex';
+        el.style.flexDirection='column'
+    }else if(c.type==='clock'){
+        const t=document.createElement('div');
+        t.className='card-title-display';
+        t.textContent=c.title;
+        t.style.color=c.titleColor;
+        t.style.textAlign='center';
+        t.style.fontFamily=titleFont;
+        t.style.textShadow=titleShadow;
+        el.appendChild(t);
+        const now=new Date(),timeFormat=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+        el.innerHTML+=`<div style="display:flex;align-items:center;justify-content:center;flex:1;font-size:3em;font-weight:bold;color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow}">${timeFormat}</div>`;
+        el.style.display='flex';
+        el.style.flexDirection='column'
+    }
+
+    ['nw','ne','sw','se'].forEach(p=>{const h=document.createElement('div');h.className=`resize-handle resize-${p}`;h.dataset.position=p;el.appendChild(h)});
+
+    el.ondragover=ev=>{if(draggedEntity&&(c.type==='entities'||c.type==='light')){ev.preventDefault();el.classList.add('drag-over')}};
+    el.ondragleave=()=>el.classList.remove('drag-over');
+    el.ondrop=ev=>{if(draggedEntity&&(c.type==='entities'||c.type==='light')){ev.preventDefault();el.classList.remove('drag-over');if(draggedFromCard.id!==c.id){c.entities.push(draggedEntity);draggedFromCard.entities.splice(draggedEntityIndex,1);saveState();renderCanvas()}}};
+
+    el.addEventListener('mousedown',e=>{if(e.target.classList.contains('resize-handle')){startResize(e,c)}else if(!e.target.classList.contains('card-entity-display')){startDrag(e,c)}});
+    return el
+}
+
 function startEntityDrag(ev,card,idx,entity){draggedEntity=entity;draggedFromCard=card;draggedEntityIndex=idx;ev.dataTransfer.effectAllowed='move';ev.target.classList.add('dragging-entity')}
 function endEntityDrag(ev){ev.target.classList.remove('dragging-entity');setTimeout(()=>{draggedEntity=null;draggedFromCard=null;draggedEntityIndex=-1},100)}
 function entityDragOver(ev,idx){if(draggedEntity){ev.preventDefault();ev.stopPropagation();ev.target.classList.add('drag-over-entity')}}
@@ -334,27 +604,195 @@ function startResize(e,c){resizingCard=c;resizeHandle=e.target.dataset.position;
 function handleResize(e){if(!resizingCard)return;const r=canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;if(resizeHandle.includes('e'))resizingCard.width=snapToGridValue(Math.max(150,mx-resizingCard.x));if(resizeHandle.includes('s'))resizingCard.height=snapToGridValue(Math.max(100,my-resizingCard.y));renderCanvas()}
 function stopResize(){if(resizingCard)saveState();resizingCard=null;resizeHandle=null;document.removeEventListener('mousemove',handleResize);document.removeEventListener('mouseup',stopResize)}
 function selectCard(c){selectedCard=c;renderCanvas();showProperties(c);updateSelectedCount()}
-function showProperties(c){if(!c){propertiesPanel.innerHTML='<div class="no-selection"><div class="no-selection-icon">👆</div><p>Click card</p></div>';return}
-propertiesPanel.innerHTML=`<div class="prop-section"><h3>📝 Details</h3><div class="form-group"><label>Title</label><input type="text" id="prop-title" value="${c.title}"></div>${c.entities?`<div class="form-group"><label>Entities</label><textarea id="prop-entities" rows="6">${c.entities.join('\n')}</textarea></div>`:c.content!==undefined?`<div class="form-group"><label>Content</label><textarea id="prop-content" rows="6">${c.content}</textarea></div>`:`<div class="form-group"><label>Entity</label><input type="text" id="prop-entity" value="${c.entity||''}"></div>`}</div><div class="prop-section"><h3>📐 Position</h3><div class="form-group"><label>X: ${c.x}px</label><input type="range" id="prop-x" min="0" max="1000" value="${c.x}"></div><div class="form-group"><label>Y: ${c.y}px</label><input type="range" id="prop-y" min="0" max="1000" value="${c.y}"></div><div class="form-group"><label>W: ${c.width}px</label><input type="range" id="prop-w" min="150" max="600" value="${c.width}"></div><div class="form-group"><label>H: ${c.height}px</label><input type="range" id="prop-h" min="100" max="500" value="${c.height}"></div><div class="form-group"><label>Z: ${c.zIndex||0}</label><input type="number" id="prop-z" value="${c.zIndex||0}"></div></div><div class="prop-section"><h3>🎨 Colors</h3><div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-gradient" ${c.useGradient?'checked':''}>Gradient</label></div><div id="solidColor" style="display:${c.useGradient?'none':'block'}"><div class="form-group"><label>BG</label><input type="color" id="prop-bg" value="${c.bgColor}"></div></div><div id="gradientColors" style="display:${c.useGradient?'block':'none'}"><div class="form-group"><label>Color 1</label><input type="color" id="prop-gc1" value="${c.gradientColor1}"></div><div class="form-group"><label>Color 2</label><input type="color" id="prop-gc2" value="${c.gradientColor2}"></div></div><div class="form-group"><label>Title</label><input type="color" id="prop-tc" value="${c.titleColor}"></div><div class="form-group"><label>Entity</label><input type="color" id="prop-ec" value="${c.entityColor}"></div></div><button class="btn btn-small" onclick="duplicateCard()">📋 Duplicate</button><button class="btn btn-danger btn-small" onclick="deleteCard()">🗑️ Delete</button>`;
-document.getElementById('prop-title').oninput=e=>{c.title=e.target.value;renderCanvas()};
-document.getElementById('prop-x').oninput=e=>{c.x=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`X: ${c.x}px`};
-document.getElementById('prop-y').oninput=e=>{c.y=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`Y: ${c.y}px`};
-document.getElementById('prop-w').oninput=e=>{c.width=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`W: ${c.width}px`};
-document.getElementById('prop-h').oninput=e=>{c.height=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`H: ${c.height}px`};
-document.getElementById('prop-z').oninput=e=>{c.zIndex=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`Z: ${c.zIndex}`};
-document.getElementById('prop-gradient').onchange=e=>{c.useGradient=e.target.checked;document.getElementById('solidColor').style.display=c.useGradient?'none':'block';document.getElementById('gradientColors').style.display=c.useGradient?'block':'none';renderCanvas()};
-document.getElementById('prop-bg').oninput=e=>{c.bgColor=e.target.value;renderCanvas()};
-document.getElementById('prop-gc1').oninput=e=>{c.gradientColor1=e.target.value;renderCanvas()};
-document.getElementById('prop-gc2').oninput=e=>{c.gradientColor2=e.target.value;renderCanvas()};
-document.getElementById('prop-tc').oninput=e=>{c.titleColor=e.target.value;renderCanvas()};
-document.getElementById('prop-ec').oninput=e=>{c.entityColor=e.target.value;renderCanvas()};
-if(c.entities)document.getElementById('prop-entities').oninput=e=>{c.entities=e.target.value.split('\n').filter(x=>x.trim());renderCanvas()};
-else if(c.content!==undefined)document.getElementById('prop-content').oninput=e=>{c.content=e.target.value;renderCanvas()};
-else if(document.getElementById('prop-entity'))document.getElementById('prop-entity').oninput=e=>{c.entity=e.target.value;renderCanvas()}}
+
+function showProperties(c){
+    if(!c){propertiesPanel.innerHTML='<div class="no-selection"><div class="no-selection-icon">👆</div><p>Click card</p></div>';return}
+    
+    // Initialize default values if not present
+    if(!c.titleFont) c.titleFont = "'Segoe UI', sans-serif";
+    if(!c.entityFont) c.entityFont = "'Segoe UI', sans-serif";
+    if(!c.titleShadow) c.titleShadow = {enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'};
+    if(!c.entityShadow) c.entityShadow = {enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'};
+    if(c.borderRadius === undefined) c.borderRadius = 14;
+    if(!c.cornerStyle) c.cornerStyle = 'rounded';
+    
+    propertiesPanel.innerHTML=`
+<div class="prop-section"><h3>📝 Details</h3>
+<div class="form-group"><label>Title</label><input type="text" id="prop-title" value="${c.title}"></div>
+${c.entities?`<div class="form-group"><label>Entities</label><textarea id="prop-entities" rows="6">${c.entities.join('\n')}</textarea></div>`:c.content!==undefined?`<div class="form-group"><label>Content</label><textarea id="prop-content" rows="6">${c.content}</textarea></div>`:`<div class="form-group"><label>Entity</label><input type="text" id="prop-entity" value="${c.entity||''}"></div>`}
+</div>
+
+<div class="prop-section"><h3>📐 Position & Size</h3>
+<div class="form-group"><label>X: ${c.x}px</label><input type="range" id="prop-x" min="0" max="1000" value="${c.x}"></div>
+<div class="form-group"><label>Y: ${c.y}px</label><input type="range" id="prop-y" min="0" max="1000" value="${c.y}"></div>
+<div class="form-group"><label>W: ${c.width}px</label><input type="range" id="prop-w" min="150" max="600" value="${c.width}"></div>
+<div class="form-group"><label>H: ${c.height}px</label><input type="range" id="prop-h" min="100" max="500" value="${c.height}"></div>
+<div class="form-group"><label>Z: ${c.zIndex||0}</label><input type="number" id="prop-z" value="${c.zIndex||0}"></div>
+</div>
+
+<div class="prop-section"><h3>🔲 Corner Style</h3>
+<div class="form-group"><label>Style</label>
+<select id="prop-corner-style">
+<option value="rounded" ${c.cornerStyle==='rounded'?'selected':''}>Rounded</option>
+<option value="square" ${c.cornerStyle==='square'?'selected':''}>Square</option>
+</select></div>
+<div class="form-group" id="radiusGroup" style="display:${c.cornerStyle==='rounded'?'block':'none'}">
+<label>Border Radius: <span id="radiusVal">${c.borderRadius}</span>px</label>
+<input type="range" id="prop-radius" min="0" max="50" value="${c.borderRadius}">
+</div>
+</div>
+
+<div class="prop-section"><h3>🎨 Colors</h3>
+<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-gradient" ${c.useGradient?'checked':''}>Use Gradient</label></div>
+<div id="solidColor" style="display:${c.useGradient?'none':'block'}"><div class="form-group"><label>Background</label><input type="color" id="prop-bg" value="${c.bgColor}"></div></div>
+<div id="gradientColors" style="display:${c.useGradient?'block':'none'}">
+<div class="form-group"><label>Color 1</label><input type="color" id="prop-gc1" value="${c.gradientColor1}"></div>
+<div class="form-group"><label>Color 2</label><input type="color" id="prop-gc2" value="${c.gradientColor2}"></div>
+</div>
+<div class="form-group"><label>Title Color</label><input type="color" id="prop-tc" value="${c.titleColor}"></div>
+<div class="form-group"><label>Entity Color</label><input type="color" id="prop-ec" value="${c.entityColor}"></div>
+</div>
+
+<div class="prop-section"><h3>🔤 Typography</h3>
+<div class="form-group"><label>Title Font</label>
+<select id="prop-title-font">${getFontOptionsHTML(c.titleFont)}</select></div>
+<div class="form-group"><label>Entity Font</label>
+<select id="prop-entity-font">${getFontOptionsHTML(c.entityFont)}</select></div>
+</div>
+
+<div class="prop-section"><h3>✨ Title Shadow</h3>
+<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-title-shadow-enabled" ${c.titleShadow.enabled?'checked':''}>Enable Title Shadow</label></div>
+<div id="titleShadowSettings" style="display:${c.titleShadow.enabled?'block':'none'}">
+<div class="form-group"><label>X Offset: <span id="tShadowXVal">${c.titleShadow.x}</span>px</label><input type="range" id="prop-title-shadow-x" min="-10" max="10" value="${c.titleShadow.x}"></div>
+<div class="form-group"><label>Y Offset: <span id="tShadowYVal">${c.titleShadow.y}</span>px</label><input type="range" id="prop-title-shadow-y" min="-10" max="10" value="${c.titleShadow.y}"></div>
+<div class="form-group"><label>Blur: <span id="tShadowBlurVal">${c.titleShadow.blur}</span>px</label><input type="range" id="prop-title-shadow-blur" min="0" max="20" value="${c.titleShadow.blur}"></div>
+<div class="form-group"><label>Shadow Color</label><input type="color" id="prop-title-shadow-color" value="${c.titleShadow.color.startsWith('rgba')?'#000000':c.titleShadow.color}"></div>
+<div class="shadow-preview" id="titleShadowPreview" style="color:${c.titleColor};font-family:${c.titleFont};text-shadow:${getTextShadowCSS(c.titleShadow)}">Title Preview</div>
+</div>
+</div>
+
+<div class="prop-section"><h3>✨ Entity Shadow</h3>
+<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-entity-shadow-enabled" ${c.entityShadow.enabled?'checked':''}>Enable Entity Shadow</label></div>
+<div id="entityShadowSettings" style="display:${c.entityShadow.enabled?'block':'none'}">
+<div class="form-group"><label>X Offset: <span id="eShadowXVal">${c.entityShadow.x}</span>px</label><input type="range" id="prop-entity-shadow-x" min="-10" max="10" value="${c.entityShadow.x}"></div>
+<div class="form-group"><label>Y Offset: <span id="eShadowYVal">${c.entityShadow.y}</span>px</label><input type="range" id="prop-entity-shadow-y" min="-10" max="10" value="${c.entityShadow.y}"></div>
+<div class="form-group"><label>Blur: <span id="eShadowBlurVal">${c.entityShadow.blur}</span>px</label><input type="range" id="prop-entity-shadow-blur" min="0" max="20" value="${c.entityShadow.blur}"></div>
+<div class="form-group"><label>Shadow Color</label><input type="color" id="prop-entity-shadow-color" value="${c.entityShadow.color.startsWith('rgba')?'#000000':c.entityShadow.color}"></div>
+<div class="shadow-preview" id="entityShadowPreview" style="color:${c.entityColor};font-family:${c.entityFont};text-shadow:${getTextShadowCSS(c.entityShadow)}">Entity Preview</div>
+</div>
+</div>
+
+<button class="btn btn-small" onclick="duplicateCard()">📋 Duplicate</button>
+<button class="btn btn-danger btn-small" onclick="deleteCard()">🗑️ Delete</button>`;
+
+    // Event listeners
+    document.getElementById('prop-title').oninput=e=>{c.title=e.target.value;renderCanvas()};
+    document.getElementById('prop-x').oninput=e=>{c.x=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`X: ${c.x}px`};
+    document.getElementById('prop-y').oninput=e=>{c.y=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`Y: ${c.y}px`};
+    document.getElementById('prop-w').oninput=e=>{c.width=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`W: ${c.width}px`};
+    document.getElementById('prop-h').oninput=e=>{c.height=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`H: ${c.height}px`};
+    document.getElementById('prop-z').oninput=e=>{c.zIndex=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`Z: ${c.zIndex}`};
+    
+    // Corner style
+    document.getElementById('prop-corner-style').onchange=e=>{
+        c.cornerStyle=e.target.value;
+        document.getElementById('radiusGroup').style.display=c.cornerStyle==='rounded'?'block':'none';
+        renderCanvas()
+    };
+    document.getElementById('prop-radius').oninput=e=>{
+        c.borderRadius=parseInt(e.target.value);
+        document.getElementById('radiusVal').textContent=c.borderRadius;
+        renderCanvas()
+    };
+    
+    // Colors
+    document.getElementById('prop-gradient').onchange=e=>{c.useGradient=e.target.checked;document.getElementById('solidColor').style.display=c.useGradient?'none':'block';document.getElementById('gradientColors').style.display=c.useGradient?'block':'none';renderCanvas()};
+    document.getElementById('prop-bg').oninput=e=>{c.bgColor=e.target.value;renderCanvas()};
+    document.getElementById('prop-gc1').oninput=e=>{c.gradientColor1=e.target.value;renderCanvas()};
+    document.getElementById('prop-gc2').oninput=e=>{c.gradientColor2=e.target.value;renderCanvas()};
+    document.getElementById('prop-tc').oninput=e=>{c.titleColor=e.target.value;renderCanvas();updateShadowPreviews()};
+    document.getElementById('prop-ec').oninput=e=>{c.entityColor=e.target.value;renderCanvas();updateShadowPreviews()};
+    
+    // Fonts
+    document.getElementById('prop-title-font').onchange=e=>{c.titleFont=e.target.value;renderCanvas();updateShadowPreviews()};
+    document.getElementById('prop-entity-font').onchange=e=>{c.entityFont=e.target.value;renderCanvas();updateShadowPreviews()};
+    
+    // Title Shadow
+    document.getElementById('prop-title-shadow-enabled').onchange=e=>{
+        c.titleShadow.enabled=e.target.checked;
+        document.getElementById('titleShadowSettings').style.display=c.titleShadow.enabled?'block':'none';
+        renderCanvas()
+    };
+    document.getElementById('prop-title-shadow-x').oninput=e=>{
+        c.titleShadow.x=parseInt(e.target.value);
+        document.getElementById('tShadowXVal').textContent=c.titleShadow.x;
+        renderCanvas();updateShadowPreviews()
+    };
+    document.getElementById('prop-title-shadow-y').oninput=e=>{
+        c.titleShadow.y=parseInt(e.target.value);
+        document.getElementById('tShadowYVal').textContent=c.titleShadow.y;
+        renderCanvas();updateShadowPreviews()
+    };
+    document.getElementById('prop-title-shadow-blur').oninput=e=>{
+        c.titleShadow.blur=parseInt(e.target.value);
+        document.getElementById('tShadowBlurVal').textContent=c.titleShadow.blur;
+        renderCanvas();updateShadowPreviews()
+    };
+    document.getElementById('prop-title-shadow-color').oninput=e=>{
+        c.titleShadow.color=e.target.value;
+        renderCanvas();updateShadowPreviews()
+    };
+    
+    // Entity Shadow
+    document.getElementById('prop-entity-shadow-enabled').onchange=e=>{
+        c.entityShadow.enabled=e.target.checked;
+        document.getElementById('entityShadowSettings').style.display=c.entityShadow.enabled?'block':'none';
+        renderCanvas()
+    };
+    document.getElementById('prop-entity-shadow-x').oninput=e=>{
+        c.entityShadow.x=parseInt(e.target.value);
+        document.getElementById('eShadowXVal').textContent=c.entityShadow.x;
+        renderCanvas();updateShadowPreviews()
+    };
+    document.getElementById('prop-entity-shadow-y').oninput=e=>{
+        c.entityShadow.y=parseInt(e.target.value);
+        document.getElementById('eShadowYVal').textContent=c.entityShadow.y;
+        renderCanvas();updateShadowPreviews()
+    };
+    document.getElementById('prop-entity-shadow-blur').oninput=e=>{
+        c.entityShadow.blur=parseInt(e.target.value);
+        document.getElementById('eShadowBlurVal').textContent=c.entityShadow.blur;
+        renderCanvas();updateShadowPreviews()
+    };
+    document.getElementById('prop-entity-shadow-color').oninput=e=>{
+        c.entityShadow.color=e.target.value;
+        renderCanvas();updateShadowPreviews()
+    };
+    
+    if(c.entities)document.getElementById('prop-entities').oninput=e=>{c.entities=e.target.value.split('\n').filter(x=>x.trim());renderCanvas()};
+    else if(c.content!==undefined)document.getElementById('prop-content').oninput=e=>{c.content=e.target.value;renderCanvas()};
+    else if(document.getElementById('prop-entity'))document.getElementById('prop-entity').oninput=e=>{c.entity=e.target.value;renderCanvas()}
+    
+    function updateShadowPreviews() {
+        const titlePreview = document.getElementById('titleShadowPreview');
+        const entityPreview = document.getElementById('entityShadowPreview');
+        if(titlePreview) {
+            titlePreview.style.color = c.titleColor;
+            titlePreview.style.fontFamily = c.titleFont;
+            titlePreview.style.textShadow = getTextShadowCSS(c.titleShadow);
+        }
+        if(entityPreview) {
+            entityPreview.style.color = c.entityColor;
+            entityPreview.style.fontFamily = c.entityFont;
+            entityPreview.style.textShadow = getTextShadowCSS(c.entityShadow);
+        }
+    }
+}
+
 function deleteCard(){if(!selectedCard)return;if(confirm('Delete?')){cards=cards.filter(c=>c.id!==selectedCard.id);selectedCard=null;saveState();renderCanvas();showProperties(null);updateCardCount();showNotification('Card deleted')}}
 function deleteMultiple(){if(confirm(`Delete ${selectedCards.length} cards?`)){cards=cards.filter(c=>!selectedCards.some(s=>s.id===c.id));selectedCards=[];selectedCard=null;saveState();renderCanvas();updateCardCount();showNotification('Cards deleted')}}
-function duplicateCard(){if(!selectedCard)return;const n={...selectedCard,id:cardIdCounter++,x:selectedCard.x+30,y:selectedCard.y+30,entities:selectedCard.entities?[...selectedCard.entities]:undefined};cards.push(n);saveState();renderCanvas();selectCard(n);showNotification('Card duplicated')}
-function pasteCard(){if(!clipboard)return;const n={...clipboard,id:cardIdCounter++,x:clipboard.x+30,y:clipboard.y+30,entities:clipboard.entities?[...clipboard.entities]:undefined};cards.push(n);saveState();renderCanvas();selectCard(n);showNotification('Card pasted')}
+function duplicateCard(){if(!selectedCard)return;const n={...JSON.parse(JSON.stringify(selectedCard)),id:cardIdCounter++,x:selectedCard.x+30,y:selectedCard.y+30};cards.push(n);saveState();renderCanvas();selectCard(n);showNotification('Card duplicated')}
+function pasteCard(){if(!clipboard)return;const n={...JSON.parse(JSON.stringify(clipboard)),id:cardIdCounter++,x:clipboard.x+30,y:clipboard.y+30};cards.push(n);saveState();renderCanvas();selectCard(n);showNotification('Card pasted')}
 function selectAll(){selectedCards=cards.slice();renderCanvas();updateSelectedCount();showNotification(`Selected ${cards.length} cards`)}
 function deselectAll(){selectedCards=[];selectedCard=null;renderCanvas();updateSelectedCount()}
 function groupSelected(){if(selectedCards.length<2){showNotification('Select 2+ cards','error');return}const groupId=Date.now();selectedCards.forEach(c=>c.group=groupId);groups[groupId]=selectedCards.map(c=>c.id);saveState();renderCanvas();showNotification('Cards grouped')}
@@ -367,10 +805,24 @@ function distributeCards(){const toDistribute=selectedCards.length>0?selectedCar
 function changeZIndex(dir){if(!selectedCard)return;if(dir==='up')selectedCard.zIndex=(selectedCard.zIndex||0)+1;else selectedCard.zIndex=Math.max(0,(selectedCard.zIndex||0)-1);saveState();renderCanvas()}
 function setAnimation(anim){animationType=anim;document.querySelectorAll('[id^="anim"]').forEach(b=>b.classList.remove('active'));document.getElementById('anim'+anim.charAt(0).toUpperCase()+anim.slice(1)).classList.add('active')}
 function toggleAutoSave(){autoSave=!autoSave;document.getElementById('autoSaveBtn').textContent=autoSave?'💾 Auto':'💾 OFF';document.getElementById('autoSaveStatus').textContent=`Auto-save: ${autoSave?'ON':'OFF'}`;if(autoSave){autoSaveInterval=setInterval(()=>{saveState();showNotification('Auto-saved','success')},60000)}else{clearInterval(autoSaveInterval)}showNotification(`Auto-save ${autoSave?'enabled':'disabled'}`)}
-function saveProject(){const d={cards,bg:bgSettings,v:'4.0'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='dashboard-v4-'+Date.now()+'.json';a.click();URL.revokeObjectURL(u);showNotification('Project saved')}
+function saveProject(){const d={cards,bg:bgSettings,v:'4.1'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='dashboard-v4.1-'+Date.now()+'.json';a.click();URL.revokeObjectURL(u);showNotification('Project saved')}
 function exportScreenshot(){showNotification('Screenshot feature coming soon','error')}
+
+// Direct YAML download from header button
+function downloadYAMLDirect(){
+    const y=generateYAML();
+    const b=new Blob([y],{type:'text/yaml'});
+    const u=URL.createObjectURL(b);
+    const a=document.createElement('a');
+    a.href=u;
+    a.download='dashboard-'+Date.now()+'.yaml';
+    a.click();
+    URL.revokeObjectURL(u);
+    showNotification('YAML downloaded','success')
+}
+
 function showYAML(){const y=generateYAML();document.getElementById('yamlOutput').textContent=y;document.getElementById('yamlModal').classList.add('active')}
-function generateYAML(){let y='# HA Dashboard v4.0\nviews:\n  - title: Dashboard\n    cards:\n';cards.forEach(c=>{y+=`      - type: ${c.type}\n        title: "${c.title}"\n`;if(c.entities){y+='        entities:\n';c.entities.forEach(e=>y+=`          - ${e}\n`)}else if(c.entity)y+=`        entity: ${c.entity}\n`;if(c.content)y+=`        content: |\n          ${c.content.replace(/\n/g,'\n          ')}\n`;y+='\n'});return y}
+function generateYAML(){let y='# HA Dashboard v4.1\nviews:\n  - title: Dashboard\n    cards:\n';cards.forEach(c=>{y+=`      - type: ${c.type}\n        title: "${c.title}"\n`;if(c.entities){y+='        entities:\n';c.entities.forEach(e=>y+=`          - ${e}\n`)}else if(c.entity)y+=`        entity: ${c.entity}\n`;if(c.content)y+=`        content: |\n          ${c.content.replace(/\n/g,'\n          ')}\n`;y+='\n'});return y}
 function copyYAML(){navigator.clipboard.writeText(document.getElementById('yamlOutput').textContent).then(()=>showNotification('YAML copied')).catch(()=>showNotification('Failed','error'))}
 function downloadYAML(){const b=new Blob([document.getElementById('yamlOutput').textContent],{type:'text/yaml'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='dashboard.yaml';a.click();URL.revokeObjectURL(u)}
 function closeModal(id){document.getElementById(id).classList.remove('active')}
@@ -387,18 +839,117 @@ function createNewDashboard(){const name=prompt('Dashboard name:','New Dashboard
 function switchDashboard(id){const dash=dashboards.find(d=>d.id===id);if(!dash)return;currentDashboardId=id;cards=dash.cards||[];bgSettings=dash.bg||bgSettings;document.getElementById('currentDashboard').textContent=dash.name;applyBackground();renderCanvas();updateCardCount();closeModal('dashboardManagerModal');showNotification(`Switched to ${dash.name}`)}
 function showThemeMarketplace(){document.getElementById('themeModal').classList.add('active')}
 function applyTheme(name){const t=themes[name];if(!t)return;bgSettings={type:'gradient',grad1:t.bg1,grad2:t.bg2,angle:135,imageUrl:'',solid:t.bg1,opacity:30,blur:0,overlay:50};cards.forEach(c=>{c.bgColor=t.card;c.titleColor=t.title;c.entityColor=t.entity});applyBackground();saveState();renderCanvas();closeModal('themeModal');showNotification(`Applied ${name} theme`)}
-function applyBackground(){const bgLayer=document.querySelector('.bg-layer');const bgImage=document.getElementById('bgImage');const bgOverlay=document.getElementById('bgOverlay');if(bgSettings.type==='gradient'){bgLayer.style.background=`linear-gradient(${bgSettings.angle}deg,${bgSettings.grad1},${bgSettings.grad2})`;bgImage.style.backgroundImage='none'}else if(bgSettings.type==='image'){bgLayer.style.background='#000';bgImage.style.backgroundImage=`url(${bgSettings.imageUrl})`;bgImage.style.opacity=bgSettings.opacity/100;bgImage.style.filter=`blur(${bgSettings.blur}px)`}else{bgLayer.style.background=bgSettings.solid;bgImage.style.backgroundImage='none'}bgOverlay.style.background=`rgba(0,0,0,${bgSettings.overlay/100})`}
+
+// Background Settings Functions
+function showBackgroundSettings(){
+    // Update UI to match current settings
+    setBgTypeUI(bgSettings.type);
+    document.getElementById('bgGrad1').value = bgSettings.grad1;
+    document.getElementById('bgGrad2').value = bgSettings.grad2;
+    document.getElementById('bgAngle').value = bgSettings.angle;
+    document.getElementById('bgAngleVal').textContent = bgSettings.angle;
+    document.getElementById('bgSolidColor').value = bgSettings.solid;
+    document.getElementById('bgImageUrl').value = bgSettings.imageUrl || '';
+    document.getElementById('bgOpacity').value = bgSettings.opacity;
+    document.getElementById('bgOpacityVal').textContent = bgSettings.opacity;
+    document.getElementById('bgBlur').value = bgSettings.blur;
+    document.getElementById('bgBlurVal').textContent = bgSettings.blur;
+    document.getElementById('bgOverlayAmount').value = bgSettings.overlay;
+    document.getElementById('bgOverlayVal').textContent = bgSettings.overlay;
+    
+    if(bgSettings.imageUrl) {
+        document.getElementById('bgImagePreview').style.backgroundImage = `url(${bgSettings.imageUrl})`;
+        document.getElementById('bgImagePreview').textContent = '';
+    }
+    
+    document.getElementById('backgroundModal').classList.add('active');
+}
+
+function setBgType(type) {
+    bgSettings.type = type;
+    setBgTypeUI(type);
+    updateBgSettings();
+}
+
+function setBgTypeUI(type) {
+    document.querySelectorAll('.bg-type-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('bgType' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active');
+    document.getElementById('bgGradientSettings').style.display = type === 'gradient' ? 'block' : 'none';
+    document.getElementById('bgSolidSettings').style.display = type === 'solid' ? 'block' : 'none';
+    document.getElementById('bgImageSettings').style.display = type === 'image' ? 'block' : 'none';
+}
+
+function updateBgSettings() {
+    bgSettings.grad1 = document.getElementById('bgGrad1').value;
+    bgSettings.grad2 = document.getElementById('bgGrad2').value;
+    bgSettings.angle = parseInt(document.getElementById('bgAngle').value);
+    document.getElementById('bgAngleVal').textContent = bgSettings.angle;
+    
+    bgSettings.solid = document.getElementById('bgSolidColor').value;
+    bgSettings.imageUrl = document.getElementById('bgImageUrl').value;
+    bgSettings.opacity = parseInt(document.getElementById('bgOpacity').value);
+    document.getElementById('bgOpacityVal').textContent = bgSettings.opacity;
+    bgSettings.blur = parseInt(document.getElementById('bgBlur').value);
+    document.getElementById('bgBlurVal').textContent = bgSettings.blur;
+    bgSettings.overlay = parseInt(document.getElementById('bgOverlayAmount').value);
+    document.getElementById('bgOverlayVal').textContent = bgSettings.overlay;
+    
+    applyBackground();
+    saveState();
+}
+
+function uploadBgImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            bgSettings.imageUrl = e.target.result;
+            document.getElementById('bgImageUrl').value = '';
+            document.getElementById('bgImagePreview').style.backgroundImage = `url(${e.target.result})`;
+            document.getElementById('bgImagePreview').textContent = '';
+            bgSettings.type = 'image';
+            setBgTypeUI('image');
+            applyBackground();
+            saveState();
+            showNotification('Background image uploaded', 'success');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function applyBackground(){
+    const bgLayer=document.querySelector('.bg-layer');
+    const bgImage=document.getElementById('bgImage');
+    const bgOverlay=document.getElementById('bgOverlay');
+    
+    if(bgSettings.type==='gradient'){
+        bgLayer.style.background=`linear-gradient(${bgSettings.angle}deg,${bgSettings.grad1},${bgSettings.grad2})`;
+        bgImage.style.backgroundImage='none';
+        bgImage.style.opacity = 0;
+    }else if(bgSettings.type==='image' && bgSettings.imageUrl){
+        bgLayer.style.background='#000';
+        bgImage.style.backgroundImage=`url(${bgSettings.imageUrl})`;
+        bgImage.style.opacity=bgSettings.opacity/100;
+        bgImage.style.filter=`blur(${bgSettings.blur}px)`;
+    }else{
+        bgLayer.style.background=bgSettings.solid;
+        bgImage.style.backgroundImage='none';
+        bgImage.style.opacity = 0;
+    }
+    bgOverlay.style.background=`rgba(0,0,0,${bgSettings.overlay/100})`;
+}
+
 function showGallery(){document.getElementById('galleryModal').classList.add('active')}
 function cloneGalleryDashboard(type){const templates={
 'smart-home':[{type:'entities',title:'Living Room',x:50,y:50,entities:['light.living','switch.tv','climate.living']},{type:'weather',title:'Weather',x:400,y:50,entity:'weather.home'},{type:'camera',title:'Front Door',x:50,y:300,entity:'camera.front'},{type:'gauge',title:'Temperature',x:500,y:300,entity:'sensor.temp',min:0,max:100}],
 'minimalist':[{type:'glance',title:'Quick View',x:50,y:50,entities:['light.main','switch.fan','sensor.temp']},{type:'clock',title:'Time',x:450,y:50,format:'24'}],
 'energy':[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power',min:0,max:5000},{type:'chart',title:'Usage',x:350,y:50,entity:'sensor.power',chartType:'line'},{type:'entities',title:'Devices',x:50,y:400,entities:['switch.washer','switch.dryer','switch.hvac']}],
 'security':[{type:'camera',title:'Front',x:50,y:50,entity:'camera.front'},{type:'camera',title:'Back',x:500,y:50,entity:'camera.back'},{type:'entities',title:'Sensors',x:50,y:400,entities:['binary_sensor.door','binary_sensor.motion','binary_sensor.window']}]
-};const tpl=templates[type];if(tpl){cards.push(...tpl.map(t=>({...t,id:cardIdCounter++,width:cardTypeConfigs[t.type].defaultSize.width,height:cardTypeConfigs[t.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType})));saveState();renderCanvas();closeModal('galleryModal');showNotification('Dashboard cloned from gallery')}}
+};const tpl=templates[type];if(tpl){cards.push(...tpl.map(t=>({...t,id:cardIdCounter++,width:cardTypeConfigs[t.type].defaultSize.width,height:cardTypeConfigs[t.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType,titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'},borderRadius:14,cornerStyle:'rounded'})));saveState();renderCanvas();closeModal('galleryModal');showNotification('Dashboard cloned from gallery')}}
 function showTemplateLibrary(){document.getElementById('templateModal').classList.add('active')}
-function applyTemplate(name){const templates={living:[{type:'entities',title:'Living Room Lights',x:50,y:50,entities:['light.living_room','light.lamp','switch.tv']},{type:'media',title:'TV',x:400,y:50,entity:'media_player.tv'},{type:'thermostat',title:'Climate',x:50,y:300,entity:'climate.living'}],kitchen:[{type:'entities',title:'Kitchen',x:50,y:50,entities:['light.kitchen','light.counter','switch.coffee']},{type:'button',title:'Coffee',x:400,y:50,entity:'switch.coffee_maker'}],bedroom:[{type:'entities',title:'Bedroom',x:50,y:50,entities:['light.bedroom','switch.fan']},{type:'thermostat',title:'Climate',x:400,y:50,entity:'climate.bedroom'},{type:'clock',title:'Clock',x:50,y:350,format:'12'}],security:[{type:'camera',title:'Front Door',x:50,y:50,entity:'camera.front'},{type:'entities',title:'Sensors',x:500,y:50,entities:['binary_sensor.door','binary_sensor.motion','binary_sensor.window']}],energy:[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power',min:0,max:5000},{type:'chart',title:'Usage',x:350,y:50,entity:'sensor.power',chartType:'line'}],outdoor:[{type:'weather',title:'Weather',x:50,y:50,entity:'weather.home'},{type:'entities',title:'Garden',x:450,y:50,entities:['switch.sprinkler','light.porch','sensor.soil']}]};const tpl=templates[name];if(tpl){cards.push(...tpl.map(t=>({...t,id:cardIdCounter++,width:cardTypeConfigs[t.type].defaultSize.width,height:cardTypeConfigs[t.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType})));saveState();renderCanvas();closeModal('templateModal');showNotification('Template applied')}}
+function applyTemplate(name){const templates={living:[{type:'entities',title:'Living Room Lights',x:50,y:50,entities:['light.living_room','light.lamp','switch.tv']},{type:'media',title:'TV',x:400,y:50,entity:'media_player.tv'},{type:'thermostat',title:'Climate',x:50,y:300,entity:'climate.living'}],kitchen:[{type:'entities',title:'Kitchen',x:50,y:50,entities:['light.kitchen','light.counter','switch.coffee']},{type:'button',title:'Coffee',x:400,y:50,entity:'switch.coffee_maker'}],bedroom:[{type:'entities',title:'Bedroom',x:50,y:50,entities:['light.bedroom','switch.fan']},{type:'thermostat',title:'Climate',x:400,y:50,entity:'climate.bedroom'},{type:'clock',title:'Clock',x:50,y:350,format:'12'}],security:[{type:'camera',title:'Front Door',x:50,y:50,entity:'camera.front'},{type:'entities',title:'Sensors',x:500,y:50,entities:['binary_sensor.door','binary_sensor.motion','binary_sensor.window']}],energy:[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power',min:0,max:5000},{type:'chart',title:'Usage',x:350,y:50,entity:'sensor.power',chartType:'line'}],outdoor:[{type:'weather',title:'Weather',x:50,y:50,entity:'weather.home'},{type:'entities',title:'Garden',x:450,y:50,entities:['switch.sprinkler','light.porch','sensor.soil']}]};const tpl=templates[name];if(tpl){cards.push(...tpl.map(t=>({...t,id:cardIdCounter++,width:cardTypeConfigs[t.type].defaultSize.width,height:cardTypeConfigs[t.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType,titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'},borderRadius:14,cornerStyle:'rounded'})));saveState();renderCanvas();closeModal('templateModal');showNotification('Template applied')}}
 function showImportModal(){document.getElementById('importModal').classList.add('active')}
-function importYAML(){const yaml=document.getElementById('importYaml').value;try{const lines=yaml.split('\n');let currentCard=null;lines.forEach(line=>{const trimmed=line.trim();if(trimmed.startsWith('- type:')){if(currentCard)cards.push(currentCard);const type=trimmed.split(':')[1].trim();currentCard={id:cardIdCounter++,type,x:50+cards.length*30,y:50+cards.length*30,width:cardTypeConfigs[type]?.defaultSize.width||300,height:cardTypeConfigs[type]?.defaultSize.height||200,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',zIndex:cards.length,animation:animationType,entities:[]}}else if(trimmed.startsWith('title:')&&currentCard){currentCard.title=trimmed.split(':')[1].trim().replace(/"/g,'')}else if(trimmed.startsWith('entity:')&&currentCard){currentCard.entity=trimmed.split(':')[1].trim()}else if(trimmed.startsWith('- ')&&currentCard&&currentCard.entities){currentCard.entities.push(trimmed.substring(2).trim())}});if(currentCard)cards.push(currentCard);saveState();renderCanvas();closeModal('importModal');showNotification(`Imported ${cards.length} cards`)}catch(e){showNotification('Invalid YAML','error')}}
+function importYAML(){const yaml=document.getElementById('importYaml').value;try{const lines=yaml.split('\n');let currentCard=null;lines.forEach(line=>{const trimmed=line.trim();if(trimmed.startsWith('- type:')){if(currentCard)cards.push(currentCard);const type=trimmed.split(':')[1].trim();currentCard={id:cardIdCounter++,type,x:50+cards.length*30,y:50+cards.length*30,width:cardTypeConfigs[type]?.defaultSize.width||300,height:cardTypeConfigs[type]?.defaultSize.height||200,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',zIndex:cards.length,animation:animationType,entities:[],titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'},borderRadius:14,cornerStyle:'rounded'}}else if(trimmed.startsWith('title:')&&currentCard){currentCard.title=trimmed.split(':')[1].trim().replace(/"/g,'')}else if(trimmed.startsWith('entity:')&&currentCard){currentCard.entity=trimmed.split(':')[1].trim()}else if(trimmed.startsWith('- ')&&currentCard&&currentCard.entities){currentCard.entities.push(trimmed.substring(2).trim())}});if(currentCard)cards.push(currentCard);saveState();renderCanvas();closeModal('importModal');showNotification(`Imported ${cards.length} cards`)}catch(e){showNotification('Invalid YAML','error')}}
 function showVersionHistory(){updateVersionList();document.getElementById('versionHistoryModal').classList.add('active')}
 function updateVersionList(){const div=document.getElementById('versionList');div.innerHTML=versionHistory.slice().reverse().map((v,i)=>`<div class="version-item" onclick="restoreVersion(${versionHistory.length-1-i})"><div class="version-time">${new Date(v.time).toLocaleString()}</div><div class="version-cards">${v.cardCount} cards</div></div>`).join('')||'<p style="color:#666;text-align:center">No history</p>'}
 function restoreVersion(idx){if(!confirm('Restore this version?'))return;const v=versionHistory[idx];cards=JSON.parse(JSON.stringify(v.cards));saveState();renderCanvas();closeModal('versionHistoryModal');showNotification('Version restored')}
