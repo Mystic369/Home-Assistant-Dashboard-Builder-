@@ -458,10 +458,27 @@ ${entField}
 </div>
 <div class="prop-section"><h3>🎨 Colors</h3>
 <div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-gradient" ${c.useGradient?'checked':''}> Use Gradient</label></div>
-<div class="form-group"><label>Background</label><input type="color" id="prop-bg" value="${c.bgColor}"></div>
+<div id="solidColorSection" style="display:${c.useGradient?'none':'block'}"><div class="form-group"><label>Background</label><input type="color" id="prop-bg" value="${c.bgColor}"></div></div>
+<div id="gradientSection" style="display:${c.useGradient?'block':'none'}"><div class="form-group"><label>Gradient Color 1</label><input type="color" id="prop-gc1" value="${c.gradientColor1||'#43eeff'}"></div><div class="form-group"><label>Gradient Color 2</label><input type="color" id="prop-gc2" value="${c.gradientColor2||'#ff43ee'}"></div></div>
 <div class="form-group"><label>Title Color</label><input type="color" id="prop-tc" value="${c.titleColor}"></div>
 <div class="form-group"><label>Entity Color</label><input type="color" id="prop-ec" value="${c.entityColor}"></div>
 </div>
+<div class="prop-section"><h3>✨ Title Shadow</h3>
+<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-title-shadow" ${c.titleShadow?.enabled?'checked':''}> Enable Shadow</label></div>
+<div id="titleShadowSection" style="display:${c.titleShadow?.enabled?'block':'none'}">
+<div class="form-group"><label>X: <span id="tsX">${c.titleShadow?.x||2}</span>px</label><input type="range" id="prop-ts-x" min="-10" max="10" value="${c.titleShadow?.x||2}"></div>
+<div class="form-group"><label>Y: <span id="tsY">${c.titleShadow?.y||2}</span>px</label><input type="range" id="prop-ts-y" min="-10" max="10" value="${c.titleShadow?.y||2}"></div>
+<div class="form-group"><label>Blur: <span id="tsBlur">${c.titleShadow?.blur||4}</span>px</label><input type="range" id="prop-ts-blur" min="0" max="20" value="${c.titleShadow?.blur||4}"></div>
+<div class="form-group"><label>Color</label><input type="color" id="prop-ts-color" value="${c.titleShadow?.color||'#000000'}"></div>
+</div></div>
+<div class="prop-section"><h3>✨ Entity Shadow</h3>
+<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-entity-shadow" ${c.entityShadow?.enabled?'checked':''}> Enable Shadow</label></div>
+<div id="entityShadowSection" style="display:${c.entityShadow?.enabled?'block':'none'}">
+<div class="form-group"><label>X: <span id="esX">${c.entityShadow?.x||1}</span>px</label><input type="range" id="prop-es-x" min="-10" max="10" value="${c.entityShadow?.x||1}"></div>
+<div class="form-group"><label>Y: <span id="esY">${c.entityShadow?.y||1}</span>px</label><input type="range" id="prop-es-y" min="-10" max="10" value="${c.entityShadow?.y||1}"></div>
+<div class="form-group"><label>Blur: <span id="esBlur">${c.entityShadow?.blur||2}</span>px</label><input type="range" id="prop-es-blur" min="0" max="20" value="${c.entityShadow?.blur||2}"></div>
+<div class="form-group"><label>Color</label><input type="color" id="prop-es-color" value="${c.entityShadow?.color||'#000000'}"></div>
+</div></div>
 <div class="prop-section"><h3>✨ Effects</h3>
 <div class="form-group"><label>Hover Effect</label><select id="prop-hover"><option value="none" ${c.hoverEffect==='none'?'selected':''}>None</option><option value="scale" ${c.hoverEffect==='scale'?'selected':''}>Scale Up</option><option value="glow" ${c.hoverEffect==='glow'?'selected':''}>Glow</option><option value="lift" ${c.hoverEffect==='lift'?'selected':''}>Lift</option><option value="border" ${c.hoverEffect==='border'?'selected':''}>Border</option></select></div>
 <div class="form-group"><label>Corner Style</label><select id="prop-corner"><option value="rounded" ${c.cornerStyle==='rounded'?'selected':''}>Rounded</option><option value="square" ${c.cornerStyle==='square'?'selected':''}>Square</option></select></div>
@@ -490,10 +507,22 @@ document.getElementById('prop-y').oninput=e=>{c.y=+e.target.value;renderCanvas()
 document.getElementById('prop-w').oninput=e=>{c.width=+e.target.value;renderCanvas();e.target.previousElementSibling.textContent=`W: ${c.width}px`};
 document.getElementById('prop-h').oninput=e=>{c.height=+e.target.value;renderCanvas();e.target.previousElementSibling.textContent=`H: ${c.height}px`};
 document.getElementById('prop-aspect').onchange=e=>{c.aspectRatioLock=e.target.checked};
-document.getElementById('prop-gradient').onchange=e=>{c.useGradient=e.target.checked;renderCanvas()};
+document.getElementById('prop-gradient').onchange=e=>{c.useGradient=e.target.checked;document.getElementById('solidColorSection').style.display=c.useGradient?'none':'block';document.getElementById('gradientSection').style.display=c.useGradient?'block':'none';renderCanvas()};
 document.getElementById('prop-bg').oninput=e=>{c.bgColor=e.target.value;renderCanvas()};
+document.getElementById('prop-gc1').oninput=e=>{c.gradientColor1=e.target.value;renderCanvas()};
+document.getElementById('prop-gc2').oninput=e=>{c.gradientColor2=e.target.value;renderCanvas()};
 document.getElementById('prop-tc').oninput=e=>{c.titleColor=e.target.value;renderCanvas()};
 document.getElementById('prop-ec').oninput=e=>{c.entityColor=e.target.value;renderCanvas()};
+document.getElementById('prop-title-shadow').onchange=e=>{c.titleShadow.enabled=e.target.checked;document.getElementById('titleShadowSection').style.display=c.titleShadow.enabled?'block':'none';renderCanvas()};
+document.getElementById('prop-ts-x').oninput=e=>{c.titleShadow.x=+e.target.value;document.getElementById('tsX').textContent=c.titleShadow.x;renderCanvas()};
+document.getElementById('prop-ts-y').oninput=e=>{c.titleShadow.y=+e.target.value;document.getElementById('tsY').textContent=c.titleShadow.y;renderCanvas()};
+document.getElementById('prop-ts-blur').oninput=e=>{c.titleShadow.blur=+e.target.value;document.getElementById('tsBlur').textContent=c.titleShadow.blur;renderCanvas()};
+document.getElementById('prop-ts-color').oninput=e=>{c.titleShadow.color=e.target.value;renderCanvas()};
+document.getElementById('prop-entity-shadow').onchange=e=>{c.entityShadow.enabled=e.target.checked;document.getElementById('entityShadowSection').style.display=c.entityShadow.enabled?'block':'none';renderCanvas()};
+document.getElementById('prop-es-x').oninput=e=>{c.entityShadow.x=+e.target.value;document.getElementById('esX').textContent=c.entityShadow.x;renderCanvas()};
+document.getElementById('prop-es-y').oninput=e=>{c.entityShadow.y=+e.target.value;document.getElementById('esY').textContent=c.entityShadow.y;renderCanvas()};
+document.getElementById('prop-es-blur').oninput=e=>{c.entityShadow.blur=+e.target.value;document.getElementById('esBlur').textContent=c.entityShadow.blur;renderCanvas()};
+document.getElementById('prop-es-color').oninput=e=>{c.entityShadow.color=e.target.value;renderCanvas()};
 document.getElementById('prop-hover').onchange=e=>{c.hoverEffect=e.target.value;renderCanvas()};
 document.getElementById('prop-corner').onchange=e=>{c.cornerStyle=e.target.value;renderCanvas()};
 document.getElementById('prop-radius').oninput=e=>{c.borderRadius=+e.target.value;renderCanvas();e.target.previousElementSibling.textContent=`Border Radius: ${c.borderRadius}px`};
