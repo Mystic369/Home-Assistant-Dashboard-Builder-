@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HA Dashboard Builder v4.2 MEGA</title>
+<title>HA Dashboard Builder v4.3 MEGA</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Nunito:wght@400;700&family=Raleway:wght@400;600;700&family=Ubuntu:wght@400;500;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;color:#fff;overflow:hidden;height:100vh;position:relative}
@@ -12,20 +12,23 @@
 .logo{font-size:1.6em;font-weight:700;background:linear-gradient(135deg,#43eeff,#ff43ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;cursor:pointer}.version{font-size:.7em;color:#666;margin-left:10px}.badge{background:linear-gradient(135deg,#ff43ee,#43eeff);padding:2px 8px;border-radius:4px;font-size:.6em;color:#000;margin-left:8px;font-weight:800}
 .header-center{display:flex;gap:10px;align-items:center}.dashboard-selector{padding:8px 16px;background:rgba(67,238,255,.2);border:1px solid #43eeff;border-radius:6px;color:#43eeff;cursor:pointer;font-weight:600;font-size:.9em;min-width:200px;text-align:center}.dashboard-selector:hover{background:rgba(67,238,255,.3)}
 .header-actions{display:flex;gap:8px;flex-wrap:wrap}.header-btn{padding:8px 14px;background:rgba(67,238,255,.15);border:1px solid #43eeff;border-radius:8px;color:#43eeff;cursor:pointer;font-weight:600;transition:all .3s;font-size:.85em;white-space:nowrap;position:relative}.header-btn:hover{background:rgba(67,238,255,.3);transform:translateY(-2px)}.header-btn.active{background:rgba(67,238,255,.4);border-color:#ff43ee}.header-btn.premium{background:linear-gradient(135deg,#ff43ee,#eb2fda);color:#fff;border:none}.header-btn.yaml-btn{background:linear-gradient(135deg,#4caf50,#45a049);color:#fff;border:none}
-/* FIXED: Tooltip styles - now appear BELOW buttons to avoid browser menu bar */
 .header-btn::after,.tool-btn::after{content:attr(data-tooltip);position:absolute;top:120%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.95);color:#fff;padding:6px 12px;border-radius:6px;font-size:.75em;white-space:nowrap;opacity:0;visibility:hidden;transition:all .2s;pointer-events:none;z-index:1000;border:1px solid #43eeff}.header-btn:hover::after,.tool-btn:hover::after{opacity:1;visibility:visible}.header-btn::before,.tool-btn::before{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-bottom-color:rgba(0,0,0,.95);opacity:0;visibility:hidden;transition:all .2s}.header-btn:hover::before,.tool-btn:hover::before{opacity:1;visibility:visible}
-/* Card type buttons tooltips appear above (they're lower on the page) */
 .card-type-btn::after{content:attr(data-tooltip);position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.95);color:#fff;padding:6px 12px;border-radius:6px;font-size:.75em;white-space:nowrap;opacity:0;visibility:hidden;transition:all .2s;pointer-events:none;z-index:1000;border:1px solid #43eeff}.card-type-btn:hover::after{opacity:1;visibility:visible}.card-type-btn::before{content:'';position:absolute;bottom:110%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:rgba(0,0,0,.95);opacity:0;visibility:hidden;transition:all .2s}.card-type-btn:hover::before{opacity:1;visibility:visible}
 .toolbar{grid-column:1/-1;background:rgba(15,15,30,.9);border-bottom:1px solid rgba(67,238,255,.2);padding:8px 20px;display:flex;gap:12px;align-items:center;overflow-x:auto}.tool-group{display:flex;gap:6px;padding-right:12px;border-right:1px solid rgba(67,238,255,.2)}.tool-btn{padding:6px 12px;background:rgba(67,238,255,.1);border:1px solid rgba(67,238,255,.3);border-radius:6px;color:#43eeff;cursor:pointer;font-size:.8em;transition:all .2s;white-space:nowrap;position:relative}.tool-btn:hover{background:rgba(67,238,255,.25)}.tool-btn.active{background:rgba(255,67,238,.2);border-color:#ff43ee;color:#ff43ee}
 .sidebar{background:rgba(20,20,40,.85);backdrop-filter:blur(10px);border-right:1px solid rgba(67,238,255,.2);padding:20px;overflow-y:auto}.sidebar h2{color:#ff43ee;margin-bottom:15px;font-size:1.2em}.sidebar-tabs{display:flex;gap:8px;margin-bottom:15px}.sidebar-tab{padding:8px 16px;background:rgba(67,238,255,.1);border:none;border-radius:6px;color:#43eeff;cursor:pointer;font-size:.85em;flex:1;text-align:center}.sidebar-tab.active{background:rgba(67,238,255,.25);border:1px solid #ff43ee}
 .canvas-container{background:transparent;position:relative;overflow:auto}.canvas{min-height:100%;min-width:100%;background-image:repeating-linear-gradient(0deg,rgba(67,238,255,.05) 0px,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px),repeating-linear-gradient(90deg,rgba(67,238,255,.05) 0px,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px);background-size:50px 50px;position:relative;padding:40px;transition:all .3s}.canvas.mobile-preview{max-width:375px;margin:0 auto;background:rgba(0,0,0,.1);border:2px solid rgba(67,238,255,.3);border-radius:20px}.canvas.tablet-preview{max-width:768px;margin:0 auto;background:rgba(0,0,0,.1);border:2px solid rgba(67,238,255,.3);border-radius:12px}
-.canvas-card{position:absolute;background:#43eeff;border-radius:14px;padding:18px;cursor:move;box-shadow:0 4px 20px rgba(67,238,255,.5);min-width:150px;min-height:100px;transition:all .3s;overflow:hidden}.canvas-card.anim-fade{animation:fadeIn .5s}.canvas-card.anim-slide{animation:slideIn .5s}.canvas-card.anim-bounce{animation:bounceIn .6s}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.05)}70%{transform:scale(.9)}100%{transform:scale(1)}}
+.canvas-card{position:absolute;background:#43eeff;border-radius:14px;padding:18px;cursor:move;box-shadow:0 4px 20px rgba(67,238,255,.5);min-width:150px;min-height:100px;transition:all .3s;overflow:hidden}.canvas-card.locked{cursor:not-allowed;opacity:.9}.canvas-card.locked::after{content:'🔒';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2em;opacity:.3;pointer-events:none}
+.canvas-card.anim-fade{animation:fadeIn .5s}.canvas-card.anim-slide{animation:slideIn .5s}.canvas-card.anim-bounce{animation:bounceIn .6s}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.05)}70%{transform:scale(.9)}100%{transform:scale(1)}}
+/* Hover effects */
+.canvas-card.hover-scale:hover{transform:scale(1.05)}.canvas-card.hover-glow:hover{box-shadow:0 0 30px rgba(67,238,255,.8),0 0 60px rgba(67,238,255,.4)}.canvas-card.hover-lift:hover{transform:translateY(-8px);box-shadow:0 12px 40px rgba(0,0,0,.4)}.canvas-card.hover-border:hover{border:3px solid #fff}
 .canvas-card:hover{box-shadow:0 8px 35px rgba(67,238,255,.7)}.canvas-card.selected{border:3px solid #ff43ee;box-shadow:0 0 0 4px rgba(255,67,238,.3)}.canvas-card.multi-selected{border:3px solid #ffeb3b;box-shadow:0 0 0 4px rgba(255,235,59,.3)}.canvas-card.drag-over{border:3px dashed #ffeb3b;background:rgba(255,235,59,.1)}
+/* Alignment guides */
+.align-guide{position:absolute;background:#ff43ee;z-index:1000;pointer-events:none;opacity:.8}.align-guide.vertical{width:2px;height:100%}.align-guide.horizontal{height:2px;width:100%}
 .card-type-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.7);padding:4px 10px;border-radius:6px;font-size:.7em;color:#fff;font-weight:700;text-transform:uppercase;z-index:5}.card-size-badge{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.7);padding:4px 10px;border-radius:6px;font-size:.7em;color:#fff;z-index:5}.card-z-badge{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.7);padding:4px 8px;border-radius:6px;font-size:.65em;color:#fff;z-index:5}.card-group-badge{position:absolute;bottom:8px;left:8px;background:rgba(255,67,238,.8);padding:4px 8px;border-radius:6px;font-size:.65em;color:#fff;z-index:5;font-weight:700}
-.card-title-display{color:#ff43ee;font-weight:600;margin-bottom:12px;margin-top:20px}.card-entity-display{margin:6px 0;padding:6px 10px;background:rgba(255,255,255,.25);border-radius:6px;color:#ffeb3b;cursor:grab;position:relative;transition:all .2s}.card-entity-display:hover{background:rgba(255,255,255,.35);transform:translateX(5px)}.card-entity-display.dragging-entity{opacity:.5;cursor:grabbing}.card-entity-display.drag-over-entity{border-top:3px solid #ff43ee}
-.resize-handle{position:absolute;width:14px;height:14px;background:#ff43ee;border:2px solid #fff;border-radius:50%;display:none;z-index:10}.canvas-card.selected .resize-handle{display:block}.resize-se{bottom:-7px;right:-7px;cursor:se-resize}.resize-sw{bottom:-7px;left:-7px;cursor:sw-resize}.resize-ne{top:-7px;right:-7px;cursor:ne-resize}.resize-nw{top:-7px;left:-7px;cursor:nw-resize}
+.card-icon{font-size:1.5em;margin-right:8px}.card-title-display{color:#ff43ee;font-weight:600;margin-bottom:12px;margin-top:20px;display:flex;align-items:center}.card-entity-display{margin:6px 0;padding:6px 10px;background:rgba(255,255,255,.25);border-radius:6px;color:#ffeb3b;cursor:grab;position:relative;transition:all .2s}.card-entity-display:hover{background:rgba(255,255,255,.35);transform:translateX(5px)}
+.resize-handle{position:absolute;width:14px;height:14px;background:#ff43ee;border:2px solid #fff;border-radius:50%;display:none;z-index:10}.canvas-card.selected .resize-handle,.canvas-card.multi-selected .resize-handle{display:block}.resize-se{bottom:-7px;right:-7px;cursor:se-resize}.resize-sw{bottom:-7px;left:-7px;cursor:sw-resize}.resize-ne{top:-7px;right:-7px;cursor:ne-resize}.resize-nw{top:-7px;left:-7px;cursor:nw-resize}
 .form-group{margin-bottom:15px}label{display:block;color:#a5b4fc;margin-bottom:5px;font-size:.85em;font-weight:500}input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(67,238,255,.3);background:rgba(10,10,20,.9);color:#fff;font-size:.9em}select{cursor:pointer}textarea{resize:vertical;font-family:inherit}input[type=color]{height:45px;cursor:pointer}input[type=checkbox],input[type=radio]{width:auto;margin-right:8px}input[type=file]{padding:12px;border:2px dashed rgba(67,238,255,.5);background:rgba(67,238,255,.05);cursor:pointer}
-.btn{width:100%;padding:12px;background:linear-gradient(135deg,#43eeff,#2fdaeb);border:none;border-radius:8px;color:#0a0a15;font-weight:600;cursor:pointer;transition:all .3s;margin:5px 0;font-size:.9em}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(67,238,255,.6)}.btn-secondary{background:linear-gradient(135deg,#ff43ee,#eb2fda)}.btn-danger{background:linear-gradient(135deg,#f44,#c00);color:#fff}.btn-success{background:linear-gradient(135deg,#4caf50,#45a049);color:#fff}.btn-small{padding:8px;font-size:.8em}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#43eeff,#2fdaeb);border:none;border-radius:8px;color:#0a0a15;font-weight:600;cursor:pointer;transition:all .3s;margin:5px 0;font-size:.9em}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(67,238,255,.6)}.btn-secondary{background:linear-gradient(135deg,#ff43ee,#eb2fda)}.btn-danger{background:linear-gradient(135deg,#f44,#c00);color:#fff}.btn-success{background:linear-gradient(135deg,#4caf50,#45a049);color:#fff}.btn-small{padding:8px;font-size:.8em}.btn-half{width:48%;display:inline-block}
 .checkbox-label{display:flex;align-items:center;padding:10px;background:rgba(67,238,255,.1);border-radius:8px;cursor:pointer;transition:background .2s}.checkbox-label:hover{background:rgba(67,238,255,.2)}
 .properties-panel{background:rgba(20,20,40,.85);backdrop-filter:blur(10px);border-left:1px solid rgba(67,238,255,.2);padding:20px;overflow-y:auto}.no-selection{text-align:center;color:#666;padding:50px 15px}.no-selection-icon{font-size:3.5em;margin-bottom:12px}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:rgba(20,20,40,.98);border:2px solid #43eeff;border-radius:16px;padding:30px;max-width:900px;width:90%;max-height:85vh;overflow-y:auto}.modal h2{color:#ff43ee;margin-bottom:20px;font-size:1.6em}
@@ -45,66 +48,70 @@
 .shadow-preview{padding:10px;background:rgba(0,0,0,.3);border-radius:8px;margin-top:8px;text-align:center;font-size:1.1em}
 .bg-type-selector{display:flex;gap:8px;margin-bottom:15px}.bg-type-btn{flex:1;padding:10px;background:rgba(67,238,255,.1);border:1px solid rgba(67,238,255,.3);border-radius:6px;color:#43eeff;cursor:pointer;text-align:center;font-size:.8em;transition:all .2s}.bg-type-btn:hover{background:rgba(67,238,255,.2)}.bg-type-btn.active{background:rgba(67,238,255,.3);border-color:#ff43ee}
 .image-preview{width:100%;height:120px;background:#1a1a2e;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-top:10px;background-size:cover;background-position:center;color:#666;font-size:.85em;border:2px dashed rgba(67,238,255,.3)}
-/* Import options */
 .import-options{background:rgba(67,238,255,.1);border-radius:8px;padding:15px;margin:15px 0}.import-options label{color:#43eeff;margin-bottom:10px;display:block}.import-option{display:flex;align-items:center;padding:8px;margin:5px 0;background:rgba(0,0,0,.2);border-radius:6px;cursor:pointer}.import-option:hover{background:rgba(67,238,255,.15)}.import-option input{margin-right:10px}
+/* Icon picker */
+.icon-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;max-height:300px;overflow-y:auto;padding:10px;background:rgba(0,0,0,.3);border-radius:8px;margin-top:10px}.icon-item{padding:10px;text-align:center;cursor:pointer;border-radius:6px;transition:all .2s;font-size:1.5em}.icon-item:hover{background:rgba(67,238,255,.3)}.icon-item.selected{background:rgba(255,67,238,.3);border:2px solid #ff43ee}
+/* Style presets */
+.preset-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}.preset-item{padding:12px;background:rgba(67,238,255,.1);border:2px solid rgba(67,238,255,.3);border-radius:8px;cursor:pointer;transition:all .2s}.preset-item:hover{background:rgba(67,238,255,.2);border-color:#43eeff}.preset-name{font-weight:600;color:#43eeff;margin-bottom:5px}.preset-preview{display:flex;gap:5px}.preset-color{width:20px;height:20px;border-radius:4px}
+/* Tap action builder */
+.action-builder{background:rgba(0,0,0,.2);border-radius:8px;padding:15px;margin-top:10px}.action-row{display:flex;gap:10px;margin-bottom:10px;align-items:center}.action-row select,.action-row input{flex:1}
+/* Lovelace toggle */
+.lovelace-toggle{display:flex;gap:10px;margin-bottom:15px}.lovelace-btn{flex:1;padding:10px;background:rgba(67,238,255,.1);border:1px solid rgba(67,238,255,.3);border-radius:6px;color:#43eeff;cursor:pointer;text-align:center}.lovelace-btn.active{background:rgba(67,238,255,.3);border-color:#ff43ee}
+/* Share modal */
+.share-url{width:100%;padding:12px;background:#0a0a15;border:1px solid rgba(67,238,255,.4);border-radius:8px;color:#43eeff;font-family:monospace;font-size:.75em;word-break:break-all;margin:15px 0}
 </style>
 </head>
 <body>
-<div class="bg-layer">
-<div class="bg-image" id="bgImage"></div>
-<div class="bg-overlay" id="bgOverlay"></div>
-</div>
+<div class="bg-layer"><div class="bg-image" id="bgImage"></div><div class="bg-overlay" id="bgOverlay"></div></div>
 <div class="app-container">
 <div class="header">
-<div class="logo" onclick="showDashboardManager()">🎨 HA Dashboard Builder<span class="version">v4.2</span><span class="badge">MEGA</span></div>
-<div class="header-center">
-<div class="dashboard-selector" onclick="showDashboardManager()" id="currentDashboard">My Dashboard</div>
-</div>
+<div class="logo" onclick="showDashboardManager()">🎨 HA Dashboard Builder<span class="version">v4.3</span><span class="badge">MEGA</span></div>
+<div class="header-center"><div class="dashboard-selector" onclick="showDashboardManager()" id="currentDashboard">My Dashboard</div></div>
 <div class="header-actions">
-<button class="header-btn yaml-btn" onclick="downloadYAMLDirect()" data-tooltip="Download YAML configuration file">📄 YAML</button>
-<button class="header-btn" onclick="showBackgroundSettings()" data-tooltip="Customize dashboard background">🖼️ Background</button>
-<button class="header-btn" onclick="showThemeMarketplace()" data-tooltip="Browse and apply themes">🎨 Themes</button>
-<button class="header-btn" onclick="showGallery()" data-tooltip="Browse community dashboards">🖼️ Gallery</button>
-<button class="header-btn" onclick="showTemplateLibrary()" data-tooltip="Apply pre-made templates">⭐ Templates</button>
-<button class="header-btn" onclick="showImportModal()" data-tooltip="Import YAML configuration">📥 Import</button>
-<button class="header-btn" onclick="toggleAutoSave()" id="autoSaveBtn" data-tooltip="Toggle automatic saving">💾 Auto</button>
-<button class="header-btn" onclick="showVersionHistory()" data-tooltip="View and restore previous versions">⏱️ History</button>
-<button class="header-btn" onclick="showShortcuts()" data-tooltip="View keyboard shortcuts">⌨️</button>
-<button class="header-btn" onclick="exportScreenshot()" data-tooltip="Export dashboard as image">📸</button>
-<button class="header-btn premium" onclick="showCloudSave()" data-tooltip="Save to cloud storage">☁️ Cloud</button>
+<button class="header-btn yaml-btn" onclick="downloadYAMLDirect()" data-tooltip="Download YAML">📄 YAML</button>
+<button class="header-btn" onclick="showBackgroundSettings()" data-tooltip="Background settings">🖼️ BG</button>
+<button class="header-btn" onclick="showThemeMarketplace()" data-tooltip="Themes">🎨</button>
+<button class="header-btn" onclick="showGallery()" data-tooltip="Gallery">🖼️</button>
+<button class="header-btn" onclick="showTemplateLibrary()" data-tooltip="Templates">⭐</button>
+<button class="header-btn" onclick="showImportModal()" data-tooltip="Import YAML">📥</button>
+<button class="header-btn" onclick="showStylePresets()" data-tooltip="Style presets">🎭</button>
+<button class="header-btn" onclick="showShareModal()" data-tooltip="Share dashboard">🔗</button>
+<button class="header-btn" onclick="exportAsPNG()" data-tooltip="Export as PNG">📸</button>
+<button class="header-btn premium" onclick="showCloudSave()" data-tooltip="Cloud save">☁️</button>
 </div>
 </div>
 <div class="toolbar">
 <div class="tool-group">
-<button class="tool-btn active" onclick="setPreviewMode('desktop')" id="previewDesktop" data-tooltip="Desktop view">🖥️</button>
-<button class="tool-btn" onclick="setPreviewMode('tablet')" id="previewTablet" data-tooltip="Tablet view">📱</button>
-<button class="tool-btn" onclick="setPreviewMode('mobile')" id="previewMobile" data-tooltip="Mobile view">📱</button>
+<button class="tool-btn active" onclick="setPreviewMode('desktop')" id="previewDesktop" data-tooltip="Desktop">🖥️</button>
+<button class="tool-btn" onclick="setPreviewMode('tablet')" id="previewTablet" data-tooltip="Tablet">📱</button>
+<button class="tool-btn" onclick="setPreviewMode('mobile')" id="previewMobile" data-tooltip="Mobile">📱</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn" onclick="selectAll()" data-tooltip="Select all cards">Select All</button>
-<button class="tool-btn" onclick="deselectAll()" data-tooltip="Deselect all cards">Deselect</button>
-<button class="tool-btn" onclick="groupSelected()" data-tooltip="Group selected cards">📦 Group</button>
-<button class="tool-btn" onclick="ungroupSelected()" data-tooltip="Ungroup selected cards">📂 Ungroup</button>
+<button class="tool-btn" onclick="selectAll()" data-tooltip="Select all">All</button>
+<button class="tool-btn" onclick="deselectAll()" data-tooltip="Deselect">None</button>
+<button class="tool-btn" onclick="groupSelected()" data-tooltip="Group">📦</button>
+<button class="tool-btn" onclick="ungroupSelected()" data-tooltip="Ungroup">📂</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn" onclick="alignCards('left')" data-tooltip="Align cards left">⬅️</button>
-<button class="tool-btn" onclick="alignCards('center')" data-tooltip="Align cards center">⬛</button>
-<button class="tool-btn" onclick="alignCards('right')" data-tooltip="Align cards right">➡️</button>
-<button class="tool-btn" onclick="distributeCards()" data-tooltip="Distribute cards evenly">↔️</button>
+<button class="tool-btn" onclick="toggleLockSelected()" id="lockBtn" data-tooltip="Lock/unlock cards">🔒</button>
+<button class="tool-btn" onclick="copyStyle()" data-tooltip="Copy style">🎨📋</button>
+<button class="tool-btn" onclick="pasteStyle()" data-tooltip="Paste style">🎨📥</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn" onclick="changeZIndex('up')" data-tooltip="Bring card forward">⬆️</button>
-<button class="tool-btn" onclick="changeZIndex('down')" data-tooltip="Send card backward">⬇️</button>
+<button class="tool-btn" onclick="alignCards('left')" data-tooltip="Align left">⬅️</button>
+<button class="tool-btn" onclick="alignCards('center')" data-tooltip="Align center">⬛</button>
+<button class="tool-btn" onclick="alignCards('right')" data-tooltip="Align right">➡️</button>
+<button class="tool-btn" onclick="autoGridLayout()" data-tooltip="Auto-grid">📐</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn active" onclick="setAnimation('fade')" id="animFade" data-tooltip="Fade animation">Fade</button>
-<button class="tool-btn" onclick="setAnimation('slide')" id="animSlide" data-tooltip="Slide animation">Slide</button>
-<button class="tool-btn" onclick="setAnimation('bounce')" id="animBounce" data-tooltip="Bounce animation">Bounce</button>
+<button class="tool-btn" onclick="changeZIndex('up')" data-tooltip="Bring forward">⬆️</button>
+<button class="tool-btn" onclick="changeZIndex('down')" data-tooltip="Send back">⬇️</button>
 </div>
 <div class="tool-group">
-<button class="tool-btn" onclick="toggleGridSnap()" id="gridSnapBtn" data-tooltip="Toggle grid snapping">🧲 ON</button>
-<button class="tool-btn" onclick="undo()" data-tooltip="Undo last action (Ctrl+Z)">↶</button>
-<button class="tool-btn" onclick="redo()" data-tooltip="Redo last action (Ctrl+Y)">↷</button>
+<button class="tool-btn" onclick="toggleGridSnap()" id="gridSnapBtn" data-tooltip="Grid snap">🧲</button>
+<button class="tool-btn" onclick="toggleAlignGuides()" id="guidesBtn" data-tooltip="Align guides">📏</button>
+<button class="tool-btn" onclick="undo()" data-tooltip="Undo">↶</button>
+<button class="tool-btn" onclick="redo()" data-tooltip="Redo">↷</button>
 </div>
 </div>
 <div class="sidebar">
@@ -117,21 +124,21 @@
 <div id="cardsTab">
 <h2>➕ Add Card</h2>
 <div class="card-type-selector">
-<div class="card-type-btn active" onclick="selectCardType('entities')" data-tooltip="Entity list card"><span class="card-type-icon">📋</span>Entities</div>
-<div class="card-type-btn" onclick="selectCardType('thermostat')" data-tooltip="Climate control card"><span class="card-type-icon">🌡️</span>Thermo</div>
-<div class="card-type-btn" onclick="selectCardType('weather')" data-tooltip="Weather forecast card"><span class="card-type-icon">🌤️</span>Weather</div>
-<div class="card-type-btn" onclick="selectCardType('camera')" data-tooltip="Camera feed card"><span class="card-type-icon">📷</span>Camera</div>
-<div class="card-type-btn" onclick="selectCardType('media')" data-tooltip="Media player card"><span class="card-type-icon">🎵</span>Media</div>
-<div class="card-type-btn" onclick="selectCardType('gauge')" data-tooltip="Gauge/meter card"><span class="card-type-icon">⏱️</span>Gauge</div>
-<div class="card-type-btn" onclick="selectCardType('button')" data-tooltip="Toggle button card"><span class="card-type-icon">🔘</span>Button</div>
-<div class="card-type-btn" onclick="selectCardType('clock')" data-tooltip="Clock display card"><span class="card-type-icon">🕐</span>Clock</div>
-<div class="card-type-btn" onclick="selectCardType('markdown')" data-tooltip="Markdown text card"><span class="card-type-icon">📝</span>Markdown</div>
-<div class="card-type-btn" onclick="selectCardType('picture')" data-tooltip="Picture display card"><span class="card-type-icon">🖼️</span>Picture</div>
-<div class="card-type-btn" onclick="selectCardType('glance')" data-tooltip="Quick glance card"><span class="card-type-icon">👁️</span>Glance</div>
-<div class="card-type-btn" onclick="selectCardType('chart')" data-tooltip="Chart/graph card"><span class="card-type-icon">📊</span>Chart</div>
-<div class="card-type-btn" onclick="selectCardType('map')" data-tooltip="Location map card"><span class="card-type-icon">🗺️</span>Map</div>
-<div class="card-type-btn" onclick="selectCardType('iframe')" data-tooltip="Embed webpage card"><span class="card-type-icon">🌐</span>Iframe</div>
-<div class="card-type-btn" onclick="selectCardType('light')" data-tooltip="Light control card"><span class="card-type-icon">💡</span>Light</div>
+<div class="card-type-btn active" onclick="selectCardType('entities')" data-tooltip="Entity list"><span class="card-type-icon">📋</span>Entities</div>
+<div class="card-type-btn" onclick="selectCardType('thermostat')" data-tooltip="Climate"><span class="card-type-icon">🌡️</span>Thermo</div>
+<div class="card-type-btn" onclick="selectCardType('weather')" data-tooltip="Weather"><span class="card-type-icon">🌤️</span>Weather</div>
+<div class="card-type-btn" onclick="selectCardType('camera')" data-tooltip="Camera"><span class="card-type-icon">📷</span>Camera</div>
+<div class="card-type-btn" onclick="selectCardType('media')" data-tooltip="Media"><span class="card-type-icon">🎵</span>Media</div>
+<div class="card-type-btn" onclick="selectCardType('gauge')" data-tooltip="Gauge"><span class="card-type-icon">⏱️</span>Gauge</div>
+<div class="card-type-btn" onclick="selectCardType('button')" data-tooltip="Button"><span class="card-type-icon">🔘</span>Button</div>
+<div class="card-type-btn" onclick="selectCardType('clock')" data-tooltip="Clock"><span class="card-type-icon">🕐</span>Clock</div>
+<div class="card-type-btn" onclick="selectCardType('markdown')" data-tooltip="Markdown"><span class="card-type-icon">📝</span>Markdown</div>
+<div class="card-type-btn" onclick="selectCardType('picture')" data-tooltip="Picture"><span class="card-type-icon">🖼️</span>Picture</div>
+<div class="card-type-btn" onclick="selectCardType('glance')" data-tooltip="Glance"><span class="card-type-icon">👁️</span>Glance</div>
+<div class="card-type-btn" onclick="selectCardType('chart')" data-tooltip="Chart"><span class="card-type-icon">📊</span>Chart</div>
+<div class="card-type-btn" onclick="selectCardType('map')" data-tooltip="Map"><span class="card-type-icon">🗺️</span>Map</div>
+<div class="card-type-btn" onclick="selectCardType('iframe')" data-tooltip="Iframe"><span class="card-type-icon">🌐</span>Iframe</div>
+<div class="card-type-btn" onclick="selectCardType('light')" data-tooltip="Light"><span class="card-type-icon">💡</span>Light</div>
 </div>
 <div class="divider"></div>
 <div id="cardConfig"></div>
@@ -160,12 +167,12 @@
 </div>
 </div>
 
-<!-- Background Settings Modal -->
+<!-- All Modals -->
 <div class="modal" id="backgroundModal"><div class="modal-content">
 <h2>🖼️ Background Settings</h2>
 <div class="bg-type-selector">
 <button class="bg-type-btn active" onclick="setBgType('gradient')" id="bgTypeGradient">Gradient</button>
-<button class="bg-type-btn" onclick="setBgType('solid')" id="bgTypeSolid">Solid Color</button>
+<button class="bg-type-btn" onclick="setBgType('solid')" id="bgTypeSolid">Solid</button>
 <button class="bg-type-btn" onclick="setBgType('image')" id="bgTypeImage">Image</button>
 </div>
 <div id="bgGradientSettings">
@@ -173,306 +180,446 @@
 <div class="form-group"><label>Color 2</label><input type="color" id="bgGrad2" value="#1a1a2e" onchange="updateBgSettings()"></div>
 <div class="form-group"><label>Angle: <span id="bgAngleVal">135</span>°</label><input type="range" id="bgAngle" min="0" max="360" value="135" oninput="updateBgSettings()"></div>
 </div>
-<div id="bgSolidSettings" style="display:none">
-<div class="form-group"><label>Background Color</label><input type="color" id="bgSolidColor" value="#1a1a2e" onchange="updateBgSettings()"></div>
-</div>
+<div id="bgSolidSettings" style="display:none"><div class="form-group"><label>Color</label><input type="color" id="bgSolidColor" value="#1a1a2e" onchange="updateBgSettings()"></div></div>
 <div id="bgImageSettings" style="display:none">
-<div class="form-group"><label>Image URL</label><input type="text" id="bgImageUrl" placeholder="https://example.com/image.jpg" onchange="updateBgSettings()"></div>
-<div class="form-group"><label>Or Upload Image</label><input type="file" id="bgImageUpload" accept="image/*" onchange="uploadBgImage(event)"></div>
-<div class="image-preview" id="bgImagePreview">No image selected</div>
+<div class="form-group"><label>URL</label><input type="text" id="bgImageUrl" placeholder="https://..." onchange="updateBgSettings()"></div>
+<div class="form-group"><label>Upload</label><input type="file" id="bgImageUpload" accept="image/*" onchange="uploadBgImage(event)"></div>
+<div class="image-preview" id="bgImagePreview">No image</div>
 <div class="form-group"><label>Opacity: <span id="bgOpacityVal">30</span>%</label><input type="range" id="bgOpacity" min="0" max="100" value="30" oninput="updateBgSettings()"></div>
 <div class="form-group"><label>Blur: <span id="bgBlurVal">0</span>px</label><input type="range" id="bgBlur" min="0" max="20" value="0" oninput="updateBgSettings()"></div>
 </div>
-<div class="form-group"><label>Overlay Darkness: <span id="bgOverlayVal">50</span>%</label><input type="range" id="bgOverlayAmount" min="0" max="100" value="50" oninput="updateBgSettings()"></div>
-<button class="btn" onclick="closeModal('backgroundModal')">Apply & Close</button>
+<div class="form-group"><label>Overlay: <span id="bgOverlayVal">50</span>%</label><input type="range" id="bgOverlayAmount" min="0" max="100" value="50" oninput="updateBgSettings()"></div>
+<button class="btn" onclick="closeModal('backgroundModal')">Apply</button>
 </div></div>
 
 <div class="modal" id="dashboardManagerModal"><div class="modal-content">
-<h2>📊 Dashboard Manager</h2>
-<div class="form-group">
+<h2>📊 Dashboards</h2>
 <button class="btn" onclick="createNewDashboard()">➕ New Dashboard</button>
-</div>
 <div class="dashboard-list" id="dashboardList"></div>
 <button class="btn btn-secondary" onclick="closeModal('dashboardManagerModal')">Close</button>
 </div></div>
+
 <div class="modal" id="themeModal"><div class="modal-content">
-<h2>🎨 Theme Marketplace</h2>
-<p style="color:#888;margin-bottom:15px">Choose a theme for your dashboard</p>
+<h2>🎨 Themes</h2>
 <div class="theme-grid">
-<div class="theme-card" onclick="applyTheme('default')" style="background:linear-gradient(135deg,#0f0f1e,#1a1a2e)"><div style="padding:30px"></div><div class="theme-name">Default Dark</div></div>
-<div class="theme-card" onclick="applyTheme('light')" style="background:linear-gradient(135deg,#f5f5f5,#e0e0e0)"><div style="padding:30px"></div><div class="theme-name" style="color:#333">Light Mode</div></div>
-<div class="theme-card" onclick="applyTheme('neon')" style="background:linear-gradient(135deg,#ff006e,#8338ec)"><div style="padding:30px"></div><div class="theme-name">Neon Dreams</div></div>
-<div class="theme-card" onclick="applyTheme('ocean')" style="background:linear-gradient(135deg,#006994,#003d5c)"><div style="padding:30px"></div><div class="theme-name">Ocean Blue</div></div>
-<div class="theme-card" onclick="applyTheme('forest')" style="background:linear-gradient(135deg,#1e4d2b,#0d2818)"><div style="padding:30px"></div><div class="theme-name">Forest Green</div></div>
-<div class="theme-card" onclick="applyTheme('sunset')" style="background:linear-gradient(135deg,#ff6b35,#f7931e)"><div style="padding:30px"></div><div class="theme-name">Sunset Orange</div></div>
-<div class="theme-card" onclick="applyTheme('purple')" style="background:linear-gradient(135deg,#7209b7,#3a0ca3)"><div style="padding:30px"></div><div class="theme-name">Royal Purple</div></div>
-<div class="theme-card" onclick="applyTheme('minimal')" style="background:#1a1a1a"><div style="padding:30px"></div><div class="theme-name">Minimal Black</div></div>
-<div class="theme-card" onclick="applyTheme('cyberpunk')" style="background:linear-gradient(135deg,#00ff9f,#00b8ff)"><div style="padding:30px"></div><div class="theme-name">Cyberpunk</div></div>
+<div class="theme-card" onclick="applyTheme('default')" style="background:linear-gradient(135deg,#0f0f1e,#1a1a2e)"><div style="padding:30px"></div><div class="theme-name">Default</div></div>
+<div class="theme-card" onclick="applyTheme('light')" style="background:linear-gradient(135deg,#f5f5f5,#e0e0e0)"><div style="padding:30px"></div><div class="theme-name" style="color:#333">Light</div></div>
+<div class="theme-card" onclick="applyTheme('neon')" style="background:linear-gradient(135deg,#ff006e,#8338ec)"><div style="padding:30px"></div><div class="theme-name">Neon</div></div>
+<div class="theme-card" onclick="applyTheme('ocean')" style="background:linear-gradient(135deg,#006994,#003d5c)"><div style="padding:30px"></div><div class="theme-name">Ocean</div></div>
+<div class="theme-card" onclick="applyTheme('forest')" style="background:linear-gradient(135deg,#1e4d2b,#0d2818)"><div style="padding:30px"></div><div class="theme-name">Forest</div></div>
+<div class="theme-card" onclick="applyTheme('sunset')" style="background:linear-gradient(135deg,#ff6b35,#f7931e)"><div style="padding:30px"></div><div class="theme-name">Sunset</div></div>
+<div class="theme-card" onclick="applyTheme('purple')" style="background:linear-gradient(135deg,#7209b7,#3a0ca3)"><div style="padding:30px"></div><div class="theme-name">Purple</div></div>
+<div class="theme-card" onclick="applyTheme('minimal')" style="background:#1a1a1a"><div style="padding:30px"></div><div class="theme-name">Minimal</div></div>
+<div class="theme-card" onclick="applyTheme('cyberpunk')" style="background:linear-gradient(135deg,#00ff9f,#00b8ff)"><div style="padding:30px"></div><div class="theme-name">Cyber</div></div>
 </div>
 <button class="btn btn-secondary" onclick="closeModal('themeModal')" style="margin-top:15px">Close</button>
 </div></div>
+
 <div class="modal" id="galleryModal"><div class="modal-content">
-<h2>🖼️ Community Gallery</h2>
-<p style="color:#888;margin-bottom:15px">Browse and clone dashboards from the community</p>
+<h2>🖼️ Gallery</h2>
 <div class="gallery-grid">
-<div class="gallery-item" onclick="cloneGalleryDashboard('smart-home')">
-<div class="gallery-preview">🏠</div>
-<div class="gallery-info">
-<div class="gallery-title">Complete Smart Home</div>
-<div class="gallery-author">by @smarthome_pro</div>
-<div class="gallery-stats"><div class="gallery-stat">⭐ 1.2k</div><div class="gallery-stat">💾 450</div></div>
-</div>
-</div>
-<div class="gallery-item" onclick="cloneGalleryDashboard('minimalist')">
-<div class="gallery-preview">✨</div>
-<div class="gallery-info">
-<div class="gallery-title">Minimalist Dashboard</div>
-<div class="gallery-author">by @clean_design</div>
-<div class="gallery-stats"><div class="gallery-stat">⭐ 890</div><div class="gallery-stat">💾 320</div></div>
-</div>
-</div>
-<div class="gallery-item" onclick="cloneGalleryDashboard('energy')">
-<div class="gallery-preview">⚡</div>
-<div class="gallery-info">
-<div class="gallery-title">Energy Monitor</div>
-<div class="gallery-author">by @energy_saver</div>
-<div class="gallery-stats"><div class="gallery-stat">⭐ 650</div><div class="gallery-stat">💾 280</div></div>
-</div>
-</div>
-<div class="gallery-item" onclick="cloneGalleryDashboard('security')">
-<div class="gallery-preview">🔒</div>
-<div class="gallery-info">
-<div class="gallery-title">Security Central</div>
-<div class="gallery-author">by @safe_home</div>
-<div class="gallery-stats"><div class="gallery-stat">⭐ 720</div><div class="gallery-stat">💾 195</div></div>
-</div>
-</div>
+<div class="gallery-item" onclick="cloneGalleryDashboard('smart-home')"><div class="gallery-preview">🏠</div><div class="gallery-info"><div class="gallery-title">Smart Home</div><div class="gallery-author">@smarthome_pro</div></div></div>
+<div class="gallery-item" onclick="cloneGalleryDashboard('minimalist')"><div class="gallery-preview">✨</div><div class="gallery-info"><div class="gallery-title">Minimalist</div><div class="gallery-author">@clean_design</div></div></div>
+<div class="gallery-item" onclick="cloneGalleryDashboard('energy')"><div class="gallery-preview">⚡</div><div class="gallery-info"><div class="gallery-title">Energy</div><div class="gallery-author">@energy_saver</div></div></div>
+<div class="gallery-item" onclick="cloneGalleryDashboard('security')"><div class="gallery-preview">🔒</div><div class="gallery-info"><div class="gallery-title">Security</div><div class="gallery-author">@safe_home</div></div></div>
 </div>
 <button class="btn btn-secondary" onclick="closeModal('galleryModal')" style="margin-top:15px">Close</button>
 </div></div>
+
 <div class="modal" id="templateModal"><div class="modal-content">
-<h2>⭐ Template Library</h2>
+<h2>⭐ Templates</h2>
 <div class="template-grid">
-<div class="template-card" onclick="applyTemplate('living')"><div class="template-icon">🛋️</div><div class="template-title">Living Room</div><div class="template-desc">Lights, media, climate</div></div>
-<div class="template-card" onclick="applyTemplate('kitchen')"><div class="template-icon">🍳</div><div class="template-title">Kitchen</div><div class="template-desc">Appliances & lighting</div></div>
-<div class="template-card" onclick="applyTemplate('bedroom')"><div class="template-icon">🛏️</div><div class="template-title">Bedroom</div><div class="template-desc">Climate & lighting</div></div>
-<div class="template-card" onclick="applyTemplate('security')"><div class="template-icon">🔒</div><div class="template-title">Security</div><div class="template-desc">Cameras & sensors</div></div>
-<div class="template-card" onclick="applyTemplate('energy')"><div class="template-icon">⚡</div><div class="template-title">Energy</div><div class="template-desc">Power monitoring</div></div>
-<div class="template-card" onclick="applyTemplate('outdoor')"><div class="template-icon">🌳</div><div class="template-title">Outdoor</div><div class="template-desc">Garden & weather</div></div>
+<div class="template-card" onclick="applyTemplate('living')"><div class="template-icon">🛋️</div><div class="template-title">Living Room</div></div>
+<div class="template-card" onclick="applyTemplate('kitchen')"><div class="template-icon">🍳</div><div class="template-title">Kitchen</div></div>
+<div class="template-card" onclick="applyTemplate('bedroom')"><div class="template-icon">🛏️</div><div class="template-title">Bedroom</div></div>
+<div class="template-card" onclick="applyTemplate('security')"><div class="template-icon">🔒</div><div class="template-title">Security</div></div>
+<div class="template-card" onclick="applyTemplate('energy')"><div class="template-icon">⚡</div><div class="template-title">Energy</div></div>
+<div class="template-card" onclick="applyTemplate('outdoor')"><div class="template-icon">🌳</div><div class="template-title">Outdoor</div></div>
 </div>
 <button class="btn btn-secondary" onclick="closeModal('templateModal')" style="margin-top:15px">Close</button>
 </div></div>
+
 <div class="modal" id="importModal"><div class="modal-content">
 <h2>📥 Import YAML</h2>
-<textarea class="form-control" id="importYaml" rows="12" placeholder="Paste your Home Assistant YAML here..." style="width:100%;padding:15px;background:#0a0a15;border:1px solid rgba(67,238,255,.4);border-radius:8px;color:#43eeff;font-family:monospace;font-size:.85em"></textarea>
-<div class="import-options">
-<label>🎨 Import Options</label>
-<div class="import-option"><input type="checkbox" id="importPreserveColors" checked><span>Preserve existing card colors (if available)</span></div>
-<div class="import-option"><input type="checkbox" id="importPreserveFonts" checked><span>Preserve existing fonts (if available)</span></div>
-<div class="import-option"><input type="checkbox" id="importPreserveShadows" checked><span>Preserve existing shadows (if available)</span></div>
-<div class="import-option"><input type="checkbox" id="importPreservePositions"><span>Try to extract positions from YAML</span></div>
+<div class="lovelace-toggle">
+<button class="lovelace-btn active" onclick="setLovelaceMode('standard')" id="lovelaceStandard">Standard</button>
+<button class="lovelace-btn" onclick="setLovelaceMode('custom')" id="lovelaceCustom">Custom Cards</button>
 </div>
-<button class="btn" onclick="importYAML()" style="margin-top:15px">🚀 Import & Build</button>
+<textarea id="importYaml" rows="10" placeholder="Paste YAML here..." style="width:100%;padding:15px;background:#0a0a15;border:1px solid rgba(67,238,255,.4);border-radius:8px;color:#43eeff;font-family:monospace"></textarea>
+<div class="import-options">
+<label>Options</label>
+<div class="import-option"><input type="checkbox" id="importPreserveColors" checked>Preserve colors</div>
+<div class="import-option"><input type="checkbox" id="importPreserveFonts" checked>Preserve fonts</div>
+<div class="import-option"><input type="checkbox" id="importPreserveShadows" checked>Preserve shadows</div>
+</div>
+<button class="btn" onclick="importYAML()">🚀 Import</button>
 <button class="btn btn-secondary" onclick="closeModal('importModal')">Close</button>
 </div></div>
-<div class="modal" id="versionHistoryModal"><div class="modal-content">
-<h2>⏱️ Version History</h2>
-<p style="color:#888;margin-bottom:15px">Restore previous versions of your dashboard</p>
-<div id="versionList" style="max-height:400px;overflow-y:auto"></div>
-<button class="btn btn-secondary" onclick="closeModal('versionHistoryModal')" style="margin-top:15px">Close</button>
+
+<div class="modal" id="stylePresetsModal"><div class="modal-content">
+<h2>🎭 Style Presets</h2>
+<div class="form-group"><label>Save Current Style</label><input type="text" id="presetName" placeholder="My Style"></div>
+<button class="btn" onclick="saveStylePreset()">💾 Save Preset</button>
+<div class="divider"></div>
+<h3 style="color:#43eeff;margin-bottom:15px">Load Preset</h3>
+<div class="preset-grid" id="presetGrid"></div>
+<button class="btn btn-secondary" onclick="closeModal('stylePresetsModal')" style="margin-top:15px">Close</button>
 </div></div>
-<div class="modal" id="shortcutsModal"><div class="modal-content">
-<h2>⌨️ Keyboard Shortcuts</h2>
-<div class="shortcuts-panel">
-<div class="shortcut-item"><span>Select All</span><span class="shortcut-key">Ctrl+A</span></div>
-<div class="shortcut-item"><span>Copy Card</span><span class="shortcut-key">Ctrl+C</span></div>
-<div class="shortcut-item"><span>Paste Card</span><span class="shortcut-key">Ctrl+V</span></div>
-<div class="shortcut-item"><span>Duplicate Card</span><span class="shortcut-key">Ctrl+D</span></div>
-<div class="shortcut-item"><span>Delete Card</span><span class="shortcut-key">Delete</span></div>
-<div class="shortcut-item"><span>Undo</span><span class="shortcut-key">Ctrl+Z</span></div>
-<div class="shortcut-item"><span>Redo</span><span class="shortcut-key">Ctrl+Y</span></div>
-<div class="shortcut-item"><span>Save</span><span class="shortcut-key">Ctrl+S</span></div>
-<div class="shortcut-item"><span>Toggle Grid Snap</span><span class="shortcut-key">G</span></div>
-<div class="shortcut-item"><span>Group Cards</span><span class="shortcut-key">Ctrl+G</span></div>
-<div class="shortcut-item"><span>Ungroup Cards</span><span class="shortcut-key">Ctrl+Shift+G</span></div>
-<div class="shortcut-item"><span>Move Card Up</span><span class="shortcut-key">↑</span></div>
-<div class="shortcut-item"><span>Move Card Down</span><span class="shortcut-key">↓</span></div>
-<div class="shortcut-item"><span>Move Card Left</span><span class="shortcut-key">←</span></div>
-<div class="shortcut-item"><span>Move Card Right</span><span class="shortcut-key">→</span></div>
-</div>
-<button class="btn btn-secondary" onclick="closeModal('shortcutsModal')" style="margin-top:15px">Close</button>
+
+<div class="modal" id="shareModal"><div class="modal-content">
+<h2>🔗 Share Dashboard</h2>
+<p style="color:#888;margin-bottom:15px">Copy this link to share your dashboard:</p>
+<div class="share-url" id="shareUrl">Generating...</div>
+<button class="btn" onclick="copyShareLink()">📋 Copy Link</button>
+<button class="btn btn-secondary" onclick="closeModal('shareModal')">Close</button>
 </div></div>
+
+<div class="modal" id="iconPickerModal"><div class="modal-content">
+<h2>🎯 Icon Picker</h2>
+<input type="text" class="search-box" id="iconSearch" placeholder="Search icons..." oninput="filterIcons()">
+<div class="icon-grid" id="iconGrid"></div>
+<button class="btn btn-secondary" onclick="closeModal('iconPickerModal')">Close</button>
+</div></div>
+
 <div class="modal" id="cloudSaveModal"><div class="modal-content">
 <h2>☁️ Cloud Save</h2>
-<p style="color:#888;margin-bottom:15px">Save your dashboards to the cloud and access from anywhere</p>
 <div class="prop-section">
-<h3>Save Current Dashboard</h3>
-<div class="form-group"><label>Dashboard Name</label><input type="text" id="cloudDashboardName" placeholder="My Awesome Dashboard"></div>
-<button class="btn" onclick="saveToCloud()">☁️ Save to Cloud</button>
+<div class="form-group"><label>Name</label><input type="text" id="cloudDashboardName" placeholder="My Dashboard"></div>
+<button class="btn" onclick="saveToCloud()">☁️ Save</button>
 </div>
-<div class="prop-section">
-<h3>Load from Cloud</h3>
-<div id="cloudDashboardList"></div>
-</div>
-<button class="btn btn-secondary" onclick="closeModal('cloudSaveModal')" style="margin-top:15px">Close</button>
+<div class="prop-section"><h3>Saved Dashboards</h3><div id="cloudDashboardList"></div></div>
+<button class="btn btn-secondary" onclick="closeModal('cloudSaveModal')">Close</button>
 </div></div>
+
 <div class="modal" id="yamlModal"><div class="modal-content">
 <h2>📄 Export YAML</h2>
+<div class="lovelace-toggle">
+<button class="lovelace-btn active" onclick="setExportMode('standard')" id="exportStandard">Standard</button>
+<button class="lovelace-btn" onclick="setExportMode('custom')" id="exportCustom">Custom Cards</button>
+</div>
 <div class="yaml-output" id="yamlOutput"></div>
-<button class="btn" onclick="copyYAML()" style="margin-top:15px">📋 Copy</button>
+<button class="btn" onclick="copyYAML()">📋 Copy</button>
 <button class="btn btn-secondary" onclick="downloadYAML()">💾 Download</button>
 <button class="btn btn-secondary" onclick="closeModal('yamlModal')">Close</button>
 </div></div>
+
+<div class="modal" id="versionHistoryModal"><div class="modal-content">
+<h2>⏱️ History</h2>
+<div id="versionList"></div>
+<button class="btn btn-secondary" onclick="closeModal('versionHistoryModal')">Close</button>
+</div></div>
+
+<div class="modal" id="shortcutsModal"><div class="modal-content">
+<h2>⌨️ Shortcuts</h2>
+<div class="shortcuts-panel">
+<div class="shortcut-item"><span>Select All</span><span class="shortcut-key">Ctrl+A</span></div>
+<div class="shortcut-item"><span>Copy</span><span class="shortcut-key">Ctrl+C</span></div>
+<div class="shortcut-item"><span>Paste</span><span class="shortcut-key">Ctrl+V</span></div>
+<div class="shortcut-item"><span>Duplicate</span><span class="shortcut-key">Ctrl+D</span></div>
+<div class="shortcut-item"><span>Delete</span><span class="shortcut-key">Delete</span></div>
+<div class="shortcut-item"><span>Undo</span><span class="shortcut-key">Ctrl+Z</span></div>
+<div class="shortcut-item"><span>Redo</span><span class="shortcut-key">Ctrl+Y</span></div>
+<div class="shortcut-item"><span>Lock/Unlock</span><span class="shortcut-key">L</span></div>
+<div class="shortcut-item"><span>Grid Snap</span><span class="shortcut-key">G</span></div>
+</div>
+<button class="btn btn-secondary" onclick="closeModal('shortcutsModal')">Close</button>
+</div></div>
+
 <div class="context-menu" id="contextMenu">
 <div class="context-menu-item" onclick="copyEntity()">📋 Copy</div>
 <div class="context-menu-item" onclick="deleteEntity()">🗑️ Delete</div>
 </div>
 <div id="notification"></div>
+
 <script>
-const availableFonts=[{name:'Segoe UI',value:"'Segoe UI', sans-serif"},{name:'Roboto',value:"'Roboto', sans-serif"},{name:'Open Sans',value:"'Open Sans', sans-serif"},{name:'Lato',value:"'Lato', sans-serif"},{name:'Montserrat',value:"'Montserrat', sans-serif"},{name:'Poppins',value:"'Poppins', sans-serif"},{name:'Inter',value:"'Inter', sans-serif"},{name:'Nunito',value:"'Nunito', sans-serif"},{name:'Raleway',value:"'Raleway', sans-serif"},{name:'Ubuntu',value:"'Ubuntu', sans-serif"},{name:'Source Sans Pro',value:"'Source Sans Pro', sans-serif"},{name:'Arial',value:"Arial, sans-serif"},{name:'Georgia',value:"Georgia, serif"},{name:'Times New Roman',value:"'Times New Roman', serif"},{name:'Courier New',value:"'Courier New', monospace"}];
-let cards=[],selectedCard=null,selectedCards=[],selectedCardType='entities',draggedCard=null,resizingCard=null,resizeHandle=null,dragOffset={x:0,y:0},cardIdCounter=0,history=[],historyIndex=-1,maxHistory=100,gridSize=50,snapToGrid=true;
+// MDI Icons subset for picker
+const mdiIcons=['mdi:home','mdi:lightbulb','mdi:fan','mdi:thermometer','mdi:water','mdi:fire','mdi:snowflake','mdi:sun','mdi:moon','mdi:cloud','mdi:weather-sunny','mdi:weather-cloudy','mdi:weather-rainy','mdi:power','mdi:power-plug','mdi:television','mdi:speaker','mdi:volume-high','mdi:play','mdi:pause','mdi:stop','mdi:skip-next','mdi:skip-previous','mdi:camera','mdi:video','mdi:motion-sensor','mdi:door','mdi:door-open','mdi:window-closed','mdi:window-open','mdi:garage','mdi:car','mdi:lock','mdi:lock-open','mdi:shield','mdi:alarm','mdi:bell','mdi:email','mdi:phone','mdi:wifi','mdi:bluetooth','mdi:router-wireless','mdi:desktop-tower','mdi:laptop','mdi:tablet','mdi:cellphone','mdi:clock','mdi:calendar','mdi:chart-line','mdi:chart-bar','mdi:gauge','mdi:speedometer','mdi:battery','mdi:battery-charging','mdi:flash','mdi:solar-power','mdi:leaf','mdi:tree','mdi:flower','mdi:dog','mdi:cat','mdi:paw','mdi:baby','mdi:human','mdi:account','mdi:account-group','mdi:bed','mdi:sofa','mdi:table-furniture','mdi:desk','mdi:toilet','mdi:shower','mdi:fridge','mdi:stove','mdi:microwave','mdi:dishwasher','mdi:washing-machine','mdi:vacuum','mdi:robot-vacuum','mdi:air-conditioner','mdi:air-purifier','mdi:humidifier','mdi:ceiling-fan','mdi:lamp','mdi:floor-lamp','mdi:wall-sconce','mdi:led-strip','mdi:string-lights','mdi:spotlight','mdi:track-light','mdi:blinds','mdi:curtains','mdi:gate','mdi:fence','mdi:pool','mdi:hot-tub','mdi:grill','mdi:sprinkler','mdi:watering-can'];
+const iconEmojis={'mdi:home':'🏠','mdi:lightbulb':'💡','mdi:fan':'🌀','mdi:thermometer':'🌡️','mdi:water':'💧','mdi:fire':'🔥','mdi:snowflake':'❄️','mdi:sun':'☀️','mdi:moon':'🌙','mdi:cloud':'☁️','mdi:weather-sunny':'🌤️','mdi:weather-cloudy':'⛅','mdi:weather-rainy':'🌧️','mdi:power':'⚡','mdi:television':'📺','mdi:speaker':'🔊','mdi:camera':'📷','mdi:video':'📹','mdi:door':'🚪','mdi:car':'🚗','mdi:lock':'🔒','mdi:lock-open':'🔓','mdi:shield':'🛡️','mdi:alarm':'🚨','mdi:bell':'🔔','mdi:email':'📧','mdi:phone':'📱','mdi:wifi':'📶','mdi:clock':'🕐','mdi:calendar':'📅','mdi:chart-line':'📈','mdi:chart-bar':'📊','mdi:gauge':'⏱️','mdi:battery':'🔋','mdi:flash':'⚡','mdi:leaf':'🌿','mdi:tree':'🌳','mdi:flower':'🌸','mdi:dog':'🐕','mdi:cat':'🐈','mdi:baby':'👶','mdi:account':'👤','mdi:bed':'🛏️','mdi:sofa':'🛋️','mdi:toilet':'🚽','mdi:shower':'🚿','mdi:fridge':'🧊','mdi:stove':'🍳','mdi:pool':'🏊','mdi:sprinkler':'💦'};
+
+const availableFonts=[{name:'Segoe UI',value:"'Segoe UI', sans-serif"},{name:'Roboto',value:"'Roboto', sans-serif"},{name:'Open Sans',value:"'Open Sans', sans-serif"},{name:'Lato',value:"'Lato', sans-serif"},{name:'Montserrat',value:"'Montserrat', sans-serif"},{name:'Poppins',value:"'Poppins', sans-serif"},{name:'Inter',value:"'Inter', sans-serif"},{name:'Nunito',value:"'Nunito', sans-serif"},{name:'Raleway',value:"'Raleway', sans-serif"},{name:'Ubuntu',value:"'Ubuntu', sans-serif"}];
+
+let cards=[],selectedCard=null,selectedCards=[],selectedCardType='entities',draggedCard=null,resizingCard=null,resizeHandle=null,dragOffset={x:0,y:0},cardIdCounter=0;
+let history=[],historyIndex=-1,maxHistory=100,gridSize=50,snapToGrid=true,showAlignGuides=true;
 let draggedEntity=null,draggedFromCard=null,draggedEntityIndex=-1,contextEntity=null,contextCard=null,contextEntityIndex=-1;
 let bgSettings={type:'gradient',grad1:'#0f0f1e',grad2:'#1a1a2e',angle:135,imageUrl:'',solid:'#1a1a2e',opacity:30,blur:0,overlay:50};
-let previewMode='desktop',animationType='fade',clipboard=null,autoSave=true,autoSaveInterval=null;
+let previewMode='desktop',animationType='fade',clipboard=null,styleClipboard=null,autoSave=true,autoSaveInterval=null;
 let dashboards=[{id:1,name:'My Dashboard',cards:[],bg:bgSettings,created:Date.now()}],currentDashboardId=1;
-let versionHistory=[],groups={},cloudDashboards=[];
-// Store last used card settings for import preservation
+let versionHistory=[],groups={},cloudDashboards=[],stylePresets=[],lovelaceMode='standard',exportMode='standard';
+let responsiveLayouts={desktop:{},tablet:{},mobile:{}};
 let lastCardSettings={bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'}};
+let currentIconCallback=null;
+
 const canvas=document.getElementById('canvas'),propertiesPanel=document.getElementById('propertiesPanel'),cardConfig=document.getElementById('cardConfig');
 const themes={default:{bg1:'#0f0f1e',bg2:'#1a1a2e',card:'#43eeff',title:'#ff43ee',entity:'#ffeb3b'},light:{bg1:'#f5f5f5',bg2:'#e0e0e0',card:'#2196f3',title:'#e91e63',entity:'#ff9800'},neon:{bg1:'#ff006e',bg2:'#8338ec',card:'#00ff9f',title:'#ffbe0b',entity:'#fb5607'},ocean:{bg1:'#006994',bg2:'#003d5c',card:'#00b4d8',title:'#0077b6',entity:'#90e0ef'},forest:{bg1:'#1e4d2b',bg2:'#0d2818',card:'#52b788',title:'#95d5b2',entity:'#d8f3dc'},sunset:{bg1:'#ff6b35',bg2:'#f7931e',card:'#ffd60a',title:'#ff006e',entity:'#ffbe0b'},purple:{bg1:'#7209b7',bg2:'#3a0ca3',card:'#c77dff',title:'#e0aaff',entity:'#f72585'},minimal:{bg1:'#1a1a1a',bg2:'#1a1a1a',card:'#333',title:'#fff',entity:'#ccc'},cyberpunk:{bg1:'#00ff9f',bg2:'#00b8ff',card:'#ff006e',title:'#ffbe0b',entity:'#8338ec'}};
-function getFontOptionsHTML(selectedFont="'Segoe UI', sans-serif"){return availableFonts.map(f=>`<option value="${f.value}" ${f.value===selectedFont?'selected':''}>${f.name}</option>`).join('')}
-function snapToGridValue(v){return snapToGrid?Math.round(v/gridSize)*gridSize:v}
-function saveState(){const currentDash=dashboards.find(d=>d.id===currentDashboardId);if(currentDash){currentDash.cards=JSON.parse(JSON.stringify(cards));currentDash.bg=JSON.parse(JSON.stringify(bgSettings))}history=history.slice(0,historyIndex+1);history.push(JSON.stringify({cards,bg:bgSettings}));historyIndex++;if(history.length>maxHistory){history.shift();historyIndex--}versionHistory.push({time:Date.now(),cards:JSON.parse(JSON.stringify(cards)),cardCount:cards.length});if(versionHistory.length>20)versionHistory.shift();updateStatus('Saved')}
-function undo(){if(historyIndex>0){historyIndex--;const state=JSON.parse(history[historyIndex]);cards=state.cards||[];bgSettings=state.bg||bgSettings;renderCanvas();applyBackground();updateStatus('Undo');if(selectedCard){selectedCard=cards.find(c=>c.id===selectedCard.id);if(selectedCard)showProperties(selectedCard)}}}
-function redo(){if(historyIndex<history.length-1){historyIndex++;const state=JSON.parse(history[historyIndex]);cards=state.cards||[];bgSettings=state.bg||bgSettings;renderCanvas();applyBackground();updateStatus('Redo');if(selectedCard){selectedCard=cards.find(c=>c.id===selectedCard.id);if(selectedCard)showProperties(selectedCard)}}}
-document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey){if(e.key==='z'&&!e.shiftKey){e.preventDefault();undo()}else if(e.key==='y'||(e.key==='z'&&e.shiftKey)){e.preventDefault();redo()}else if(e.key==='d'){e.preventDefault();duplicateCard()}else if(e.key==='c'&&selectedCard){e.preventDefault();clipboard=JSON.parse(JSON.stringify(selectedCard));showNotification('Card copied')}else if(e.key==='v'&&clipboard){e.preventDefault();pasteCard()}else if(e.key==='a'){e.preventDefault();selectAll()}else if(e.key==='s'){e.preventDefault();saveProject()}else if(e.key==='g'&&!e.shiftKey){e.preventDefault();groupSelected()}else if(e.key==='g'&&e.shiftKey){e.preventDefault();ungroupSelected()}}else if(e.key==='Delete'){if(selectedCards.length>0)deleteMultiple();else if(selectedCard)deleteCard()}else if(e.key==='g'&&!e.ctrlKey){toggleGridSnap()}else if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)&&selectedCard){e.preventDefault();moveCardWithKeys(e.key)}});
+
+function getFontOptionsHTML(sel="'Segoe UI', sans-serif"){return availableFonts.map(f=>`<option value="${f.value}"${f.value===sel?' selected':''}>${f.name}</option>`).join('')}
+function snapVal(v){return snapToGrid?Math.round(v/gridSize)*gridSize:v}
+function saveState(){const d=dashboards.find(x=>x.id===currentDashboardId);if(d){d.cards=JSON.parse(JSON.stringify(cards));d.bg=JSON.parse(JSON.stringify(bgSettings))}history=history.slice(0,historyIndex+1);history.push(JSON.stringify({cards,bg:bgSettings}));historyIndex++;if(history.length>maxHistory){history.shift();historyIndex--}versionHistory.push({time:Date.now(),cards:JSON.parse(JSON.stringify(cards)),cardCount:cards.length});if(versionHistory.length>20)versionHistory.shift();updateStatus('Saved')}
+function undo(){if(historyIndex>0){historyIndex--;const s=JSON.parse(history[historyIndex]);cards=s.cards||[];bgSettings=s.bg||bgSettings;renderCanvas();applyBackground()}}
+function redo(){if(historyIndex<history.length-1){historyIndex++;const s=JSON.parse(history[historyIndex]);cards=s.cards||[];bgSettings=s.bg||bgSettings;renderCanvas();applyBackground()}}
+
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey){if(e.key==='z'&&!e.shiftKey){e.preventDefault();undo()}else if(e.key==='y'||(e.key==='z'&&e.shiftKey)){e.preventDefault();redo()}else if(e.key==='d'){e.preventDefault();duplicateCard()}else if(e.key==='c'&&selectedCard){e.preventDefault();clipboard=JSON.parse(JSON.stringify(selectedCard));showNotification('Copied')}else if(e.key==='v'&&clipboard){e.preventDefault();pasteCard()}else if(e.key==='a'){e.preventDefault();selectAll()}else if(e.key==='s'){e.preventDefault();saveProject()}else if(e.key==='g'){e.preventDefault();groupSelected()}}else if(e.key==='Delete'){if(selectedCards.length>0)deleteMultiple();else if(selectedCard)deleteCard()}else if(e.key==='g')toggleGridSnap();else if(e.key==='l')toggleLockSelected();else if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)&&selectedCard){e.preventDefault();moveCardWithKeys(e.key)}});
 document.addEventListener('click',()=>document.getElementById('contextMenu').classList.remove('active'));
-// UPDATED: Thermostat now supports multiple entities
-const cardTypeConfigs={entities:{defaultSize:{width:300,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="My Entities"></div><div class="form-group"><label>Entities</label><textarea id="newCardEntities" rows="6" placeholder="light.living_room\nswitch.fan"></textarea></div>`},thermostat:{defaultSize:{width:300,height:280},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Thermostat"></div><div class="form-group"><label>Climate Entities (one per line)</label><textarea id="thermostatEntities" rows="4" placeholder="climate.thermostat\nclimate.bedroom\nclimate.office"></textarea></div>`},weather:{defaultSize:{width:350,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Weather"></div><div class="form-group"><label>Entity</label><input type="text" id="weatherEntity" value="weather.forecast"></div>`},camera:{defaultSize:{width:400,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Camera"></div><div class="form-group"><label>Entity</label><input type="text" id="cameraEntity" value="camera.entrance"></div>`},media:{defaultSize:{width:350,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Media"></div><div class="form-group"><label>Entity</label><input type="text" id="mediaEntity" value="media_player.speaker"></div>`},gauge:{defaultSize:{width:250,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Gauge"></div><div class="form-group"><label>Entity</label><input type="text" id="gaugeEntity" value="sensor.battery"></div><div class="form-group"><label>Min</label><input type="number" id="gaugeMin" value="0"></div><div class="form-group"><label>Max</label><input type="number" id="gaugeMax" value="100"></div>`},button:{defaultSize:{width:200,height:150},fields:`<div class="form-group"><label>Name</label><input type="text" id="newCardTitle" value="Toggle"></div><div class="form-group"><label>Entity</label><input type="text" id="buttonEntity" value="switch.device"></div>`},clock:{defaultSize:{width:300,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Clock"></div><div class="form-group"><label>Format</label><select id="clockFormat"><option value="12">12-Hour</option><option value="24">24-Hour</option></select></div>`},markdown:{defaultSize:{width:350,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Notes"></div><div class="form-group"><label>Content</label><textarea id="markdownContent" rows="6" placeholder="## Markdown\n**Bold** *italic*"></textarea></div>`},picture:{defaultSize:{width:400,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Picture"></div><div class="form-group"><label>Image URL</label><input type="text" id="pictureUrl" placeholder="https://..."></div>`},glance:{defaultSize:{width:350,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Glance"></div><div class="form-group"><label>Entities</label><textarea id="glanceEntities" rows="4" placeholder="light.living\nswitch.fan"></textarea></div>`},chart:{defaultSize:{width:450,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Chart"></div><div class="form-group"><label>Entity</label><input type="text" id="chartEntity" value="sensor.temperature"></div><div class="form-group"><label>Chart Type</label><select id="chartType"><option value="line">Line</option><option value="bar">Bar</option></select></div>`},map:{defaultSize:{width:500,height:400},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Map"></div><div class="form-group"><label>Entities</label><textarea id="mapEntities" rows="4" placeholder="device_tracker.phone\nperson.john"></textarea></div>`},iframe:{defaultSize:{width:600,height:400},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Iframe"></div><div class="form-group"><label>URL</label><input type="text" id="iframeUrl" placeholder="https://..."></div>`},light:{defaultSize:{width:300,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Lights"></div><div class="form-group"><label>Entities</label><textarea id="lightEntities" rows="4" placeholder="light.living_room\nlight.bedroom"></textarea></div>`}};
+
+const cardTypeConfigs={entities:{defaultSize:{width:300,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="My Entities"></div><div class="form-group"><label>Entities</label><textarea id="newCardEntities" rows="5" placeholder="light.living_room\nswitch.fan"></textarea></div>`},thermostat:{defaultSize:{width:300,height:280},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Thermostat"></div><div class="form-group"><label>Entities</label><textarea id="thermostatEntities" rows="3" placeholder="climate.thermostat"></textarea></div>`},weather:{defaultSize:{width:350,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Weather"></div><div class="form-group"><label>Entity</label><input type="text" id="weatherEntity" value="weather.home"></div>`},camera:{defaultSize:{width:400,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Camera"></div><div class="form-group"><label>Entity</label><input type="text" id="cameraEntity" value="camera.front"></div>`},media:{defaultSize:{width:350,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Media"></div><div class="form-group"><label>Entity</label><input type="text" id="mediaEntity" value="media_player.speaker"></div>`},gauge:{defaultSize:{width:250,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Gauge"></div><div class="form-group"><label>Entity</label><input type="text" id="gaugeEntity" value="sensor.battery"></div><div class="form-group"><label>Min</label><input type="number" id="gaugeMin" value="0"></div><div class="form-group"><label>Max</label><input type="number" id="gaugeMax" value="100"></div>`},button:{defaultSize:{width:200,height:150},fields:`<div class="form-group"><label>Name</label><input type="text" id="newCardTitle" value="Button"></div><div class="form-group"><label>Entity</label><input type="text" id="buttonEntity" value="switch.device"></div>`},clock:{defaultSize:{width:300,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Clock"></div><div class="form-group"><label>Format</label><select id="clockFormat"><option value="12">12-Hour</option><option value="24">24-Hour</option></select></div>`},markdown:{defaultSize:{width:350,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Notes"></div><div class="form-group"><label>Content</label><textarea id="markdownContent" rows="5">**Bold** text</textarea></div>`},picture:{defaultSize:{width:400,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Picture"></div><div class="form-group"><label>URL</label><input type="text" id="pictureUrl" placeholder="https://..."></div>`},glance:{defaultSize:{width:350,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Glance"></div><div class="form-group"><label>Entities</label><textarea id="glanceEntities" rows="3" placeholder="light.living\nswitch.fan"></textarea></div>`},chart:{defaultSize:{width:450,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Chart"></div><div class="form-group"><label>Entity</label><input type="text" id="chartEntity" value="sensor.temp"></div>`},map:{defaultSize:{width:500,height:400},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Map"></div><div class="form-group"><label>Entities</label><textarea id="mapEntities" rows="3" placeholder="device_tracker.phone"></textarea></div>`},iframe:{defaultSize:{width:600,height:400},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Iframe"></div><div class="form-group"><label>URL</label><input type="text" id="iframeUrl" placeholder="https://..."></div>`},light:{defaultSize:{width:300,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Lights"></div><div class="form-group"><label>Entities</label><textarea id="lightEntities" rows="3" placeholder="light.living_room"></textarea></div>`}};
+
 function selectCardType(t){selectedCardType=t;document.querySelectorAll('.card-type-btn').forEach(b=>b.classList.remove('active'));event.target.closest('.card-type-btn').classList.add('active');cardConfig.innerHTML=cardTypeConfigs[t].fields}
 cardConfig.innerHTML=cardTypeConfigs.entities.fields;saveState();
-function addCardToCanvas(){const size=cardTypeConfigs[selectedCardType].defaultSize,title=document.getElementById('newCardTitle')?.value||'Card',cardData={id:cardIdCounter++,type:selectedCardType,title,x:50+(cards.length*30),y:50+(cards.length*30),width:size.width,height:size.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType,group:null,titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'},borderRadius:14,cornerStyle:'rounded'};
-if(selectedCardType==='entities'){const t=document.getElementById('newCardEntities').value;cardData.entities=t.split('\n').filter(e=>e.trim());if(!cardData.entities.length){showNotification('Add entities','error');return}}
-// UPDATED: Thermostat now uses entities array
-else if(selectedCardType==='thermostat'){const t=document.getElementById('thermostatEntities').value;cardData.entities=t.split('\n').filter(e=>e.trim());if(!cardData.entities.length){cardData.entities=['climate.thermostat']}}
-else if(['weather','camera','media','gauge'].includes(selectedCardType)){const id=selectedCardType+'Entity';cardData.entity=document.getElementById(id).value}else if(selectedCardType==='button'){cardData.entity=document.getElementById('buttonEntity').value}else if(selectedCardType==='clock'){cardData.format=document.getElementById('clockFormat').value}else if(selectedCardType==='markdown'){cardData.content=document.getElementById('markdownContent').value}else if(selectedCardType==='picture'){cardData.imageUrl=document.getElementById('pictureUrl').value}else if(['glance','map','light'].includes(selectedCardType)){const id=selectedCardType+'Entities';const t=document.getElementById(id).value;cardData.entities=t.split('\n').filter(e=>e.trim())}else if(selectedCardType==='chart'){cardData.entity=document.getElementById('chartEntity').value;cardData.chartType=document.getElementById('chartType').value}else if(selectedCardType==='iframe'){cardData.iframeUrl=document.getElementById('iframeUrl').value}if(selectedCardType==='gauge'){cardData.min=document.getElementById('gaugeMin').value;cardData.max=document.getElementById('gaugeMax').value}cards.push(cardData);saveState();renderCanvas();selectCard(cardData);updateCardCount();showNotification('Card added','success')}
+
+function addCardToCanvas(){const size=cardTypeConfigs[selectedCardType].defaultSize,title=document.getElementById('newCardTitle')?.value||'Card';
+const cardData={id:cardIdCounter++,type:selectedCardType,title,x:50+(cards.length%5)*30,y:50+Math.floor(cards.length/5)*30,width:size.width,height:size.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType,group:null,locked:false,aspectRatioLock:false,hoverEffect:'none',icon:'',titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'},borderRadius:14,cornerStyle:'rounded',tapAction:{action:'toggle',service:'',entity:''},conditions:''};
+if(selectedCardType==='entities'||selectedCardType==='light'){const t=document.getElementById(selectedCardType==='light'?'lightEntities':'newCardEntities')?.value||'';cardData.entities=t.split('\n').filter(e=>e.trim())}
+else if(selectedCardType==='thermostat'){const t=document.getElementById('thermostatEntities')?.value||'climate.thermostat';cardData.entities=t.split('\n').filter(e=>e.trim())}
+else if(selectedCardType==='glance'||selectedCardType==='map'){const id=selectedCardType+'Entities';cardData.entities=(document.getElementById(id)?.value||'').split('\n').filter(e=>e.trim())}
+else if(['weather','camera','media','gauge'].includes(selectedCardType)){cardData.entity=document.getElementById(selectedCardType+'Entity')?.value||''}
+else if(selectedCardType==='button'){cardData.entity=document.getElementById('buttonEntity')?.value||''}
+else if(selectedCardType==='clock'){cardData.format=document.getElementById('clockFormat')?.value||'12'}
+else if(selectedCardType==='markdown'){cardData.content=document.getElementById('markdownContent')?.value||''}
+else if(selectedCardType==='picture'){cardData.imageUrl=document.getElementById('pictureUrl')?.value||''}
+else if(selectedCardType==='chart'){cardData.entity=document.getElementById('chartEntity')?.value||''}
+else if(selectedCardType==='iframe'){cardData.iframeUrl=document.getElementById('iframeUrl')?.value||''}
+if(selectedCardType==='gauge'){cardData.min=document.getElementById('gaugeMin')?.value||0;cardData.max=document.getElementById('gaugeMax')?.value||100}
+cards.push(cardData);saveState();renderCanvas();selectCard(cardData);updateCardCount();showNotification('Card added','success')}
+
 function renderCanvas(){canvas.innerHTML='';cards.sort((a,b)=>a.zIndex-b.zIndex).forEach(c=>canvas.appendChild(createCardElement(c)));updateLayersList()}
-function getTextShadowCSS(shadow){if(!shadow||!shadow.enabled)return'none';return`${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.color}`}
-// Calculate scale factor based on card size
-function getScaleFactor(card){const baseWidth=cardTypeConfigs[card.type]?.defaultSize.width||300;const baseHeight=cardTypeConfigs[card.type]?.defaultSize.height||200;const widthScale=card.width/baseWidth;const heightScale=card.height/baseHeight;return Math.min(widthScale,heightScale,2)}// Cap at 2x
-function createCardElement(c){const el=document.createElement('div');el.className='canvas-card';if(c.animation)el.classList.add(`anim-${c.animation}`);el.id=`card-${c.id}`;el.style.left=c.x+'px';el.style.top=c.y+'px';el.style.width=c.width+'px';el.style.height=c.height+'px';el.style.background=c.useGradient?`linear-gradient(135deg,${c.gradientColor1},${c.gradientColor2})`:c.bgColor;el.style.zIndex=c.zIndex||0;const radius=c.cornerStyle==='square'?0:(c.borderRadius||14);el.style.borderRadius=radius+'px';if(selectedCard&&selectedCard.id===c.id)el.classList.add('selected');if(selectedCards.some(s=>s.id===c.id))el.classList.add('multi-selected');
-// IMPROVEMENT 3: Calculate scale factor for responsive text
-const scale=getScaleFactor(c);
-const baseTitleSize=1.2;const baseEntitySize=0.85;
-const titleFontSize=(baseTitleSize*scale)+'em';
-const entityFontSize=(baseEntitySize*scale)+'em';
-const tb=document.createElement('div');tb.className='card-type-badge';tb.textContent=c.type;el.appendChild(tb);const sb=document.createElement('div');sb.className='card-size-badge';sb.textContent=`${c.width}×${c.height}`;el.appendChild(sb);const zb=document.createElement('div');zb.className='card-z-badge';zb.textContent=`Z:${c.zIndex||0}`;el.appendChild(zb);if(c.group){const gb=document.createElement('div');gb.className='card-group-badge';gb.textContent=`G:${c.group}`;el.appendChild(gb)}const titleFont=c.titleFont||"'Segoe UI', sans-serif";const entityFont=c.entityFont||"'Segoe UI', sans-serif";const titleShadow=getTextShadowCSS(c.titleShadow);const entityShadow=getTextShadowCSS(c.entityShadow);
-if(c.type==='entities'||c.type==='light'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);c.entities.forEach((e,idx)=>{const d=document.createElement('div');d.className='card-entity-display';d.textContent=e;d.style.color=c.entityColor;d.style.fontFamily=entityFont;d.style.textShadow=entityShadow;d.style.fontSize=entityFontSize;d.style.padding=`${6*scale}px ${10*scale}px`;d.draggable=true;d.ondragstart=ev=>startEntityDrag(ev,c,idx,e);d.ondragend=endEntityDrag;d.ondragover=ev=>entityDragOver(ev,idx);d.ondrop=ev=>entityDrop(ev,c,idx);d.oncontextmenu=ev=>{ev.preventDefault();ev.stopPropagation();showContextMenu(ev,c,idx,e)};el.appendChild(d)})}
-// IMPROVEMENT 4: Thermostat now supports multiple entities
-else if(c.type==='thermostat'){
-const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.textAlign='center';t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);
-const container=document.createElement('div');container.style.cssText='display:flex;flex-direction:column;gap:10px;padding:10px;overflow-y:auto;flex:1';
-// Support both old single entity and new multiple entities
-const entities=c.entities||[c.entity||'climate.thermostat'];
-entities.forEach((ent,idx)=>{
-const thermoItem=document.createElement('div');
-thermoItem.style.cssText=`text-align:center;padding:${10*scale}px;background:rgba(255,255,255,0.15);border-radius:8px;cursor:grab`;
-thermoItem.draggable=true;
-thermoItem.ondragstart=ev=>startEntityDrag(ev,c,idx,ent);
-thermoItem.ondragend=endEntityDrag;
-thermoItem.ondragover=ev=>entityDragOver(ev,idx);
-thermoItem.ondrop=ev=>entityDrop(ev,c,idx);
-thermoItem.oncontextmenu=ev=>{ev.preventDefault();ev.stopPropagation();showContextMenu(ev,c,idx,ent)};
-const label=document.createElement('div');label.style.cssText=`font-size:${0.75*scale}em;color:${c.entityColor};opacity:0.8;margin-bottom:5px;font-family:${entityFont};text-shadow:${entityShadow}`;label.textContent=ent.split('.')[1]||ent;
-const temp=document.createElement('div');temp.style.cssText=`font-size:${1.8*scale}em;font-weight:bold;color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow}`;temp.textContent=`${68+idx*2}°`;
-const mode=document.createElement('div');mode.style.cssText=`font-size:${0.7*scale}em;padding:4px 8px;background:rgba(255,255,255,0.2);border-radius:4px;display:inline-block;color:${c.entityColor};margin-top:5px;font-family:${entityFont}`;mode.textContent=idx%2===0?'HEAT':'COOL';
-thermoItem.appendChild(label);thermoItem.appendChild(temp);thermoItem.appendChild(mode);container.appendChild(thermoItem)});
-el.appendChild(container);el.style.display='flex';el.style.flexDirection='column'}
-else if(c.type==='markdown'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);const md=document.createElement('div');md.style.cssText=`color:${c.entityColor};padding:10px;font-size:${0.9*scale}em;line-height:1.6;font-family:${entityFont};text-shadow:${entityShadow}`;md.textContent=c.content||'Markdown';el.appendChild(md)}else if(c.type==='picture'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);const img=document.createElement('div');img.style.cssText='flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:3em;color:rgba(255,255,255,0.3)';img.textContent='🖼️';if(c.imageUrl){img.style.backgroundImage=`url(${c.imageUrl})`;img.style.backgroundSize='cover';img.textContent=''}el.appendChild(img);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='glance'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:10px';c.entities?.forEach(e=>{const item=document.createElement('div');item.style.cssText=`text-align:center;padding:${10*scale}px;background:rgba(255,255,255,0.2);border-radius:6px;color:${c.entityColor};font-size:${0.8*scale}em;font-family:${entityFont};text-shadow:${entityShadow}`;item.textContent=e.split('.')[1]||e;grid.appendChild(item)});el.appendChild(grid)}else if(c.type==='chart'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);const chart=document.createElement('div');chart.style.cssText=`flex:1;display:flex;align-items:center;justify-content:center;font-size:${2*scale}em;color:rgba(255,255,255,0.3)`;chart.textContent='📊';el.appendChild(chart);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='map'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);const map=document.createElement('div');map.style.cssText=`flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:${3*scale}em;color:rgba(255,255,255,0.3)`;map.textContent='🗺️';el.appendChild(map);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='iframe'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);const frame=document.createElement('div');frame.style.cssText=`flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:${2*scale}em;color:rgba(255,255,255,0.3)`;frame.textContent='🌐 Iframe';el.appendChild(frame);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='weather'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.textAlign='center';t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);el.innerHTML+=`<div style="text-align:center"><div style="font-size:${3*scale}em;margin:10px 0">🌤️</div><div style="font-size:${2*scale}em;font-weight:bold;color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow}">75°F</div></div>`}else if(c.type==='camera'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);const p=document.createElement('div');p.style.cssText=`background:#1a1a2e;flex:1;display:flex;align-items:center;justify-content:center;font-size:${3*scale}em;color:rgba(255,255,255,0.3)`;p.textContent='📷';el.appendChild(p);el.style.display='flex';el.style.flexDirection='column'}else if(c.type==='clock'){const t=document.createElement('div');t.className='card-title-display';t.textContent=c.title;t.style.color=c.titleColor;t.style.textAlign='center';t.style.fontFamily=titleFont;t.style.textShadow=titleShadow;t.style.fontSize=titleFontSize;el.appendChild(t);const now=new Date(),timeFormat=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});el.innerHTML+=`<div style="display:flex;align-items:center;justify-content:center;flex:1;font-size:${3*scale}em;font-weight:bold;color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow}">${timeFormat}</div>`;el.style.display='flex';el.style.flexDirection='column'}
+function getTextShadowCSS(s){if(!s||!s.enabled)return'none';return`${s.x}px ${s.y}px ${s.blur}px ${s.color}`}
+function getScaleFactor(c){const bw=cardTypeConfigs[c.type]?.defaultSize.width||300,bh=cardTypeConfigs[c.type]?.defaultSize.height||200;return Math.min(c.width/bw,c.height/bh,2)}
+
+function createCardElement(c){
+const el=document.createElement('div');el.className='canvas-card';if(c.animation)el.classList.add(`anim-${c.animation}`);if(c.locked)el.classList.add('locked');if(c.hoverEffect&&c.hoverEffect!=='none')el.classList.add(`hover-${c.hoverEffect}`);
+el.id=`card-${c.id}`;el.style.left=c.x+'px';el.style.top=c.y+'px';el.style.width=c.width+'px';el.style.height=c.height+'px';
+el.style.background=c.useGradient?`linear-gradient(135deg,${c.gradientColor1},${c.gradientColor2})`:c.bgColor;
+el.style.zIndex=c.zIndex||0;el.style.borderRadius=(c.cornerStyle==='square'?0:(c.borderRadius||14))+'px';
+if(selectedCard?.id===c.id)el.classList.add('selected');if(selectedCards.some(s=>s.id===c.id))el.classList.add('multi-selected');
+const scale=getScaleFactor(c),titleFont=c.titleFont||"'Segoe UI', sans-serif",entityFont=c.entityFont||"'Segoe UI', sans-serif",titleShadow=getTextShadowCSS(c.titleShadow),entityShadow=getTextShadowCSS(c.entityShadow);
+const iconHtml=c.icon&&iconEmojis[c.icon]?`<span class="card-icon">${iconEmojis[c.icon]}</span>`:'';
+
+el.innerHTML=`<div class="card-type-badge">${c.type}</div><div class="card-size-badge">${c.width}×${c.height}</div><div class="card-z-badge">Z:${c.zIndex||0}</div>${c.group?`<div class="card-group-badge">G:${c.group}</div>`:''}`;
+
+const titleEl=document.createElement('div');titleEl.className='card-title-display';titleEl.innerHTML=iconHtml+c.title;titleEl.style.cssText=`color:${c.titleColor};font-family:${titleFont};text-shadow:${titleShadow};font-size:${1.2*scale}em`;el.appendChild(titleEl);
+
+if(c.type==='entities'||c.type==='light'||c.type==='thermostat'){
+(c.entities||[]).forEach((ent,idx)=>{const d=document.createElement('div');d.className='card-entity-display';d.textContent=ent;d.style.cssText=`color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow};font-size:${0.85*scale}em;padding:${6*scale}px ${10*scale}px`;d.draggable=true;d.ondragstart=ev=>{draggedEntity=ent;draggedFromCard=c;draggedEntityIndex=idx;ev.target.classList.add('dragging-entity')};d.ondragend=ev=>ev.target.classList.remove('dragging-entity');d.oncontextmenu=ev=>{ev.preventDefault();ev.stopPropagation();contextCard=c;contextEntityIndex=idx;contextEntity=ent;const m=document.getElementById('contextMenu');m.style.left=ev.pageX+'px';m.style.top=ev.pageY+'px';m.classList.add('active')};el.appendChild(d)})}
+else if(c.type==='glance'){const g=document.createElement('div');g.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px';(c.entities||[]).forEach(e=>{const i=document.createElement('div');i.style.cssText=`text-align:center;padding:${8*scale}px;background:rgba(255,255,255,.2);border-radius:6px;color:${c.entityColor};font-size:${0.75*scale}em`;i.textContent=e.split('.')[1]||e;g.appendChild(i)});el.appendChild(g)}
+else if(c.type==='weather'){el.innerHTML+=`<div style="text-align:center;margin-top:10px"><div style="font-size:${3*scale}em">🌤️</div><div style="font-size:${2*scale}em;font-weight:bold;color:${c.entityColor}">72°F</div></div>`}
+else if(c.type==='clock'){const now=new Date(),t=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});el.innerHTML+=`<div style="display:flex;align-items:center;justify-content:center;flex:1;font-size:${2.5*scale}em;font-weight:bold;color:${c.entityColor}">${t}</div>`;el.style.display='flex';el.style.flexDirection='column'}
+else if(c.type==='gauge'){el.innerHTML+=`<div style="text-align:center;margin-top:20px"><div style="font-size:${3*scale}em">⏱️</div><div style="font-size:${1.5*scale}em;color:${c.entityColor}">75%</div></div>`}
+else if(c.type==='camera'){el.innerHTML+=`<div style="flex:1;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:${3*scale}em;color:rgba(255,255,255,.3);margin-top:10px;border-radius:8px">📷</div>`;el.style.display='flex';el.style.flexDirection='column'}
+else if(c.type==='markdown'){el.innerHTML+=`<div style="color:${c.entityColor};padding:10px;font-size:${0.9*scale}em">${c.content||'Markdown'}</div>`}
+else{el.innerHTML+=`<div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:${2*scale}em;color:rgba(255,255,255,.3)">${c.type==='media'?'🎵':c.type==='chart'?'📊':c.type==='map'?'🗺️':c.type==='iframe'?'🌐':c.type==='picture'?'🖼️':c.type==='button'?'🔘':'📋'}</div>`}
+
 ['nw','ne','sw','se'].forEach(p=>{const h=document.createElement('div');h.className=`resize-handle resize-${p}`;h.dataset.position=p;el.appendChild(h)});
-// Allow dropping entities on thermostat too
-el.ondragover=ev=>{if(draggedEntity&&(c.type==='entities'||c.type==='light'||c.type==='thermostat')){ev.preventDefault();el.classList.add('drag-over')}};el.ondragleave=()=>el.classList.remove('drag-over');el.ondrop=ev=>{if(draggedEntity&&(c.type==='entities'||c.type==='light'||c.type==='thermostat')){ev.preventDefault();el.classList.remove('drag-over');if(draggedFromCard.id!==c.id){if(!c.entities)c.entities=[];c.entities.push(draggedEntity);if(draggedFromCard.entities)draggedFromCard.entities.splice(draggedEntityIndex,1);saveState();renderCanvas()}}};
-el.addEventListener('mousedown',e=>{if(e.target.classList.contains('resize-handle')){startResize(e,c)}else if(!e.target.classList.contains('card-entity-display')&&!e.target.closest('[draggable="true"]')){startDrag(e,c)}});return el}
-function startEntityDrag(ev,card,idx,entity){draggedEntity=entity;draggedFromCard=card;draggedEntityIndex=idx;ev.dataTransfer.effectAllowed='move';ev.target.classList.add('dragging-entity')}function endEntityDrag(ev){if(ev.target)ev.target.classList.remove('dragging-entity');setTimeout(()=>{draggedEntity=null;draggedFromCard=null;draggedEntityIndex=-1},100)}function entityDragOver(ev,idx){if(draggedEntity){ev.preventDefault();ev.stopPropagation();ev.target.classList.add('drag-over-entity')}}function entityDrop(ev,card,dropIdx){ev.preventDefault();ev.stopPropagation();document.querySelectorAll('.drag-over-entity').forEach(e=>e.classList.remove('drag-over-entity'));if(!draggedEntity)return;if(!card.entities)card.entities=[];if(draggedFromCard.id===card.id){const[item]=draggedFromCard.entities.splice(draggedEntityIndex,1);card.entities.splice(dropIdx,0,item)}else{if(draggedFromCard.entities)draggedFromCard.entities.splice(draggedEntityIndex,1);card.entities.splice(dropIdx,0,draggedEntity)}saveState();renderCanvas()}function showContextMenu(ev,card,idx,entity){contextCard=card;contextEntityIndex=idx;contextEntity=entity;const menu=document.getElementById('contextMenu');menu.style.left=ev.pageX+'px';menu.style.top=ev.pageY+'px';menu.classList.add('active')}function copyEntity(){if(contextEntity){navigator.clipboard.writeText(contextEntity);showNotification('Entity copied');document.getElementById('contextMenu').classList.remove('active')}}function deleteEntity(){if(contextCard&&contextEntityIndex>=0){if(contextCard.entities)contextCard.entities.splice(contextEntityIndex,1);saveState();renderCanvas();document.getElementById('contextMenu').classList.remove('active');showNotification('Entity deleted')}}function startDrag(e,c){if(e.target.classList.contains('resize-handle'))return;draggedCard=c;if(e.shiftKey){if(!selectedCards.some(s=>s.id===c.id))selectedCards.push(c)}else{if(!selectedCards.some(s=>s.id===c.id)){selectedCards=[];selectedCard=c}}selectCard(c);const el=document.getElementById(`card-${c.id}`);const r=el.getBoundingClientRect();dragOffset.x=e.clientX-r.left;dragOffset.y=e.clientY-r.top;document.addEventListener('mousemove',handleDrag);document.addEventListener('mouseup',stopDrag);e.preventDefault()}function handleDrag(e){if(!draggedCard)return;const r=canvas.getBoundingClientRect(),rawX=Math.max(0,e.clientX-r.left-dragOffset.x),rawY=Math.max(0,e.clientY-r.top-dragOffset.y),newX=snapToGridValue(rawX),newY=snapToGridValue(rawY),deltaX=newX-draggedCard.x,deltaY=newY-draggedCard.y;if(selectedCards.length>1){selectedCards.forEach(c=>{c.x+=deltaX;c.y+=deltaY})}else{draggedCard.x=newX;draggedCard.y=newY}renderCanvas()}function stopDrag(){if(draggedCard)saveState();draggedCard=null;document.removeEventListener('mousemove',handleDrag);document.removeEventListener('mouseup',stopDrag)}function startResize(e,c){resizingCard=c;resizeHandle=e.target.dataset.position;document.addEventListener('mousemove',handleResize);document.addEventListener('mouseup',stopResize);e.preventDefault();e.stopPropagation()}function handleResize(e){if(!resizingCard)return;const r=canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;if(resizeHandle.includes('e'))resizingCard.width=snapToGridValue(Math.max(150,mx-resizingCard.x));if(resizeHandle.includes('s'))resizingCard.height=snapToGridValue(Math.max(100,my-resizingCard.y));renderCanvas()}function stopResize(){if(resizingCard)saveState();resizingCard=null;resizeHandle=null;document.removeEventListener('mousemove',handleResize);document.removeEventListener('mouseup',stopResize)}function selectCard(c){selectedCard=c;renderCanvas();showProperties(c);updateSelectedCount();// Store settings for import
-if(c){lastCardSettings.bgColor=c.bgColor;lastCardSettings.titleColor=c.titleColor;lastCardSettings.entityColor=c.entityColor;lastCardSettings.titleFont=c.titleFont;lastCardSettings.entityFont=c.entityFont;lastCardSettings.titleShadow={...c.titleShadow};lastCardSettings.entityShadow={...c.entityShadow}}}
-function showProperties(c){if(!c){propertiesPanel.innerHTML='<div class="no-selection"><div class="no-selection-icon">👆</div><p>Click card</p></div>';return}if(!c.titleFont)c.titleFont="'Segoe UI', sans-serif";if(!c.entityFont)c.entityFont="'Segoe UI', sans-serif";if(!c.titleShadow)c.titleShadow={enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'};if(!c.entityShadow)c.entityShadow={enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'};if(c.borderRadius===undefined)c.borderRadius=14;if(!c.cornerStyle)c.cornerStyle='rounded';
-// For thermostat, show entities textarea
-const entitiesField=c.type==='thermostat'?`<div class="form-group"><label>Climate Entities</label><textarea id="prop-entities" rows="4">${(c.entities||[c.entity||'']).join('\n')}</textarea></div>`:c.entities?`<div class="form-group"><label>Entities</label><textarea id="prop-entities" rows="6">${c.entities.join('\n')}</textarea></div>`:c.content!==undefined?`<div class="form-group"><label>Content</label><textarea id="prop-content" rows="6">${c.content}</textarea></div>`:`<div class="form-group"><label>Entity</label><input type="text" id="prop-entity" value="${c.entity||''}"></div>`;
-propertiesPanel.innerHTML=`<div class="prop-section"><h3>📝 Details</h3><div class="form-group"><label>Title</label><input type="text" id="prop-title" value="${c.title}"></div>${entitiesField}</div><div class="prop-section"><h3>📐 Position & Size</h3><div class="form-group"><label>X: ${c.x}px</label><input type="range" id="prop-x" min="0" max="1000" value="${c.x}"></div><div class="form-group"><label>Y: ${c.y}px</label><input type="range" id="prop-y" min="0" max="1000" value="${c.y}"></div><div class="form-group"><label>W: ${c.width}px</label><input type="range" id="prop-w" min="150" max="600" value="${c.width}"></div><div class="form-group"><label>H: ${c.height}px</label><input type="range" id="prop-h" min="100" max="500" value="${c.height}"></div><div class="form-group"><label>Z: ${c.zIndex||0}</label><input type="number" id="prop-z" value="${c.zIndex||0}"></div></div><div class="prop-section"><h3>🔲 Corner Style</h3><div class="form-group"><label>Style</label><select id="prop-corner-style"><option value="rounded" ${c.cornerStyle==='rounded'?'selected':''}>Rounded</option><option value="square" ${c.cornerStyle==='square'?'selected':''}>Square</option></select></div><div class="form-group" id="radiusGroup" style="display:${c.cornerStyle==='rounded'?'block':'none'}"><label>Border Radius: <span id="radiusVal">${c.borderRadius}</span>px</label><input type="range" id="prop-radius" min="0" max="50" value="${c.borderRadius}"></div></div><div class="prop-section"><h3>🎨 Colors</h3><div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-gradient" ${c.useGradient?'checked':''}>Use Gradient</label></div><div id="solidColor" style="display:${c.useGradient?'none':'block'}"><div class="form-group"><label>Background</label><input type="color" id="prop-bg" value="${c.bgColor}"></div></div><div id="gradientColors" style="display:${c.useGradient?'block':'none'}"><div class="form-group"><label>Color 1</label><input type="color" id="prop-gc1" value="${c.gradientColor1}"></div><div class="form-group"><label>Color 2</label><input type="color" id="prop-gc2" value="${c.gradientColor2}"></div></div><div class="form-group"><label>Title Color</label><input type="color" id="prop-tc" value="${c.titleColor}"></div><div class="form-group"><label>Entity Color</label><input type="color" id="prop-ec" value="${c.entityColor}"></div></div><div class="prop-section"><h3>🔤 Typography</h3><div class="form-group"><label>Title Font</label><select id="prop-title-font">${getFontOptionsHTML(c.titleFont)}</select></div><div class="form-group"><label>Entity Font</label><select id="prop-entity-font">${getFontOptionsHTML(c.entityFont)}</select></div></div><div class="prop-section"><h3>✨ Title Shadow</h3><div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-title-shadow-enabled" ${c.titleShadow.enabled?'checked':''}>Enable Title Shadow</label></div><div id="titleShadowSettings" style="display:${c.titleShadow.enabled?'block':'none'}"><div class="form-group"><label>X Offset: <span id="tShadowXVal">${c.titleShadow.x}</span>px</label><input type="range" id="prop-title-shadow-x" min="-10" max="10" value="${c.titleShadow.x}"></div><div class="form-group"><label>Y Offset: <span id="tShadowYVal">${c.titleShadow.y}</span>px</label><input type="range" id="prop-title-shadow-y" min="-10" max="10" value="${c.titleShadow.y}"></div><div class="form-group"><label>Blur: <span id="tShadowBlurVal">${c.titleShadow.blur}</span>px</label><input type="range" id="prop-title-shadow-blur" min="0" max="20" value="${c.titleShadow.blur}"></div><div class="form-group"><label>Shadow Color</label><input type="color" id="prop-title-shadow-color" value="${c.titleShadow.color.startsWith('rgba')?'#000000':c.titleShadow.color}"></div><div class="shadow-preview" id="titleShadowPreview" style="color:${c.titleColor};font-family:${c.titleFont};text-shadow:${getTextShadowCSS(c.titleShadow)}">Title Preview</div></div></div><div class="prop-section"><h3>✨ Entity Shadow</h3><div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-entity-shadow-enabled" ${c.entityShadow.enabled?'checked':''}>Enable Entity Shadow</label></div><div id="entityShadowSettings" style="display:${c.entityShadow.enabled?'block':'none'}"><div class="form-group"><label>X Offset: <span id="eShadowXVal">${c.entityShadow.x}</span>px</label><input type="range" id="prop-entity-shadow-x" min="-10" max="10" value="${c.entityShadow.x}"></div><div class="form-group"><label>Y Offset: <span id="eShadowYVal">${c.entityShadow.y}</span>px</label><input type="range" id="prop-entity-shadow-y" min="-10" max="10" value="${c.entityShadow.y}"></div><div class="form-group"><label>Blur: <span id="eShadowBlurVal">${c.entityShadow.blur}</span>px</label><input type="range" id="prop-entity-shadow-blur" min="0" max="20" value="${c.entityShadow.blur}"></div><div class="form-group"><label>Shadow Color</label><input type="color" id="prop-entity-shadow-color" value="${c.entityShadow.color.startsWith('rgba')?'#000000':c.entityShadow.color}"></div><div class="shadow-preview" id="entityShadowPreview" style="color:${c.entityColor};font-family:${c.entityFont};text-shadow:${getTextShadowCSS(c.entityShadow)}">Entity Preview</div></div></div><button class="btn btn-small" onclick="duplicateCard()">📋 Duplicate</button><button class="btn btn-danger btn-small" onclick="deleteCard()">🗑️ Delete</button>`;document.getElementById('prop-title').oninput=e=>{c.title=e.target.value;renderCanvas()};document.getElementById('prop-x').oninput=e=>{c.x=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`X: ${c.x}px`};document.getElementById('prop-y').oninput=e=>{c.y=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`Y: ${c.y}px`};document.getElementById('prop-w').oninput=e=>{c.width=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`W: ${c.width}px`};document.getElementById('prop-h').oninput=e=>{c.height=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`H: ${c.height}px`};document.getElementById('prop-z').oninput=e=>{c.zIndex=parseInt(e.target.value);renderCanvas();e.target.previousElementSibling.textContent=`Z: ${c.zIndex}`};document.getElementById('prop-corner-style').onchange=e=>{c.cornerStyle=e.target.value;document.getElementById('radiusGroup').style.display=c.cornerStyle==='rounded'?'block':'none';renderCanvas()};document.getElementById('prop-radius').oninput=e=>{c.borderRadius=parseInt(e.target.value);document.getElementById('radiusVal').textContent=c.borderRadius;renderCanvas()};document.getElementById('prop-gradient').onchange=e=>{c.useGradient=e.target.checked;document.getElementById('solidColor').style.display=c.useGradient?'none':'block';document.getElementById('gradientColors').style.display=c.useGradient?'block':'none';renderCanvas()};document.getElementById('prop-bg').oninput=e=>{c.bgColor=e.target.value;renderCanvas()};document.getElementById('prop-gc1').oninput=e=>{c.gradientColor1=e.target.value;renderCanvas()};document.getElementById('prop-gc2').oninput=e=>{c.gradientColor2=e.target.value;renderCanvas()};document.getElementById('prop-tc').oninput=e=>{c.titleColor=e.target.value;renderCanvas();updateShadowPreviews()};document.getElementById('prop-ec').oninput=e=>{c.entityColor=e.target.value;renderCanvas();updateShadowPreviews()};document.getElementById('prop-title-font').onchange=e=>{c.titleFont=e.target.value;renderCanvas();updateShadowPreviews()};document.getElementById('prop-entity-font').onchange=e=>{c.entityFont=e.target.value;renderCanvas();updateShadowPreviews()};document.getElementById('prop-title-shadow-enabled').onchange=e=>{c.titleShadow.enabled=e.target.checked;document.getElementById('titleShadowSettings').style.display=c.titleShadow.enabled?'block':'none';renderCanvas()};document.getElementById('prop-title-shadow-x').oninput=e=>{c.titleShadow.x=parseInt(e.target.value);document.getElementById('tShadowXVal').textContent=c.titleShadow.x;renderCanvas();updateShadowPreviews()};document.getElementById('prop-title-shadow-y').oninput=e=>{c.titleShadow.y=parseInt(e.target.value);document.getElementById('tShadowYVal').textContent=c.titleShadow.y;renderCanvas();updateShadowPreviews()};document.getElementById('prop-title-shadow-blur').oninput=e=>{c.titleShadow.blur=parseInt(e.target.value);document.getElementById('tShadowBlurVal').textContent=c.titleShadow.blur;renderCanvas();updateShadowPreviews()};document.getElementById('prop-title-shadow-color').oninput=e=>{c.titleShadow.color=e.target.value;renderCanvas();updateShadowPreviews()};document.getElementById('prop-entity-shadow-enabled').onchange=e=>{c.entityShadow.enabled=e.target.checked;document.getElementById('entityShadowSettings').style.display=c.entityShadow.enabled?'block':'none';renderCanvas()};document.getElementById('prop-entity-shadow-x').oninput=e=>{c.entityShadow.x=parseInt(e.target.value);document.getElementById('eShadowXVal').textContent=c.entityShadow.x;renderCanvas();updateShadowPreviews()};document.getElementById('prop-entity-shadow-y').oninput=e=>{c.entityShadow.y=parseInt(e.target.value);document.getElementById('eShadowYVal').textContent=c.entityShadow.y;renderCanvas();updateShadowPreviews()};document.getElementById('prop-entity-shadow-blur').oninput=e=>{c.entityShadow.blur=parseInt(e.target.value);document.getElementById('eShadowBlurVal').textContent=c.entityShadow.blur;renderCanvas();updateShadowPreviews()};document.getElementById('prop-entity-shadow-color').oninput=e=>{c.entityShadow.color=e.target.value;renderCanvas();updateShadowPreviews()};
-// Handle entities for both regular cards and thermostat
-if(document.getElementById('prop-entities')){document.getElementById('prop-entities').oninput=e=>{c.entities=e.target.value.split('\n').filter(x=>x.trim());renderCanvas()}}
-else if(c.content!==undefined&&document.getElementById('prop-content'))document.getElementById('prop-content').oninput=e=>{c.content=e.target.value;renderCanvas()};
-if(document.getElementById('prop-entity'))document.getElementById('prop-entity').oninput=e=>{c.entity=e.target.value;renderCanvas()};
-function updateShadowPreviews(){const titlePreview=document.getElementById('titleShadowPreview');const entityPreview=document.getElementById('entityShadowPreview');if(titlePreview){titlePreview.style.color=c.titleColor;titlePreview.style.fontFamily=c.titleFont;titlePreview.style.textShadow=getTextShadowCSS(c.titleShadow)}if(entityPreview){entityPreview.style.color=c.entityColor;entityPreview.style.fontFamily=c.entityFont;entityPreview.style.textShadow=getTextShadowCSS(c.entityShadow)}}}
-function deleteCard(){if(!selectedCard)return;if(confirm('Delete?')){cards=cards.filter(c=>c.id!==selectedCard.id);selectedCard=null;saveState();renderCanvas();showProperties(null);updateCardCount();showNotification('Card deleted')}}function deleteMultiple(){if(confirm(`Delete ${selectedCards.length} cards?`)){cards=cards.filter(c=>!selectedCards.some(s=>s.id===c.id));selectedCards=[];selectedCard=null;saveState();renderCanvas();updateCardCount();showNotification('Cards deleted')}}function duplicateCard(){if(!selectedCard)return;const n={...JSON.parse(JSON.stringify(selectedCard)),id:cardIdCounter++,x:selectedCard.x+30,y:selectedCard.y+30};cards.push(n);saveState();renderCanvas();selectCard(n);showNotification('Card duplicated')}function pasteCard(){if(!clipboard)return;const n={...JSON.parse(JSON.stringify(clipboard)),id:cardIdCounter++,x:clipboard.x+30,y:clipboard.y+30};cards.push(n);saveState();renderCanvas();selectCard(n);showNotification('Card pasted')}function selectAll(){selectedCards=cards.slice();renderCanvas();updateSelectedCount();showNotification(`Selected ${cards.length} cards`)}function deselectAll(){selectedCards=[];selectedCard=null;renderCanvas();updateSelectedCount()}function groupSelected(){if(selectedCards.length<2){showNotification('Select 2+ cards','error');return}const groupId=Date.now();selectedCards.forEach(c=>c.group=groupId);groups[groupId]=selectedCards.map(c=>c.id);saveState();renderCanvas();showNotification('Cards grouped')}function ungroupSelected(){if(selectedCards.length===0){showNotification('Select grouped cards','error');return}selectedCards.forEach(c=>c.group=null);saveState();renderCanvas();showNotification('Cards ungrouped')}function moveCardWithKeys(key){if(!selectedCard)return;const step=snapToGrid?gridSize:5;if(key==='ArrowUp')selectedCard.y=Math.max(0,selectedCard.y-step);else if(key==='ArrowDown')selectedCard.y+=step;else if(key==='ArrowLeft')selectedCard.x=Math.max(0,selectedCard.x-step);else if(key==='ArrowRight')selectedCard.x+=step;renderCanvas()}function toggleGridSnap(){snapToGrid=!snapToGrid;document.getElementById('gridSnapBtn').textContent=snapToGrid?'🧲 ON':'🧲 OFF';showNotification(`Grid snap ${snapToGrid?'ON':'OFF'}`)}function setPreviewMode(mode){previewMode=mode;canvas.className='canvas';if(mode==='mobile')canvas.classList.add('mobile-preview');else if(mode==='tablet')canvas.classList.add('tablet-preview');document.querySelectorAll('[id^="preview"]').forEach(b=>b.classList.remove('active'));document.getElementById('preview'+mode.charAt(0).toUpperCase()+mode.slice(1)).classList.add('active')}function alignCards(dir){if(!cards.length)return;const toAlign=selectedCards.length>0?selectedCards:cards;if(dir==='left'){const minX=Math.min(...toAlign.map(c=>c.x));toAlign.forEach(c=>c.x=minX)}else if(dir==='right'){const maxX=Math.max(...toAlign.map(c=>c.x+c.width));toAlign.forEach(c=>c.x=maxX-c.width)}else if(dir==='center'){const minX=Math.min(...toAlign.map(c=>c.x));const maxX=Math.max(...toAlign.map(c=>c.x+c.width));const centerX=(minX+maxX)/2;toAlign.forEach(c=>c.x=centerX-c.width/2)}saveState();renderCanvas();showNotification(`Aligned ${dir}`)}function distributeCards(){const toDistribute=selectedCards.length>0?selectedCards:cards;if(toDistribute.length<3)return;const sorted=toDistribute.slice().sort((a,b)=>a.x-b.x);const minX=sorted[0].x;const maxX=sorted[sorted.length-1].x;const gap=(maxX-minX)/(sorted.length-1);sorted.forEach((c,i)=>{c.x=minX+gap*i});saveState();renderCanvas();showNotification('Cards distributed')}function changeZIndex(dir){if(!selectedCard)return;if(dir==='up')selectedCard.zIndex=(selectedCard.zIndex||0)+1;else selectedCard.zIndex=Math.max(0,(selectedCard.zIndex||0)-1);saveState();renderCanvas()}function setAnimation(anim){animationType=anim;document.querySelectorAll('[id^="anim"]').forEach(b=>b.classList.remove('active'));document.getElementById('anim'+anim.charAt(0).toUpperCase()+anim.slice(1)).classList.add('active')}function toggleAutoSave(){autoSave=!autoSave;document.getElementById('autoSaveBtn').textContent=autoSave?'💾 Auto':'💾 OFF';document.getElementById('autoSaveStatus').textContent=`Auto-save: ${autoSave?'ON':'OFF'}`;if(autoSave){autoSaveInterval=setInterval(()=>{saveState();showNotification('Auto-saved','success')},60000)}else{clearInterval(autoSaveInterval)}showNotification(`Auto-save ${autoSave?'enabled':'disabled'}`)}function saveProject(){const d={cards,bg:bgSettings,v:'4.2'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='dashboard-v4.2-'+Date.now()+'.json';a.click();URL.revokeObjectURL(u);showNotification('Project saved')}function exportScreenshot(){showNotification('Screenshot feature coming soon','error')}
-function downloadYAMLDirect(){const y=generateYAML();const b=new Blob([y],{type:'text/yaml'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='dashboard-'+Date.now()+'.yaml';a.click();URL.revokeObjectURL(u);showNotification('YAML downloaded','success')}
-function showYAML(){const y=generateYAML();document.getElementById('yamlOutput').textContent=y;document.getElementById('yamlModal').classList.add('active')}function generateYAML(){let y='# HA Dashboard v4.2\nviews:\n  - title: Dashboard\n    cards:\n';cards.forEach(c=>{y+=`      - type: ${c.type}\n        title: "${c.title}"\n`;if(c.entities){y+='        entities:\n';c.entities.forEach(e=>y+=`          - ${e}\n`)}else if(c.entity)y+=`        entity: ${c.entity}\n`;if(c.content)y+=`        content: |\n          ${c.content.replace(/\n/g,'\n          ')}\n`;y+='\n'});return y}function copyYAML(){navigator.clipboard.writeText(document.getElementById('yamlOutput').textContent).then(()=>showNotification('YAML copied')).catch(()=>showNotification('Failed','error'))}function downloadYAML(){const b=new Blob([document.getElementById('yamlOutput').textContent],{type:'text/yaml'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='dashboard.yaml';a.click();URL.revokeObjectURL(u)}function closeModal(id){document.getElementById(id).classList.remove('active')}function showNotification(msg,type='success'){const n=document.getElementById('notification');n.textContent=msg;n.className=`notification ${type}`;n.style.display='block';setTimeout(()=>n.style.display='none',3000)}function updateStatus(text){document.getElementById('statusText').textContent=text;setTimeout(()=>document.getElementById('statusText').textContent='Ready',2000)}function updateCardCount(){document.getElementById('cardCount').textContent=`${cards.length} cards`}function updateSelectedCount(){document.getElementById('selectedCount').textContent=selectedCards.length>0?`${selectedCards.length} selected`:'0 selected'}function showSidebarTab(tab){document.querySelectorAll('.sidebar-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');document.getElementById('cardsTab').style.display=tab==='cards'?'block':'none';document.getElementById('searchTab').style.display=tab==='search'?'block':'none';document.getElementById('layersTab').style.display=tab==='layers'?'block':'none'}function searchCards(){const q=document.getElementById('searchBox').value.toLowerCase();const results=cards.filter(c=>c.title.toLowerCase().includes(q)||c.entities?.some(e=>e.toLowerCase().includes(q))||c.entity?.toLowerCase().includes(q));const div=document.getElementById('searchResults');div.innerHTML=results.map(c=>`<div style="padding:10px;background:rgba(67,238,255,.1);border-radius:8px;margin:5px 0;cursor:pointer" onclick="selectCard(cards.find(x=>x.id===${c.id}))">${c.title} (${c.type})</div>`).join('')||'<p style="color:#666;text-align:center">No results</p>'}function updateLayersList(){const div=document.getElementById('layersList');div.innerHTML=cards.slice().sort((a,b)=>(b.zIndex||0)-(a.zIndex||0)).map(c=>`<div style="padding:8px;background:rgba(67,238,255,.1);border-radius:6px;margin:5px 0;cursor:pointer;font-size:.85em" onclick="selectCard(cards.find(x=>x.id===${c.id}))">${c.title} - Z:${c.zIndex||0}</div>`).join('')}function showDashboardManager(){updateDashboardList();document.getElementById('dashboardManagerModal').classList.add('active')}function updateDashboardList(){const div=document.getElementById('dashboardList');div.innerHTML=dashboards.map(d=>`<div class="dashboard-item ${d.id===currentDashboardId?'active':''}" onclick="switchDashboard(${d.id})"><div class="dashboard-name">${d.name}</div><div class="dashboard-meta">${d.cards?.length||0} cards • ${new Date(d.created).toLocaleDateString()}</div></div>`).join('')}function createNewDashboard(){const name=prompt('Dashboard name:','New Dashboard');if(!name)return;const newDash={id:Date.now(),name,cards:[],bg:{...bgSettings},created:Date.now()};dashboards.push(newDash);switchDashboard(newDash.id);showNotification('Dashboard created');updateDashboardList()}function switchDashboard(id){const dash=dashboards.find(d=>d.id===id);if(!dash)return;currentDashboardId=id;cards=dash.cards||[];bgSettings=dash.bg||bgSettings;document.getElementById('currentDashboard').textContent=dash.name;applyBackground();renderCanvas();updateCardCount();closeModal('dashboardManagerModal');showNotification(`Switched to ${dash.name}`)}function showThemeMarketplace(){document.getElementById('themeModal').classList.add('active')}function applyTheme(name){const t=themes[name];if(!t)return;bgSettings={type:'gradient',grad1:t.bg1,grad2:t.bg2,angle:135,imageUrl:'',solid:t.bg1,opacity:30,blur:0,overlay:50};cards.forEach(c=>{c.bgColor=t.card;c.titleColor=t.title;c.entityColor=t.entity});applyBackground();saveState();renderCanvas();closeModal('themeModal');showNotification(`Applied ${name} theme`)}
-function showBackgroundSettings(){setBgTypeUI(bgSettings.type);document.getElementById('bgGrad1').value=bgSettings.grad1;document.getElementById('bgGrad2').value=bgSettings.grad2;document.getElementById('bgAngle').value=bgSettings.angle;document.getElementById('bgAngleVal').textContent=bgSettings.angle;document.getElementById('bgSolidColor').value=bgSettings.solid;document.getElementById('bgImageUrl').value=bgSettings.imageUrl||'';document.getElementById('bgOpacity').value=bgSettings.opacity;document.getElementById('bgOpacityVal').textContent=bgSettings.opacity;document.getElementById('bgBlur').value=bgSettings.blur;document.getElementById('bgBlurVal').textContent=bgSettings.blur;document.getElementById('bgOverlayAmount').value=bgSettings.overlay;document.getElementById('bgOverlayVal').textContent=bgSettings.overlay;if(bgSettings.imageUrl){document.getElementById('bgImagePreview').style.backgroundImage=`url(${bgSettings.imageUrl})`;document.getElementById('bgImagePreview').textContent=''}document.getElementById('backgroundModal').classList.add('active')}function setBgType(type){bgSettings.type=type;setBgTypeUI(type);updateBgSettings()}function setBgTypeUI(type){document.querySelectorAll('.bg-type-btn').forEach(b=>b.classList.remove('active'));document.getElementById('bgType'+type.charAt(0).toUpperCase()+type.slice(1)).classList.add('active');document.getElementById('bgGradientSettings').style.display=type==='gradient'?'block':'none';document.getElementById('bgSolidSettings').style.display=type==='solid'?'block':'none';document.getElementById('bgImageSettings').style.display=type==='image'?'block':'none'}function updateBgSettings(){bgSettings.grad1=document.getElementById('bgGrad1').value;bgSettings.grad2=document.getElementById('bgGrad2').value;bgSettings.angle=parseInt(document.getElementById('bgAngle').value);document.getElementById('bgAngleVal').textContent=bgSettings.angle;bgSettings.solid=document.getElementById('bgSolidColor').value;bgSettings.imageUrl=document.getElementById('bgImageUrl').value;bgSettings.opacity=parseInt(document.getElementById('bgOpacity').value);document.getElementById('bgOpacityVal').textContent=bgSettings.opacity;bgSettings.blur=parseInt(document.getElementById('bgBlur').value);document.getElementById('bgBlurVal').textContent=bgSettings.blur;bgSettings.overlay=parseInt(document.getElementById('bgOverlayAmount').value);document.getElementById('bgOverlayVal').textContent=bgSettings.overlay;applyBackground();saveState()}function uploadBgImage(event){const file=event.target.files[0];if(file){const reader=new FileReader();reader.onload=function(e){bgSettings.imageUrl=e.target.result;document.getElementById('bgImageUrl').value='';document.getElementById('bgImagePreview').style.backgroundImage=`url(${e.target.result})`;document.getElementById('bgImagePreview').textContent='';bgSettings.type='image';setBgTypeUI('image');applyBackground();saveState();showNotification('Background image uploaded','success')};reader.readAsDataURL(file)}}function applyBackground(){const bgLayer=document.querySelector('.bg-layer');const bgImage=document.getElementById('bgImage');const bgOverlay=document.getElementById('bgOverlay');if(bgSettings.type==='gradient'){bgLayer.style.background=`linear-gradient(${bgSettings.angle}deg,${bgSettings.grad1},${bgSettings.grad2})`;bgImage.style.backgroundImage='none';bgImage.style.opacity=0}else if(bgSettings.type==='image'&&bgSettings.imageUrl){bgLayer.style.background='#000';bgImage.style.backgroundImage=`url(${bgSettings.imageUrl})`;bgImage.style.opacity=bgSettings.opacity/100;bgImage.style.filter=`blur(${bgSettings.blur}px)`}else{bgLayer.style.background=bgSettings.solid;bgImage.style.backgroundImage='none';bgImage.style.opacity=0}bgOverlay.style.background=`rgba(0,0,0,${bgSettings.overlay/100})`}
-function showGallery(){document.getElementById('galleryModal').classList.add('active')}function cloneGalleryDashboard(type){const templates={'smart-home':[{type:'entities',title:'Living Room',x:50,y:50,entities:['light.living','switch.tv','climate.living']},{type:'weather',title:'Weather',x:400,y:50,entity:'weather.home'},{type:'camera',title:'Front Door',x:50,y:300,entity:'camera.front'},{type:'gauge',title:'Temperature',x:500,y:300,entity:'sensor.temp',min:0,max:100}],'minimalist':[{type:'glance',title:'Quick View',x:50,y:50,entities:['light.main','switch.fan','sensor.temp']},{type:'clock',title:'Time',x:450,y:50,format:'24'}],'energy':[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power',min:0,max:5000},{type:'chart',title:'Usage',x:350,y:50,entity:'sensor.power',chartType:'line'},{type:'entities',title:'Devices',x:50,y:400,entities:['switch.washer','switch.dryer','switch.hvac']}],'security':[{type:'camera',title:'Front',x:50,y:50,entity:'camera.front'},{type:'camera',title:'Back',x:500,y:50,entity:'camera.back'},{type:'entities',title:'Sensors',x:50,y:400,entities:['binary_sensor.door','binary_sensor.motion','binary_sensor.window']}]};const tpl=templates[type];if(tpl){cards.push(...tpl.map(t=>({...t,id:cardIdCounter++,width:cardTypeConfigs[t.type].defaultSize.width,height:cardTypeConfigs[t.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType,titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'},borderRadius:14,cornerStyle:'rounded'})));saveState();renderCanvas();closeModal('galleryModal');showNotification('Dashboard cloned from gallery')}}function showTemplateLibrary(){document.getElementById('templateModal').classList.add('active')}function applyTemplate(name){const templates={living:[{type:'entities',title:'Living Room Lights',x:50,y:50,entities:['light.living_room','light.lamp','switch.tv']},{type:'media',title:'TV',x:400,y:50,entity:'media_player.tv'},{type:'thermostat',title:'Climate',x:50,y:300,entities:['climate.living']}],kitchen:[{type:'entities',title:'Kitchen',x:50,y:50,entities:['light.kitchen','light.counter','switch.coffee']},{type:'button',title:'Coffee',x:400,y:50,entity:'switch.coffee_maker'}],bedroom:[{type:'entities',title:'Bedroom',x:50,y:50,entities:['light.bedroom','switch.fan']},{type:'thermostat',title:'Climate',x:400,y:50,entities:['climate.bedroom']},{type:'clock',title:'Clock',x:50,y:350,format:'12'}],security:[{type:'camera',title:'Front Door',x:50,y:50,entity:'camera.front'},{type:'entities',title:'Sensors',x:500,y:50,entities:['binary_sensor.door','binary_sensor.motion','binary_sensor.window']}],energy:[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power',min:0,max:5000},{type:'chart',title:'Usage',x:350,y:50,entity:'sensor.power',chartType:'line'}],outdoor:[{type:'weather',title:'Weather',x:50,y:50,entity:'weather.home'},{type:'entities',title:'Garden',x:450,y:50,entities:['switch.sprinkler','light.porch','sensor.soil']}]};const tpl=templates[name];if(tpl){cards.push(...tpl.map(t=>({...t,id:cardIdCounter++,width:cardTypeConfigs[t.type].defaultSize.width,height:cardTypeConfigs[t.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',useGradient:false,gradientColor1:'#43eeff',gradientColor2:'#ff43ee',zIndex:cards.length,animation:animationType,titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'},borderRadius:14,cornerStyle:'rounded'})));saveState();renderCanvas();closeModal('templateModal');showNotification('Template applied')}}function showImportModal(){document.getElementById('importModal').classList.add('active')}
-// IMPROVEMENT 2: Enhanced YAML import with property preservation
-function importYAML(){
-const yaml=document.getElementById('importYaml').value;
-const preserveColors=document.getElementById('importPreserveColors').checked;
-const preserveFonts=document.getElementById('importPreserveFonts').checked;
-const preserveShadows=document.getElementById('importPreserveShadows').checked;
-const preservePositions=document.getElementById('importPreservePositions').checked;
-try{
-const lines=yaml.split('\n');let currentCard=null;let inEntities=false;let positionX=50,positionY=50;
-lines.forEach(line=>{
-const trimmed=line.trim();
-// Check for position hints in comments or attributes
-if(preservePositions){
-if(trimmed.includes('x:')||trimmed.includes('grid_position')){const xMatch=trimmed.match(/x:\s*(\d+)/);if(xMatch)positionX=parseInt(xMatch[1])*100}
-if(trimmed.includes('y:')){const yMatch=trimmed.match(/y:\s*(\d+)/);if(yMatch)positionY=parseInt(yMatch[1])*100}
-}
-if(trimmed.startsWith('- type:')){
-if(currentCard)cards.push(currentCard);
-const type=trimmed.split(':')[1].trim().replace(/['"]/g,'');
-const baseCard={
-id:cardIdCounter++,
-type,
-x:positionX+cards.length*30,
-y:positionY+cards.length*30,
-width:cardTypeConfigs[type]?.defaultSize.width||300,
-height:cardTypeConfigs[type]?.defaultSize.height||200,
-zIndex:cards.length,
-animation:animationType,
-entities:[],
-borderRadius:14,
-cornerStyle:'rounded'
-};
-// Apply preserved or default settings
-baseCard.bgColor=preserveColors?lastCardSettings.bgColor:'#43eeff';
-baseCard.titleColor=preserveColors?lastCardSettings.titleColor:'#ff43ee';
-baseCard.entityColor=preserveColors?lastCardSettings.entityColor:'#ffeb3b';
-baseCard.gradientColor1=preserveColors?lastCardSettings.bgColor:'#43eeff';
-baseCard.gradientColor2=preserveColors?lastCardSettings.titleColor:'#ff43ee';
-baseCard.useGradient=false;
-baseCard.titleFont=preserveFonts?lastCardSettings.titleFont:"'Segoe UI', sans-serif";
-baseCard.entityFont=preserveFonts?lastCardSettings.entityFont:"'Segoe UI', sans-serif";
-baseCard.titleShadow=preserveShadows?{...lastCardSettings.titleShadow}:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'};
-baseCard.entityShadow=preserveShadows?{...lastCardSettings.entityShadow}:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'};
-currentCard=baseCard;
-inEntities=false
-}else if(trimmed.startsWith('title:')&&currentCard){
-currentCard.title=trimmed.split(':').slice(1).join(':').trim().replace(/['"]/g,'')
-}else if(trimmed.startsWith('entity:')&&currentCard){
-currentCard.entity=trimmed.split(':').slice(1).join(':').trim().replace(/['"]/g,'')
-}else if(trimmed==='entities:'&&currentCard){
-inEntities=true
-}else if(trimmed.startsWith('- ')&&currentCard&&inEntities){
-const entity=trimmed.substring(2).trim().replace(/['"]/g,'');
-if(entity&&!entity.includes(':'))currentCard.entities.push(entity)
-}else if(!trimmed.startsWith('-')&&trimmed.includes(':')){
-inEntities=false
-}
-});
-if(currentCard)cards.push(currentCard);
-saveState();renderCanvas();closeModal('importModal');
-showNotification(`Imported ${cards.length} cards with ${preserveColors?'preserved':'default'} styling`,'success')
-}catch(e){console.error(e);showNotification('Invalid YAML: '+e.message,'error')}}
-function showVersionHistory(){updateVersionList();document.getElementById('versionHistoryModal').classList.add('active')}function updateVersionList(){const div=document.getElementById('versionList');div.innerHTML=versionHistory.slice().reverse().map((v,i)=>`<div class="version-item" onclick="restoreVersion(${versionHistory.length-1-i})"><div class="version-time">${new Date(v.time).toLocaleString()}</div><div class="version-cards">${v.cardCount} cards</div></div>`).join('')||'<p style="color:#666;text-align:center">No history</p>'}function restoreVersion(idx){if(!confirm('Restore this version?'))return;const v=versionHistory[idx];cards=JSON.parse(JSON.stringify(v.cards));saveState();renderCanvas();closeModal('versionHistoryModal');showNotification('Version restored')}function showShortcuts(){document.getElementById('shortcutsModal').classList.add('active')}function showCloudSave(){updateCloudDashboardList();document.getElementById('cloudSaveModal').classList.add('active')}function saveToCloud(){const name=document.getElementById('cloudDashboardName').value||'Untitled';const cloudData={name,cards:JSON.parse(JSON.stringify(cards)),bg:JSON.parse(JSON.stringify(bgSettings)),saved:Date.now()};cloudDashboards.push(cloudData);localStorage.setItem('ha_cloud_dashboards',JSON.stringify(cloudDashboards));updateCloudDashboardList();showNotification('Saved to cloud');document.getElementById('cloudDashboardName').value=''}function updateCloudDashboardList(){cloudDashboards=JSON.parse(localStorage.getItem('ha_cloud_dashboards')||'[]');const div=document.getElementById('cloudDashboardList');div.innerHTML=cloudDashboards.map((d,i)=>`<div class="dashboard-item" onclick="loadFromCloud(${i})"><div class="dashboard-name">${d.name}</div><div class="dashboard-meta">${d.cards.length} cards • ${new Date(d.saved).toLocaleDateString()}</div></div>`).join('')||'<p style="color:#666;text-align:center;padding:20px">No cloud dashboards</p>'}function loadFromCloud(idx){const d=cloudDashboards[idx];cards=JSON.parse(JSON.stringify(d.cards));bgSettings=JSON.parse(JSON.stringify(d.bg));cardIdCounter=Math.max(...cards.map(c=>c.id),0)+1;applyBackground();saveState();renderCanvas();closeModal('cloudSaveModal');showNotification('Loaded from cloud')}
-if(autoSave){autoSaveInterval=setInterval(()=>{saveState()},60000)}
+
+el.ondragover=ev=>{if(draggedEntity&&['entities','light','thermostat'].includes(c.type)){ev.preventDefault();el.classList.add('drag-over')}};
+el.ondragleave=()=>el.classList.remove('drag-over');
+el.ondrop=ev=>{if(draggedEntity&&['entities','light','thermostat'].includes(c.type)){ev.preventDefault();el.classList.remove('drag-over');if(draggedFromCard.id!==c.id){if(!c.entities)c.entities=[];c.entities.push(draggedEntity);if(draggedFromCard.entities)draggedFromCard.entities.splice(draggedEntityIndex,1);saveState();renderCanvas()}}draggedEntity=null};
+
+el.addEventListener('mousedown',e=>{if(c.locked&&!e.target.classList.contains('resize-handle'))return;if(e.target.classList.contains('resize-handle'))startResize(e,c);else if(!e.target.classList.contains('card-entity-display'))startDrag(e,c)});
+return el}
+
+function startDrag(e,c){if(c.locked)return;draggedCard=c;if(e.shiftKey&&!selectedCards.some(s=>s.id===c.id))selectedCards.push(c);else if(!selectedCards.some(s=>s.id===c.id)){selectedCards=[];selectedCard=c}selectCard(c);const el=document.getElementById(`card-${c.id}`),r=el.getBoundingClientRect();dragOffset.x=e.clientX-r.left;dragOffset.y=e.clientY-r.top;document.addEventListener('mousemove',handleDrag);document.addEventListener('mouseup',stopDrag);e.preventDefault()}
+function handleDrag(e){if(!draggedCard)return;const r=canvas.getBoundingClientRect(),rawX=Math.max(0,e.clientX-r.left-dragOffset.x),rawY=Math.max(0,e.clientY-r.top-dragOffset.y),newX=snapVal(rawX),newY=snapVal(rawY),dx=newX-draggedCard.x,dy=newY-draggedCard.y;if(selectedCards.length>1)selectedCards.forEach(c=>{if(!c.locked){c.x+=dx;c.y+=dy}});else{draggedCard.x=newX;draggedCard.y=newY}renderCanvas();if(showAlignGuides)drawAlignGuides(draggedCard)}
+function stopDrag(){if(draggedCard)saveState();draggedCard=null;document.removeEventListener('mousemove',handleDrag);document.removeEventListener('mouseup',stopDrag);clearAlignGuides()}
+function startResize(e,c){resizingCard=c;resizeHandle=e.target.dataset.position;document.addEventListener('mousemove',handleResize);document.addEventListener('mouseup',stopResize);e.preventDefault();e.stopPropagation()}
+function handleResize(e){if(!resizingCard)return;const r=canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;const oldW=resizingCard.width,oldH=resizingCard.height,ratio=oldW/oldH;if(resizeHandle.includes('e'))resizingCard.width=snapVal(Math.max(150,mx-resizingCard.x));if(resizeHandle.includes('s'))resizingCard.height=snapVal(Math.max(100,my-resizingCard.y));if(resizingCard.aspectRatioLock){if(resizeHandle.includes('e'))resizingCard.height=Math.round(resizingCard.width/ratio);else resizingCard.width=Math.round(resizingCard.height*ratio)}renderCanvas()}
+function stopResize(){if(resizingCard)saveState();resizingCard=null;document.removeEventListener('mousemove',handleResize);document.removeEventListener('mouseup',stopResize)}
+
+function drawAlignGuides(card){clearAlignGuides();cards.forEach(c=>{if(c.id===card.id)return;if(Math.abs(c.x-card.x)<10)addGuide(c.x,'vertical');if(Math.abs(c.y-card.y)<10)addGuide(c.y,'horizontal');if(Math.abs((c.x+c.width/2)-(card.x+card.width/2))<10)addGuide(c.x+c.width/2,'vertical');if(Math.abs((c.y+c.height/2)-(card.y+card.height/2))<10)addGuide(c.y+c.height/2,'horizontal')})}
+function addGuide(pos,type){const g=document.createElement('div');g.className=`align-guide ${type}`;if(type==='vertical'){g.style.left=pos+'px';g.style.top='0'}else{g.style.top=pos+'px';g.style.left='0'}canvas.appendChild(g)}
+function clearAlignGuides(){document.querySelectorAll('.align-guide').forEach(g=>g.remove())}
+function toggleAlignGuides(){showAlignGuides=!showAlignGuides;document.getElementById('guidesBtn').classList.toggle('active',showAlignGuides);showNotification(`Guides ${showAlignGuides?'ON':'OFF'}`)}
+
+function selectCard(c){selectedCard=c;renderCanvas();showProperties(c);updateSelectedCount();if(c){Object.assign(lastCardSettings,{bgColor:c.bgColor,titleColor:c.titleColor,entityColor:c.entityColor,titleFont:c.titleFont,entityFont:c.entityFont,titleShadow:{...c.titleShadow},entityShadow:{...c.entityShadow}})}}
+
+function showProperties(c){
+if(!c){propertiesPanel.innerHTML='<div class="no-selection"><div class="no-selection-icon">👆</div><p>Click a card to edit</p></div>';return}
+if(selectedCards.length>1){showBulkProperties();return}
+// Initialize defaults
+c.titleFont=c.titleFont||"'Segoe UI', sans-serif";c.entityFont=c.entityFont||"'Segoe UI', sans-serif";
+c.titleShadow=c.titleShadow||{enabled:false,x:2,y:2,blur:4,color:'#000'};c.entityShadow=c.entityShadow||{enabled:false,x:1,y:1,blur:2,color:'#000'};
+c.borderRadius=c.borderRadius??14;c.cornerStyle=c.cornerStyle||'rounded';c.hoverEffect=c.hoverEffect||'none';c.tapAction=c.tapAction||{action:'toggle',service:'',entity:''};c.conditions=c.conditions||'';c.icon=c.icon||'';c.aspectRatioLock=c.aspectRatioLock||false;
+
+const entField=c.entities?`<div class="form-group"><label>Entities</label><textarea id="prop-entities" rows="4">${c.entities.join('\n')}</textarea></div>`:c.entity!==undefined?`<div class="form-group"><label>Entity</label><input type="text" id="prop-entity" value="${c.entity||''}"></div>`:'';
+
+propertiesPanel.innerHTML=`
+<div class="prop-section"><h3>📝 Basic</h3>
+<div class="form-group"><label>Title</label><input type="text" id="prop-title" value="${c.title}"></div>
+<div class="form-group"><label>Icon</label><div style="display:flex;gap:8px"><input type="text" id="prop-icon" value="${c.icon}" style="flex:1" readonly><button class="btn btn-small" onclick="openIconPicker()" style="width:auto;padding:8px 15px">🎯</button></div></div>
+${entField}
+<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-locked" ${c.locked?'checked':''}> 🔒 Locked</label></div>
+</div>
+<div class="prop-section"><h3>📐 Size & Position</h3>
+<div class="form-group"><label>X: ${c.x}px</label><input type="range" id="prop-x" min="0" max="1500" value="${c.x}"></div>
+<div class="form-group"><label>Y: ${c.y}px</label><input type="range" id="prop-y" min="0" max="1500" value="${c.y}"></div>
+<div class="form-group"><label>W: ${c.width}px</label><input type="range" id="prop-w" min="150" max="800" value="${c.width}"></div>
+<div class="form-group"><label>H: ${c.height}px</label><input type="range" id="prop-h" min="100" max="600" value="${c.height}"></div>
+<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-aspect" ${c.aspectRatioLock?'checked':''}> 🔗 Lock Aspect Ratio</label></div>
+</div>
+<div class="prop-section"><h3>🎨 Colors</h3>
+<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="prop-gradient" ${c.useGradient?'checked':''}> Use Gradient</label></div>
+<div class="form-group"><label>Background</label><input type="color" id="prop-bg" value="${c.bgColor}"></div>
+<div class="form-group"><label>Title Color</label><input type="color" id="prop-tc" value="${c.titleColor}"></div>
+<div class="form-group"><label>Entity Color</label><input type="color" id="prop-ec" value="${c.entityColor}"></div>
+</div>
+<div class="prop-section"><h3>✨ Effects</h3>
+<div class="form-group"><label>Hover Effect</label><select id="prop-hover"><option value="none" ${c.hoverEffect==='none'?'selected':''}>None</option><option value="scale" ${c.hoverEffect==='scale'?'selected':''}>Scale Up</option><option value="glow" ${c.hoverEffect==='glow'?'selected':''}>Glow</option><option value="lift" ${c.hoverEffect==='lift'?'selected':''}>Lift</option><option value="border" ${c.hoverEffect==='border'?'selected':''}>Border</option></select></div>
+<div class="form-group"><label>Corner Style</label><select id="prop-corner"><option value="rounded" ${c.cornerStyle==='rounded'?'selected':''}>Rounded</option><option value="square" ${c.cornerStyle==='square'?'selected':''}>Square</option></select></div>
+<div class="form-group"><label>Border Radius: ${c.borderRadius}px</label><input type="range" id="prop-radius" min="0" max="50" value="${c.borderRadius}"></div>
+</div>
+<div class="prop-section"><h3>🔤 Typography</h3>
+<div class="form-group"><label>Title Font</label><select id="prop-title-font">${getFontOptionsHTML(c.titleFont)}</select></div>
+<div class="form-group"><label>Entity Font</label><select id="prop-entity-font">${getFontOptionsHTML(c.entityFont)}</select></div>
+</div>
+<div class="prop-section"><h3>👆 Tap Action</h3>
+<div class="form-group"><label>Action</label><select id="prop-tap-action"><option value="toggle" ${c.tapAction.action==='toggle'?'selected':''}>Toggle</option><option value="call-service" ${c.tapAction.action==='call-service'?'selected':''}>Call Service</option><option value="navigate" ${c.tapAction.action==='navigate'?'selected':''}>Navigate</option><option value="more-info" ${c.tapAction.action==='more-info'?'selected':''}>More Info</option><option value="none" ${c.tapAction.action==='none'?'selected':''}>None</option></select></div>
+<div class="form-group"><label>Service/Path</label><input type="text" id="prop-tap-service" value="${c.tapAction.service||''}" placeholder="light.toggle or /lovelace/1"></div>
+</div>
+<div class="prop-section"><h3>🔍 Conditions</h3>
+<div class="form-group"><label>Visibility Conditions (notes)</label><textarea id="prop-conditions" rows="2" placeholder="Show when state is 'on'">${c.conditions}</textarea></div>
+</div>
+<button class="btn btn-half btn-small" onclick="duplicateCard()">📋 Clone</button>
+<button class="btn btn-half btn-danger btn-small" onclick="deleteCard()">🗑️ Delete</button>`;
+
+// Wire up events
+document.getElementById('prop-title').oninput=e=>{c.title=e.target.value;renderCanvas()};
+document.getElementById('prop-icon').value=c.icon;
+document.getElementById('prop-locked').onchange=e=>{c.locked=e.target.checked;renderCanvas()};
+document.getElementById('prop-x').oninput=e=>{c.x=+e.target.value;renderCanvas();e.target.previousElementSibling.textContent=`X: ${c.x}px`};
+document.getElementById('prop-y').oninput=e=>{c.y=+e.target.value;renderCanvas();e.target.previousElementSibling.textContent=`Y: ${c.y}px`};
+document.getElementById('prop-w').oninput=e=>{c.width=+e.target.value;renderCanvas();e.target.previousElementSibling.textContent=`W: ${c.width}px`};
+document.getElementById('prop-h').oninput=e=>{c.height=+e.target.value;renderCanvas();e.target.previousElementSibling.textContent=`H: ${c.height}px`};
+document.getElementById('prop-aspect').onchange=e=>{c.aspectRatioLock=e.target.checked};
+document.getElementById('prop-gradient').onchange=e=>{c.useGradient=e.target.checked;renderCanvas()};
+document.getElementById('prop-bg').oninput=e=>{c.bgColor=e.target.value;renderCanvas()};
+document.getElementById('prop-tc').oninput=e=>{c.titleColor=e.target.value;renderCanvas()};
+document.getElementById('prop-ec').oninput=e=>{c.entityColor=e.target.value;renderCanvas()};
+document.getElementById('prop-hover').onchange=e=>{c.hoverEffect=e.target.value;renderCanvas()};
+document.getElementById('prop-corner').onchange=e=>{c.cornerStyle=e.target.value;renderCanvas()};
+document.getElementById('prop-radius').oninput=e=>{c.borderRadius=+e.target.value;renderCanvas();e.target.previousElementSibling.textContent=`Border Radius: ${c.borderRadius}px`};
+document.getElementById('prop-title-font').onchange=e=>{c.titleFont=e.target.value;renderCanvas()};
+document.getElementById('prop-entity-font').onchange=e=>{c.entityFont=e.target.value;renderCanvas()};
+document.getElementById('prop-tap-action').onchange=e=>{c.tapAction.action=e.target.value};
+document.getElementById('prop-tap-service').oninput=e=>{c.tapAction.service=e.target.value};
+document.getElementById('prop-conditions').oninput=e=>{c.conditions=e.target.value};
+if(document.getElementById('prop-entities'))document.getElementById('prop-entities').oninput=e=>{c.entities=e.target.value.split('\n').filter(x=>x.trim());renderCanvas()};
+if(document.getElementById('prop-entity'))document.getElementById('prop-entity').oninput=e=>{c.entity=e.target.value;renderCanvas()};}
+
+// Bulk edit for multiple selection
+function showBulkProperties(){
+propertiesPanel.innerHTML=`<div class="prop-section"><h3>📦 Bulk Edit (${selectedCards.length} cards)</h3>
+<div class="form-group"><label>Background</label><input type="color" id="bulk-bg" value="#43eeff"></div>
+<div class="form-group"><label>Title Color</label><input type="color" id="bulk-tc" value="#ff43ee"></div>
+<div class="form-group"><label>Entity Color</label><input type="color" id="bulk-ec" value="#ffeb3b"></div>
+<div class="form-group"><label>Hover Effect</label><select id="bulk-hover"><option value="">Keep</option><option value="none">None</option><option value="scale">Scale</option><option value="glow">Glow</option><option value="lift">Lift</option></select></div>
+<button class="btn" onclick="applyBulkEdit()">Apply to All</button>
+<button class="btn btn-danger" onclick="deleteMultiple()">🗑️ Delete All</button></div>`;}
+
+function applyBulkEdit(){
+const bg=document.getElementById('bulk-bg').value,tc=document.getElementById('bulk-tc').value,ec=document.getElementById('bulk-ec').value,hover=document.getElementById('bulk-hover').value;
+selectedCards.forEach(c=>{c.bgColor=bg;c.titleColor=tc;c.entityColor=ec;if(hover)c.hoverEffect=hover});saveState();renderCanvas();showNotification('Applied to '+selectedCards.length+' cards')}
+
+function copyEntity(){if(contextEntity){navigator.clipboard.writeText(contextEntity);showNotification('Copied');document.getElementById('contextMenu').classList.remove('active')}}
+function deleteEntity(){if(contextCard&&contextEntityIndex>=0){contextCard.entities.splice(contextEntityIndex,1);saveState();renderCanvas();document.getElementById('contextMenu').classList.remove('active')}}
+function deleteCard(){if(!selectedCard)return;cards=cards.filter(c=>c.id!==selectedCard.id);selectedCard=null;saveState();renderCanvas();showProperties(null);updateCardCount()}
+function deleteMultiple(){cards=cards.filter(c=>!selectedCards.some(s=>s.id===c.id));selectedCards=[];selectedCard=null;saveState();renderCanvas();updateCardCount()}
+function duplicateCard(){if(!selectedCard)return;const n={...JSON.parse(JSON.stringify(selectedCard)),id:cardIdCounter++,x:selectedCard.x+30,y:selectedCard.y+30,locked:false};cards.push(n);saveState();renderCanvas();selectCard(n)}
+function pasteCard(){if(!clipboard)return;const n={...JSON.parse(JSON.stringify(clipboard)),id:cardIdCounter++,x:clipboard.x+30,y:clipboard.y+30,locked:false};cards.push(n);saveState();renderCanvas();selectCard(n)}
+function selectAll(){selectedCards=cards.slice();renderCanvas();updateSelectedCount()}
+function deselectAll(){selectedCards=[];selectedCard=null;renderCanvas();updateSelectedCount();showProperties(null)}
+
+// Lock
+function toggleLockSelected(){if(selectedCard){selectedCard.locked=!selectedCard.locked;saveState();renderCanvas();showNotification(selectedCard.locked?'Locked':'Unlocked')}else if(selectedCards.length){const lock=!selectedCards[0].locked;selectedCards.forEach(c=>c.locked=lock);saveState();renderCanvas();showNotification(lock?'Locked':'Unlocked')}}
+
+// Copy/Paste Style
+function copyStyle(){if(!selectedCard)return;styleClipboard={bgColor:selectedCard.bgColor,titleColor:selectedCard.titleColor,entityColor:selectedCard.entityColor,useGradient:selectedCard.useGradient,gradientColor1:selectedCard.gradientColor1,gradientColor2:selectedCard.gradientColor2,titleFont:selectedCard.titleFont,entityFont:selectedCard.entityFont,titleShadow:{...selectedCard.titleShadow},entityShadow:{...selectedCard.entityShadow},hoverEffect:selectedCard.hoverEffect,borderRadius:selectedCard.borderRadius,cornerStyle:selectedCard.cornerStyle};showNotification('Style copied')}
+function pasteStyle(){if(!styleClipboard)return;const targets=selectedCards.length?selectedCards:(selectedCard?[selectedCard]:[]);targets.forEach(c=>Object.assign(c,JSON.parse(JSON.stringify(styleClipboard))));saveState();renderCanvas();showNotification('Style applied')}
+
+// Auto Grid
+function autoGridLayout(){if(!cards.length)return;const cols=Math.ceil(Math.sqrt(cards.length)),gap=20;let maxW=0,maxH=0;cards.forEach(c=>{maxW=Math.max(maxW,c.width);maxH=Math.max(maxH,c.height)});cards.forEach((c,i)=>{c.x=50+(i%cols)*(maxW+gap);c.y=50+Math.floor(i/cols)*(maxH+gap)});saveState();renderCanvas();showNotification('Auto-grid applied')}
+
+function groupSelected(){if(selectedCards.length<2)return;const gid=Date.now();selectedCards.forEach(c=>c.group=gid);saveState();renderCanvas();showNotification('Grouped')}
+function ungroupSelected(){selectedCards.forEach(c=>c.group=null);saveState();renderCanvas()}
+function moveCardWithKeys(k){if(!selectedCard||selectedCard.locked)return;const s=snapToGrid?gridSize:5;if(k==='ArrowUp')selectedCard.y=Math.max(0,selectedCard.y-s);else if(k==='ArrowDown')selectedCard.y+=s;else if(k==='ArrowLeft')selectedCard.x=Math.max(0,selectedCard.x-s);else if(k==='ArrowRight')selectedCard.x+=s;renderCanvas()}
+function toggleGridSnap(){snapToGrid=!snapToGrid;document.getElementById('gridSnapBtn').classList.toggle('active',snapToGrid);showNotification(`Grid ${snapToGrid?'ON':'OFF'}`)}
+function setPreviewMode(m){previewMode=m;canvas.className='canvas';if(m==='mobile')canvas.classList.add('mobile-preview');else if(m==='tablet')canvas.classList.add('tablet-preview');document.querySelectorAll('[id^="preview"]').forEach(b=>b.classList.remove('active'));document.getElementById('preview'+m.charAt(0).toUpperCase()+m.slice(1)).classList.add('active');
+// Save/restore responsive layouts
+responsiveLayouts[previewMode]=cards.map(c=>({id:c.id,x:c.x,y:c.y,width:c.width,height:c.height}))}
+function alignCards(dir){const arr=selectedCards.length?selectedCards:cards;if(!arr.length)return;if(dir==='left'){const min=Math.min(...arr.map(c=>c.x));arr.forEach(c=>{if(!c.locked)c.x=min})}else if(dir==='right'){const max=Math.max(...arr.map(c=>c.x+c.width));arr.forEach(c=>{if(!c.locked)c.x=max-c.width})}else{const min=Math.min(...arr.map(c=>c.x)),max=Math.max(...arr.map(c=>c.x+c.width)),ctr=(min+max)/2;arr.forEach(c=>{if(!c.locked)c.x=ctr-c.width/2})}saveState();renderCanvas()}
+function changeZIndex(dir){if(!selectedCard)return;selectedCard.zIndex=dir==='up'?(selectedCard.zIndex||0)+1:Math.max(0,(selectedCard.zIndex||0)-1);saveState();renderCanvas()}
+
+// Export PNG
+function exportAsPNG(){showNotification('Generating PNG...');
+const cvs=document.createElement('canvas'),ctx=cvs.getContext('2d');
+const rect=canvas.getBoundingClientRect();cvs.width=rect.width*2;cvs.height=rect.height*2;ctx.scale(2,2);
+ctx.fillStyle=bgSettings.type==='gradient'?bgSettings.grad1:bgSettings.solid;ctx.fillRect(0,0,rect.width,rect.height);
+cards.forEach(c=>{ctx.fillStyle=c.useGradient?c.gradientColor1:c.bgColor;ctx.beginPath();ctx.roundRect(c.x,c.y,c.width,c.height,c.borderRadius||14);ctx.fill();ctx.fillStyle=c.titleColor;ctx.font=`bold ${16}px ${c.titleFont||'Segoe UI'}`;ctx.fillText(c.title,c.x+18,c.y+50)});
+cvs.toBlob(b=>{const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dashboard-'+Date.now()+'.png';a.click();URL.revokeObjectURL(u);showNotification('PNG downloaded','success')},'image/png')}
+
+// Share
+function showShareModal(){const data={cards,bg:bgSettings,v:'4.3'};const json=JSON.stringify(data);const encoded=btoa(encodeURIComponent(json));const url=window.location.href.split('?')[0]+'?d='+encoded;document.getElementById('shareUrl').textContent=url.length>500?'Dashboard too large for URL. Use Cloud Save instead.':url;document.getElementById('shareModal').classList.add('active')}
+function copyShareLink(){navigator.clipboard.writeText(document.getElementById('shareUrl').textContent).then(()=>showNotification('Link copied'))}
+
+// Icon Picker
+function openIconPicker(){populateIconGrid();document.getElementById('iconPickerModal').classList.add('active')}
+function populateIconGrid(filter=''){const g=document.getElementById('iconGrid');const icons=filter?mdiIcons.filter(i=>i.includes(filter)):mdiIcons;g.innerHTML=icons.map(i=>`<div class="icon-item" onclick="selectIcon('${i}')" title="${i}">${iconEmojis[i]||'📦'}</div>`).join('')}
+function filterIcons(){populateIconGrid(document.getElementById('iconSearch').value.toLowerCase())}
+function selectIcon(icon){if(selectedCard){selectedCard.icon=icon;document.getElementById('prop-icon').value=icon;saveState();renderCanvas()}closeModal('iconPickerModal')}
+
+// Style Presets
+function showStylePresets(){loadPresets();document.getElementById('stylePresetsModal').classList.add('active')}
+function loadPresets(){stylePresets=JSON.parse(localStorage.getItem('ha_style_presets')||'[]');const g=document.getElementById('presetGrid');g.innerHTML=stylePresets.map((p,i)=>`<div class="preset-item" onclick="applyPreset(${i})"><div class="preset-name">${p.name}</div><div class="preset-preview"><div class="preset-color" style="background:${p.bgColor}"></div><div class="preset-color" style="background:${p.titleColor}"></div><div class="preset-color" style="background:${p.entityColor}"></div></div></div>`).join('')||'<p style="color:#666">No presets saved</p>'}
+function saveStylePreset(){if(!selectedCard){showNotification('Select a card first','error');return}const name=document.getElementById('presetName').value||'Preset '+(stylePresets.length+1);stylePresets.push({name,bgColor:selectedCard.bgColor,titleColor:selectedCard.titleColor,entityColor:selectedCard.entityColor,titleFont:selectedCard.titleFont,entityFont:selectedCard.entityFont,hoverEffect:selectedCard.hoverEffect,borderRadius:selectedCard.borderRadius});localStorage.setItem('ha_style_presets',JSON.stringify(stylePresets));loadPresets();showNotification('Preset saved')}
+function applyPreset(i){const p=stylePresets[i];const targets=selectedCards.length?selectedCards:(selectedCard?[selectedCard]:cards);targets.forEach(c=>{c.bgColor=p.bgColor;c.titleColor=p.titleColor;c.entityColor=p.entityColor;c.titleFont=p.titleFont;c.entityFont=p.entityFont;c.hoverEffect=p.hoverEffect;c.borderRadius=p.borderRadius});saveState();renderCanvas();closeModal('stylePresetsModal');showNotification('Preset applied')}
+
+// Lovelace mode
+function setLovelaceMode(m){lovelaceMode=m;document.getElementById('lovelaceStandard').classList.toggle('active',m==='standard');document.getElementById('lovelaceCustom').classList.toggle('active',m==='custom')}
+function setExportMode(m){exportMode=m;document.getElementById('exportStandard').classList.toggle('active',m==='standard');document.getElementById('exportCustom').classList.toggle('active',m==='custom');document.getElementById('yamlOutput').textContent=generateYAML()}
+
+function saveProject(){const d={cards,bg:bgSettings,v:'4.3'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dashboard-v4.3-'+Date.now()+'.json';a.click();URL.revokeObjectURL(u);showNotification('Saved')}
+function downloadYAMLDirect(){const y=generateYAML();const b=new Blob([y],{type:'text/yaml'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dashboard.yaml';a.click();URL.revokeObjectURL(u);showNotification('YAML downloaded')}
+function generateYAML(){const prefix=exportMode==='custom'?'custom:':'';let y=`# HA Dashboard v4.3\nviews:\n  - title: Dashboard\n    cards:\n`;cards.forEach(c=>{y+=`      - type: ${prefix}${c.type}\n        title: "${c.title}"\n`;if(c.icon)y+=`        icon: ${c.icon}\n`;if(c.entities){y+='        entities:\n';c.entities.forEach(e=>y+=`          - ${e}\n`)}else if(c.entity)y+=`        entity: ${c.entity}\n`;if(c.tapAction&&c.tapAction.action!=='toggle'){y+=`        tap_action:\n          action: ${c.tapAction.action}\n`;if(c.tapAction.service)y+=`          ${c.tapAction.action==='call-service'?'service':'navigation_path'}: ${c.tapAction.service}\n`}if(c.conditions)y+=`        # Condition: ${c.conditions}\n`;y+='\n'});return y}
+function copyYAML(){navigator.clipboard.writeText(document.getElementById('yamlOutput').textContent).then(()=>showNotification('Copied'))}
+function downloadYAML(){const b=new Blob([document.getElementById('yamlOutput').textContent],{type:'text/yaml'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dashboard.yaml';a.click()}
+function showYAML(){document.getElementById('yamlOutput').textContent=generateYAML();document.getElementById('yamlModal').classList.add('active')}
+
+function closeModal(id){document.getElementById(id).classList.remove('active')}
+function showNotification(msg,type='success'){const n=document.getElementById('notification');n.textContent=msg;n.className=`notification ${type}`;n.style.display='block';setTimeout(()=>n.style.display='none',3000)}
+function updateStatus(t){document.getElementById('statusText').textContent=t;setTimeout(()=>document.getElementById('statusText').textContent='Ready',2000)}
+function updateCardCount(){document.getElementById('cardCount').textContent=cards.length+' cards'}
+function updateSelectedCount(){document.getElementById('selectedCount').textContent=selectedCards.length?selectedCards.length+' selected':'0 selected'}
+function showSidebarTab(t){document.querySelectorAll('.sidebar-tab').forEach(x=>x.classList.remove('active'));document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active');document.getElementById('cardsTab').style.display=t==='cards'?'block':'none';document.getElementById('searchTab').style.display=t==='search'?'block':'none';document.getElementById('layersTab').style.display=t==='layers'?'block':'none'}
+function searchCards(){const q=document.getElementById('searchBox').value.toLowerCase(),r=cards.filter(c=>c.title.toLowerCase().includes(q)||c.entities?.some(e=>e.includes(q))||c.entity?.includes(q));document.getElementById('searchResults').innerHTML=r.map(c=>`<div style="padding:10px;background:rgba(67,238,255,.1);border-radius:8px;margin:5px 0;cursor:pointer" onclick="selectCard(cards.find(x=>x.id===${c.id}))">${c.title}</div>`).join('')||'<p style="color:#666">No results</p>'}
+function updateLayersList(){document.getElementById('layersList').innerHTML=cards.slice().sort((a,b)=>(b.zIndex||0)-(a.zIndex||0)).map(c=>`<div style="padding:8px;background:rgba(67,238,255,.1);border-radius:6px;margin:5px 0;cursor:pointer;font-size:.85em" onclick="selectCard(cards.find(x=>x.id===${c.id}))">${c.locked?'🔒 ':''}${c.title} - Z:${c.zIndex||0}</div>`).join('')}
+function showDashboardManager(){document.getElementById('dashboardList').innerHTML=dashboards.map(d=>`<div class="dashboard-item ${d.id===currentDashboardId?'active':''}" onclick="switchDashboard(${d.id})"><div class="dashboard-name">${d.name}</div><div class="dashboard-meta">${d.cards?.length||0} cards</div></div>`).join('');document.getElementById('dashboardManagerModal').classList.add('active')}
+function createNewDashboard(){const name=prompt('Name:','Dashboard');if(!name)return;const nd={id:Date.now(),name,cards:[],bg:{...bgSettings},created:Date.now()};dashboards.push(nd);switchDashboard(nd.id)}
+function switchDashboard(id){const d=dashboards.find(x=>x.id===id);if(!d)return;currentDashboardId=id;cards=d.cards||[];bgSettings=d.bg||bgSettings;document.getElementById('currentDashboard').textContent=d.name;applyBackground();renderCanvas();updateCardCount();closeModal('dashboardManagerModal')}
+function showThemeMarketplace(){document.getElementById('themeModal').classList.add('active')}
+function applyTheme(n){const t=themes[n];if(!t)return;bgSettings={type:'gradient',grad1:t.bg1,grad2:t.bg2,angle:135,imageUrl:'',solid:t.bg1,opacity:30,blur:0,overlay:50};cards.forEach(c=>{c.bgColor=t.card;c.titleColor=t.title;c.entityColor=t.entity});applyBackground();saveState();renderCanvas();closeModal('themeModal')}
+function showBackgroundSettings(){setBgTypeUI(bgSettings.type);document.getElementById('bgGrad1').value=bgSettings.grad1;document.getElementById('bgGrad2').value=bgSettings.grad2;document.getElementById('bgAngle').value=bgSettings.angle;document.getElementById('bgAngleVal').textContent=bgSettings.angle;document.getElementById('bgSolidColor').value=bgSettings.solid;document.getElementById('bgImageUrl').value=bgSettings.imageUrl||'';document.getElementById('bgOpacity').value=bgSettings.opacity;document.getElementById('bgOpacityVal').textContent=bgSettings.opacity;document.getElementById('bgBlur').value=bgSettings.blur;document.getElementById('bgBlurVal').textContent=bgSettings.blur;document.getElementById('bgOverlayAmount').value=bgSettings.overlay;document.getElementById('bgOverlayVal').textContent=bgSettings.overlay;document.getElementById('backgroundModal').classList.add('active')}
+function setBgType(t){bgSettings.type=t;setBgTypeUI(t);updateBgSettings()}
+function setBgTypeUI(t){document.querySelectorAll('.bg-type-btn').forEach(b=>b.classList.remove('active'));document.getElementById('bgType'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active');document.getElementById('bgGradientSettings').style.display=t==='gradient'?'block':'none';document.getElementById('bgSolidSettings').style.display=t==='solid'?'block':'none';document.getElementById('bgImageSettings').style.display=t==='image'?'block':'none'}
+function updateBgSettings(){bgSettings.grad1=document.getElementById('bgGrad1').value;bgSettings.grad2=document.getElementById('bgGrad2').value;bgSettings.angle=+document.getElementById('bgAngle').value;document.getElementById('bgAngleVal').textContent=bgSettings.angle;bgSettings.solid=document.getElementById('bgSolidColor').value;bgSettings.imageUrl=document.getElementById('bgImageUrl').value;bgSettings.opacity=+document.getElementById('bgOpacity').value;document.getElementById('bgOpacityVal').textContent=bgSettings.opacity;bgSettings.blur=+document.getElementById('bgBlur').value;document.getElementById('bgBlurVal').textContent=bgSettings.blur;bgSettings.overlay=+document.getElementById('bgOverlayAmount').value;document.getElementById('bgOverlayVal').textContent=bgSettings.overlay;applyBackground();saveState()}
+function uploadBgImage(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=x=>{bgSettings.imageUrl=x.target.result;bgSettings.type='image';setBgTypeUI('image');applyBackground();saveState()};r.readAsDataURL(f)}}
+function applyBackground(){const l=document.querySelector('.bg-layer'),i=document.getElementById('bgImage'),o=document.getElementById('bgOverlay');if(bgSettings.type==='gradient'){l.style.background=`linear-gradient(${bgSettings.angle}deg,${bgSettings.grad1},${bgSettings.grad2})`;i.style.opacity=0}else if(bgSettings.type==='image'&&bgSettings.imageUrl){l.style.background='#000';i.style.backgroundImage=`url(${bgSettings.imageUrl})`;i.style.opacity=bgSettings.opacity/100;i.style.filter=`blur(${bgSettings.blur}px)`}else{l.style.background=bgSettings.solid;i.style.opacity=0}o.style.background=`rgba(0,0,0,${bgSettings.overlay/100})`}
+
+function showGallery(){document.getElementById('galleryModal').classList.add('active')}
+function cloneGalleryDashboard(t){const tpls={'smart-home':[{type:'entities',title:'Living',x:50,y:50,entities:['light.living','switch.tv']},{type:'weather',title:'Weather',x:400,y:50,entity:'weather.home'}],'minimalist':[{type:'glance',title:'Glance',x:50,y:50,entities:['light.main','switch.fan']},{type:'clock',title:'Time',x:400,y:50,format:'24'}],'energy':[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power',min:0,max:5000}],'security':[{type:'camera',title:'Cam',x:50,y:50,entity:'camera.front'}]};const tpl=tpls[t];if(tpl){cards.push(...tpl.map(c=>({...c,id:cardIdCounter++,width:cardTypeConfigs[c.type].defaultSize.width,height:cardTypeConfigs[c.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',zIndex:cards.length,locked:false,hoverEffect:'none',icon:'',titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},borderRadius:14,cornerStyle:'rounded',tapAction:{action:'toggle'},conditions:''})));saveState();renderCanvas();closeModal('galleryModal')}}
+function showTemplateLibrary(){document.getElementById('templateModal').classList.add('active')}
+function applyTemplate(n){const tpls={living:[{type:'entities',title:'Living',x:50,y:50,entities:['light.living_room','switch.tv']}],kitchen:[{type:'entities',title:'Kitchen',x:50,y:50,entities:['light.kitchen']}],bedroom:[{type:'entities',title:'Bedroom',x:50,y:50,entities:['light.bedroom']}],security:[{type:'camera',title:'Cam',x:50,y:50,entity:'camera.front'}],energy:[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power'}],outdoor:[{type:'weather',title:'Weather',x:50,y:50,entity:'weather.home'}]};const tpl=tpls[n];if(tpl){cards.push(...tpl.map(c=>({...c,id:cardIdCounter++,width:cardTypeConfigs[c.type].defaultSize.width,height:cardTypeConfigs[c.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',zIndex:cards.length,locked:false,hoverEffect:'none',icon:'',titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},borderRadius:14,cornerStyle:'rounded',tapAction:{action:'toggle'},conditions:''})));saveState();renderCanvas();closeModal('templateModal')}}
+function showImportModal(){document.getElementById('importModal').classList.add('active')}
+function importYAML(){const yaml=document.getElementById('importYaml').value,preserveC=document.getElementById('importPreserveColors').checked,preserveF=document.getElementById('importPreserveFonts').checked;try{const lines=yaml.split('\n');let cur=null;lines.forEach(l=>{const t=l.trim();if(t.startsWith('- type:')){if(cur)cards.push(cur);const type=t.split(':')[1].trim().replace(/['"]/g,'').replace('custom:','');cur={id:cardIdCounter++,type,x:50+cards.length*30,y:50+cards.length*30,width:cardTypeConfigs[type]?.defaultSize.width||300,height:cardTypeConfigs[type]?.defaultSize.height||200,bgColor:preserveC?lastCardSettings.bgColor:'#43eeff',titleColor:preserveC?lastCardSettings.titleColor:'#ff43ee',entityColor:preserveC?lastCardSettings.entityColor:'#ffeb3b',titleFont:preserveF?lastCardSettings.titleFont:"'Segoe UI', sans-serif",entityFont:preserveF?lastCardSettings.entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},zIndex:cards.length,entities:[],locked:false,hoverEffect:'none',borderRadius:14,cornerStyle:'rounded',tapAction:{action:'toggle'},conditions:''}}else if(t.startsWith('title:')&&cur)cur.title=t.split(':').slice(1).join(':').trim().replace(/['"]/g,'');else if(t.startsWith('entity:')&&cur)cur.entity=t.split(':').slice(1).join(':').trim();else if(t.startsWith('- ')&&cur&&!t.includes(':')){cur.entities.push(t.substring(2).trim())}});if(cur)cards.push(cur);saveState();renderCanvas();closeModal('importModal');showNotification('Imported')}catch(e){showNotification('Error: '+e.message,'error')}}
+
+function showVersionHistory(){document.getElementById('versionList').innerHTML=versionHistory.slice().reverse().map((v,i)=>`<div class="version-item" onclick="restoreVersion(${versionHistory.length-1-i})"><div class="version-time">${new Date(v.time).toLocaleString()}</div><div class="version-cards">${v.cardCount} cards</div></div>`).join('')||'<p style="color:#666">No history</p>';document.getElementById('versionHistoryModal').classList.add('active')}
+function restoreVersion(i){const v=versionHistory[i];cards=JSON.parse(JSON.stringify(v.cards));saveState();renderCanvas();closeModal('versionHistoryModal')}
+function showShortcuts(){document.getElementById('shortcutsModal').classList.add('active')}
+function showCloudSave(){cloudDashboards=JSON.parse(localStorage.getItem('ha_cloud_dashboards')||'[]');document.getElementById('cloudDashboardList').innerHTML=cloudDashboards.map((d,i)=>`<div class="dashboard-item" onclick="loadFromCloud(${i})"><div class="dashboard-name">${d.name}</div><div class="dashboard-meta">${d.cards.length} cards</div></div>`).join('')||'<p style="color:#666">None saved</p>';document.getElementById('cloudSaveModal').classList.add('active')}
+function saveToCloud(){const name=document.getElementById('cloudDashboardName').value||'Untitled';cloudDashboards.push({name,cards:JSON.parse(JSON.stringify(cards)),bg:JSON.parse(JSON.stringify(bgSettings)),saved:Date.now()});localStorage.setItem('ha_cloud_dashboards',JSON.stringify(cloudDashboards));showCloudSave();showNotification('Saved')}
+function loadFromCloud(i){const d=cloudDashboards[i];cards=JSON.parse(JSON.stringify(d.cards));bgSettings=JSON.parse(JSON.stringify(d.bg));cardIdCounter=Math.max(...cards.map(c=>c.id),0)+1;applyBackground();saveState();renderCanvas();closeModal('cloudSaveModal')}
+
+// Check for shared dashboard in URL
+(function(){const p=new URLSearchParams(window.location.search).get('d');if(p){try{const d=JSON.parse(decodeURIComponent(atob(p)));if(d.cards){cards=d.cards;bgSettings=d.bg||bgSettings;cardIdCounter=Math.max(...cards.map(c=>c.id),0)+1;applyBackground();renderCanvas();updateCardCount();showNotification('Dashboard loaded from link')}}catch(e){}}})();
+
+if(autoSave)autoSaveInterval=setInterval(()=>saveState(),60000);
 applyBackground();renderCanvas();updateCardCount();updateSelectedCount();
 </script>
 </body>
