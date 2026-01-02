@@ -213,7 +213,66 @@
 <div class="theme-card" onclick="applyTheme('minimal')" style="background:#1a1a1a"><div style="padding:30px"></div><div class="theme-name">Minimal</div></div>
 <div class="theme-card" onclick="applyTheme('cyberpunk')" style="background:linear-gradient(135deg,#00ff9f,#00b8ff)"><div style="padding:30px"></div><div class="theme-name">Cyber</div></div>
 </div>
-<button class="btn btn-secondary" onclick="closeModal('themeModal')" style="margin-top:15px">Close</button>
+<button class="btn" onclick="closeModal('themeModal');showThemeImport()" style="margin-top:15px">📥 Import HA Theme</button>
+<button class="btn btn-secondary" onclick="closeModal('themeModal')">Close</button>
+</div></div>
+
+<div class="modal" id="themeImportModal"><div class="modal-content">
+<h2>📥 Import Home Assistant Theme</h2>
+<div class="sidebar-tabs" style="margin-bottom:15px">
+<button class="sidebar-tab active" onclick="showThemeTab('presets')" id="themeTabPresets">Popular Themes</button>
+<button class="sidebar-tab" onclick="showThemeTab('import')" id="themeTabImport">Import YAML</button>
+<button class="sidebar-tab" onclick="showThemeTab('custom')" id="themeTabCustom">My Themes</button>
+</div>
+
+<div id="themePresetsTab">
+<p style="color:#888;margin-bottom:15px">Click to apply popular Home Assistant themes</p>
+<div class="theme-grid" id="haThemeGrid">
+<div class="theme-card" onclick="applyHATheme('ios-dark')" style="background:linear-gradient(135deg,#1c1c1e,#2c2c2e)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#0a84ff"></span><span style="width:12px;height:12px;border-radius:50%;background:#30d158"></span><span style="width:12px;height:12px;border-radius:50%;background:#ff9f0a"></span></div><div class="theme-name">iOS Dark</div></div>
+<div class="theme-card" onclick="applyHATheme('ios-light')" style="background:linear-gradient(135deg,#f2f2f7,#ffffff)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#007aff"></span><span style="width:12px;height:12px;border-radius:50%;background:#34c759"></span><span style="width:12px;height:12px;border-radius:50%;background:#ff9500"></span></div><div class="theme-name" style="color:#333">iOS Light</div></div>
+<div class="theme-card" onclick="applyHATheme('mushroom')" style="background:linear-gradient(135deg,#1d1b26,#2d2b36)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#ff9800"></span><span style="width:12px;height:12px;border-radius:50%;background:#4caf50"></span><span style="width:12px;height:12px;border-radius:50%;background:#2196f3"></span></div><div class="theme-name">Mushroom</div></div>
+<div class="theme-card" onclick="applyHATheme('google-home')" style="background:linear-gradient(135deg,#202124,#303134)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#8ab4f8"></span><span style="width:12px;height:12px;border-radius:50%;background:#81c995"></span><span style="width:12px;height:12px;border-radius:50%;background:#fdd663"></span></div><div class="theme-name">Google Dark</div></div>
+<div class="theme-card" onclick="applyHATheme('slate')" style="background:linear-gradient(135deg,#1e293b,#334155)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#38bdf8"></span><span style="width:12px;height:12px;border-radius:50%;background:#a78bfa"></span><span style="width:12px;height:12px;border-radius:50%;background:#fb7185"></span></div><div class="theme-name">Slate</div></div>
+<div class="theme-card" onclick="applyHATheme('noctis')" style="background:linear-gradient(135deg,#0f1318,#1b2838)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#49e9a6"></span><span style="width:12px;height:12px;border-radius:50%;background:#49ace9"></span><span style="width:12px;height:12px;border-radius:50%;background:#df8a3b"></span></div><div class="theme-name">Noctis</div></div>
+<div class="theme-card" onclick="applyHATheme('caule-black')" style="background:#000"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#03a9f4"></span><span style="width:12px;height:12px;border-radius:50%;background:#4caf50"></span><span style="width:12px;height:12px;border-radius:50%;background:#ff5722"></span></div><div class="theme-name">Caule Black</div></div>
+<div class="theme-card" onclick="applyHATheme('midnight')" style="background:linear-gradient(135deg,#0d1117,#161b22)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#58a6ff"></span><span style="width:12px;height:12px;border-radius:50%;background:#3fb950"></span><span style="width:12px;height:12px;border-radius:50%;background:#f78166"></span></div><div class="theme-name">Midnight</div></div>
+<div class="theme-card" onclick="applyHATheme('material-dark')" style="background:linear-gradient(135deg,#121212,#1e1e1e)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#bb86fc"></span><span style="width:12px;height:12px;border-radius:50%;background:#03dac6"></span><span style="width:12px;height:12px;border-radius:50%;background:#cf6679"></span></div><div class="theme-name">Material Dark</div></div>
+<div class="theme-card" onclick="applyHATheme('nord')" style="background:linear-gradient(135deg,#2e3440,#3b4252)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#88c0d0"></span><span style="width:12px;height:12px;border-radius:50%;background:#a3be8c"></span><span style="width:12px;height:12px;border-radius:50%;background:#ebcb8b"></span></div><div class="theme-name">Nord</div></div>
+<div class="theme-card" onclick="applyHATheme('solarized-dark')" style="background:linear-gradient(135deg,#002b36,#073642)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#268bd2"></span><span style="width:12px;height:12px;border-radius:50%;background:#859900"></span><span style="width:12px;height:12px;border-radius:50%;background:#cb4b16"></span></div><div class="theme-name">Solarized</div></div>
+<div class="theme-card" onclick="applyHATheme('dracula')" style="background:linear-gradient(135deg,#282a36,#44475a)"><div style="padding:20px;display:flex;gap:5px;justify-content:center"><span style="width:12px;height:12px;border-radius:50%;background:#bd93f9"></span><span style="width:12px;height:12px;border-radius:50%;background:#50fa7b"></span><span style="width:12px;height:12px;border-radius:50%;background:#ff79c6"></span></div><div class="theme-name">Dracula</div></div>
+</div>
+</div>
+
+<div id="themeImportTab" style="display:none">
+<p style="color:#888;margin-bottom:15px">Paste your Home Assistant theme YAML below</p>
+<textarea id="themeYamlInput" rows="12" placeholder="my_theme:
+  primary-color: '#6200EE'
+  accent-color: '#03DAC6'
+  card-background-color: '#1E1E1E'
+  primary-text-color: '#FFFFFF'
+  secondary-text-color: '#B3B3B3'
+  primary-background-color: '#121212'" style="width:100%;padding:15px;background:#0a0a15;border:1px solid rgba(67,238,255,.4);border-radius:8px;color:#43eeff;font-family:monospace;font-size:.85em"></textarea>
+<div class="import-options">
+<label>Apply to:</label>
+<div class="import-option"><input type="checkbox" id="themeApplyBg" checked> Dashboard background</div>
+<div class="import-option"><input type="checkbox" id="themeApplyCards" checked> All existing cards</div>
+<div class="import-option"><input type="checkbox" id="themeApplyNew" checked> New cards (default)</div>
+</div>
+<button class="btn" onclick="parseAndApplyThemeYAML()">🚀 Apply Theme</button>
+</div>
+
+<div id="themeCustomTab" style="display:none">
+<p style="color:#888;margin-bottom:15px">Save current colors as a reusable theme</p>
+<div class="form-group"><label>Theme Name</label><input type="text" id="customThemeName" placeholder="My Awesome Theme"></div>
+<button class="btn" onclick="saveCustomTheme()">💾 Save Current Colors</button>
+<div class="divider"></div>
+<h3 style="color:#43eeff;margin-bottom:15px">Saved Themes</h3>
+<div id="customThemeList"></div>
+<div class="divider"></div>
+<button class="btn btn-secondary" onclick="exportThemeYAML()">📤 Export as HA Theme YAML</button>
+</div>
+
+<button class="btn btn-secondary" onclick="closeModal('themeImportModal')" style="margin-top:15px">Close</button>
 </div></div>
 
 <div class="modal" id="galleryModal"><div class="modal-content">
@@ -749,6 +808,137 @@ function showCloudSave(){cloudDashboards=JSON.parse(localStorage.getItem('ha_clo
 function saveToCloud(){const name=document.getElementById('cloudDashboardName').value||'Untitled';cloudDashboards.push({name,cards:JSON.parse(JSON.stringify(cards)),bg:JSON.parse(JSON.stringify(bgSettings)),saved:Date.now()});localStorage.setItem('ha_cloud_dashboards',JSON.stringify(cloudDashboards));showCloudSave();showNotification('Saved')}
 function loadFromCloud(i){const d=cloudDashboards[i];cards=JSON.parse(JSON.stringify(d.cards));bgSettings=JSON.parse(JSON.stringify(d.bg));cardIdCounter=Math.max(...cards.map(c=>c.id),0)+1;applyBackground();saveState();renderCanvas();closeModal('cloudSaveModal')}
 
+// HA Theme Presets
+const haThemes={
+'ios-dark':{bg1:'#1c1c1e',bg2:'#2c2c2e',card:'#3a3a3c',title:'#ffffff',entity:'#ebebf5',accent:'#0a84ff'},
+'ios-light':{bg1:'#f2f2f7',bg2:'#ffffff',card:'#ffffff',title:'#000000',entity:'#3c3c43',accent:'#007aff'},
+'mushroom':{bg1:'#1d1b26',bg2:'#2d2b36',card:'#3d3b46',title:'#ffffff',entity:'#b3b3b3',accent:'#ff9800'},
+'google-home':{bg1:'#202124',bg2:'#303134',card:'#3c4043',title:'#e8eaed',entity:'#9aa0a6',accent:'#8ab4f8'},
+'slate':{bg1:'#1e293b',bg2:'#334155',card:'#475569',title:'#f1f5f9',entity:'#cbd5e1',accent:'#38bdf8'},
+'noctis':{bg1:'#0f1318',bg2:'#1b2838',card:'#232f3e',title:'#d5ced9',entity:'#7f848e',accent:'#49e9a6'},
+'caule-black':{bg1:'#000000',bg2:'#0a0a0a',card:'#1a1a1a',title:'#ffffff',entity:'#cccccc',accent:'#03a9f4'},
+'midnight':{bg1:'#0d1117',bg2:'#161b22',card:'#21262d',title:'#c9d1d9',entity:'#8b949e',accent:'#58a6ff'},
+'material-dark':{bg1:'#121212',bg2:'#1e1e1e',card:'#2d2d2d',title:'#ffffff',entity:'#b3b3b3',accent:'#bb86fc'},
+'nord':{bg1:'#2e3440',bg2:'#3b4252',card:'#434c5e',title:'#eceff4',entity:'#d8dee9',accent:'#88c0d0'},
+'solarized-dark':{bg1:'#002b36',bg2:'#073642',card:'#094959',title:'#fdf6e3',entity:'#93a1a1',accent:'#268bd2'},
+'dracula':{bg1:'#282a36',bg2:'#44475a',card:'#6272a4',title:'#f8f8f2',entity:'#bfbfbf',accent:'#bd93f9'}
+};
+let customThemes=JSON.parse(localStorage.getItem('ha_custom_themes')||'[]');
+
+function showThemeImport(){document.getElementById('themeImportModal').classList.add('active');loadCustomThemes()}
+function showThemeTab(tab){
+document.querySelectorAll('#themeImportModal .sidebar-tab').forEach(t=>t.classList.remove('active'));
+document.getElementById('themeTab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+document.getElementById('themePresetsTab').style.display=tab==='presets'?'block':'none';
+document.getElementById('themeImportTab').style.display=tab==='import'?'block':'none';
+document.getElementById('themeCustomTab').style.display=tab==='custom'?'block':'none';
+if(tab==='custom')loadCustomThemes()}
+
+function applyHATheme(name){
+const t=haThemes[name];
+if(!t)return;
+if(document.getElementById('themeApplyBg')?.checked!==false){
+bgSettings={type:'gradient',grad1:t.bg1,grad2:t.bg2,angle:135,imageUrl:'',solid:t.bg1,opacity:30,blur:0,overlay:30};
+applyBackground()}
+if(document.getElementById('themeApplyCards')?.checked!==false){
+cards.forEach(c=>{c.bgColor=t.card;c.titleColor=t.title;c.entityColor=t.entity})}
+if(document.getElementById('themeApplyNew')?.checked!==false){
+lastCardSettings.bgColor=t.card;lastCardSettings.titleColor=t.title;lastCardSettings.entityColor=t.entity}
+saveState();renderCanvas();closeModal('themeImportModal');showNotification(`Applied ${name} theme`,'success')}
+
+function parseAndApplyThemeYAML(){
+const yaml=document.getElementById('themeYamlInput').value;
+if(!yaml.trim()){showNotification('Paste theme YAML first','error');return}
+try{
+const colors={bg1:'#121212',bg2:'#1e1e1e',card:'#2d2d2d',title:'#ffffff',entity:'#b3b3b3'};
+const lines=yaml.split('\n');
+lines.forEach(line=>{
+const l=line.trim().toLowerCase();
+// Parse various HA theme color variables
+if(l.includes('primary-background-color')||l.includes('lovelace-background')){
+const c=extractColor(line);if(c){colors.bg1=c;colors.bg2=c}}
+if(l.includes('secondary-background-color')){const c=extractColor(line);if(c)colors.bg2=c}
+if(l.includes('card-background-color')||l.includes('ha-card-background')){const c=extractColor(line);if(c)colors.card=c}
+if(l.includes('primary-text-color')){const c=extractColor(line);if(c)colors.title=c}
+if(l.includes('secondary-text-color')){const c=extractColor(line);if(c)colors.entity=c}
+if(l.includes('primary-color')||l.includes('accent-color')){const c=extractColor(line);if(c&&colors.title==='#ffffff')colors.title=c}
+});
+// Apply the parsed colors
+if(document.getElementById('themeApplyBg').checked){
+bgSettings={type:'gradient',grad1:colors.bg1,grad2:colors.bg2,angle:135,imageUrl:'',solid:colors.bg1,opacity:30,blur:0,overlay:30};
+applyBackground()}
+if(document.getElementById('themeApplyCards').checked){
+cards.forEach(c=>{c.bgColor=colors.card;c.titleColor=colors.title;c.entityColor=colors.entity})}
+if(document.getElementById('themeApplyNew').checked){
+lastCardSettings.bgColor=colors.card;lastCardSettings.titleColor=colors.title;lastCardSettings.entityColor=colors.entity}
+saveState();renderCanvas();closeModal('themeImportModal');showNotification('Theme applied!','success');
+}catch(e){showNotification('Error parsing theme: '+e.message,'error')}}
+
+function extractColor(line){
+const match=line.match(/['"](#[0-9a-fA-F]{3,8}|rgb[a]?\([^)]+\))['"]/)||line.match(/:\s*(#[0-9a-fA-F]{3,8})/);
+return match?match[1]:null}
+
+function saveCustomTheme(){
+const name=document.getElementById('customThemeName').value||'Custom Theme '+(customThemes.length+1);
+const theme={name,bg1:bgSettings.grad1||bgSettings.solid,bg2:bgSettings.grad2||bgSettings.solid,card:lastCardSettings.bgColor,title:lastCardSettings.titleColor,entity:lastCardSettings.entityColor,created:Date.now()};
+customThemes.push(theme);
+localStorage.setItem('ha_custom_themes',JSON.stringify(customThemes));
+loadCustomThemes();
+document.getElementById('customThemeName').value='';
+showNotification('Theme saved!','success')}
+
+function loadCustomThemes(){
+customThemes=JSON.parse(localStorage.getItem('ha_custom_themes')||'[]');
+const list=document.getElementById('customThemeList');
+if(!list)return;
+list.innerHTML=customThemes.length?customThemes.map((t,i)=>`
+<div class="preset-item" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<div onclick="applyCustomTheme(${i})" style="cursor:pointer;flex:1">
+<div class="preset-name">${t.name}</div>
+<div class="preset-preview"><div class="preset-color" style="background:${t.bg1}"></div><div class="preset-color" style="background:${t.card}"></div><div class="preset-color" style="background:${t.title}"></div><div class="preset-color" style="background:${t.entity}"></div></div>
+</div>
+<button onclick="deleteCustomTheme(${i})" style="background:#f44;border:none;color:#fff;padding:5px 10px;border-radius:4px;cursor:pointer">🗑️</button>
+</div>`).join(''):'<p style="color:#666">No saved themes yet</p>'}
+
+function applyCustomTheme(i){
+const t=customThemes[i];
+if(!t)return;
+bgSettings={type:'gradient',grad1:t.bg1,grad2:t.bg2,angle:135,imageUrl:'',solid:t.bg1,opacity:30,blur:0,overlay:30};
+applyBackground();
+cards.forEach(c=>{c.bgColor=t.card;c.titleColor=t.title;c.entityColor=t.entity});
+lastCardSettings.bgColor=t.card;lastCardSettings.titleColor=t.title;lastCardSettings.entityColor=t.entity;
+saveState();renderCanvas();closeModal('themeImportModal');showNotification(`Applied ${t.name}`,'success')}
+
+function deleteCustomTheme(i){
+if(!confirm('Delete this theme?'))return;
+customThemes.splice(i,1);
+localStorage.setItem('ha_custom_themes',JSON.stringify(customThemes));
+loadCustomThemes();showNotification('Theme deleted')}
+
+function exportThemeYAML(){
+const themeName=prompt('Theme name for export:','my_dashboard_theme')||'my_dashboard_theme';
+const yaml=`${themeName}:
+  # Background colors
+  primary-background-color: "${bgSettings.grad1||bgSettings.solid}"
+  secondary-background-color: "${bgSettings.grad2||bgSettings.solid}"
+  lovelace-background: "${bgSettings.grad1||bgSettings.solid}"
+  
+  # Card colors
+  card-background-color: "${lastCardSettings.bgColor}"
+  ha-card-background: "${lastCardSettings.bgColor}"
+  
+  # Text colors
+  primary-text-color: "${lastCardSettings.titleColor}"
+  secondary-text-color: "${lastCardSettings.entityColor}"
+  
+  # Accent (using title color)
+  primary-color: "${lastCardSettings.titleColor}"
+  accent-color: "${lastCardSettings.titleColor}"`;
+const blob=new Blob([yaml],{type:'text/yaml'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');a.href=url;a.download=themeName+'.yaml';a.click();
+URL.revokeObjectURL(url);showNotification('Theme exported!','success')}
+
 // Check for shared dashboard in URL
 (function(){const p=new URLSearchParams(window.location.search).get('d');if(p){try{const d=JSON.parse(decodeURIComponent(atob(p)));if(d.cards){cards=d.cards;bgSettings=d.bg||bgSettings;cardIdCounter=Math.max(...cards.map(c=>c.id),0)+1;applyBackground();renderCanvas();updateCardCount();showNotification('Dashboard loaded from link')}}catch(e){}}})();
 
@@ -757,4 +947,5 @@ applyBackground();renderCanvas();updateCardCount();updateSelectedCount();
 </script>
 </body>
 </html>
+
 
