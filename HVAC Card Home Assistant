@@ -1,0 +1,1282 @@
+console.log('Aprilaire Thermostat Card: Script loading started...');
+
+class AprilaireThermostatCard extends HTMLElement {
+  constructor() {
+    super();
+    console.log('Aprilaire Thermostat Card: Constructor called');
+    this.attachShadow({ mode: 'open' });
+    this.activeEntity = null;
+    this.viewMode = 'thermostat';
+  }
+
+  setConfig(config) {
+    console.log('Aprilaire Thermostat Card: setConfig called', config);
+    if (!config.thermostats || config.thermostats.length === 0) {
+      throw new Error('You need to define at least one thermostat');
+    }
+    
+    this.config = {
+      thermostats: config.thermostats,
+      outdoor_humidity: config.outdoor_humidity || 'sensor.thermostat_outdoor_humidity',
+      outdoor_temperature: config.outdoor_temperature || 'sensor.thermostat_outdoor_temperature',
+      weather_entity: config.weather_entity || 'weather.pirateweather',
+      name: config.name || 'Family Room',
+      bottom_buttons: config.bottom_buttons || [],
+      ...config
+    };
+    
+    this.activeEntity = this.config.thermostats.find(t => t.entity.startsWith('climate.'))?.entity || this.config.thermostats[0].entity;
+    console.log('Aprilaire Thermostat Card: Active entity set to', this.activeEntity);
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+    if (!this.content) {
+      this.render();
+    }
+    this.update();
+  }
+
+  getCardSize() {
+    return 6;
+  }
+
+  static getLayoutOptions() {
+    return {
+      grid_columns: 2,
+      grid_min_columns: 2,
+      grid_max_columns: 3,
+      grid_min_rows: 5
+    };
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          width: 100%;
+          min-width: 500px;
+        }
+        
+        @media (max-width: 700px) {
+          :host {
+            min-width: unset;
+          }
+          
+          .header {
+            flex-wrap: wrap;
+          }
+          
+          .room-name {
+            flex: 1 1 100%;
+            margin-bottom: 10px;
+          }
+          
+          .datetime {
+            order: 3;
+            flex: 1 1 50%;
+            text-align: left;
+          }
+          
+          .header-buttons {
+            order: 2;
+            flex: 0 1 auto;
+          }
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 1; }
+        }
+        
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 5px currentColor; }
+          50% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+        }
+        
+        @keyframes buttonPress {
+          0% { transform: scale(1); }
+          50% { transform: scale(0.95); }
+          100% { transform: scale(1); }
+        }
+        
+        .card-container {
+          background: linear-gradient(165deg, #1e5a7d 0%, #0f3049 50%, #0a1f2e 100%);
+          border-radius: 12px;
+          padding: 12px;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          color: white;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .card-container::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+        
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0;
+          padding-bottom: 10px;
+          gap: 10px;
+        }
+        
+        .room-name {
+          font-size: 16px;
+          font-weight: 300;
+          letter-spacing: 0.4px;
+          flex: 0 0 auto;
+        }
+        
+        .datetime {
+          font-size: 12px;
+          opacity: 0.9;
+          font-weight: 500;
+          flex: 1 1 auto;
+          text-align: center;
+        }
+        
+        .header-buttons {
+          display: flex;
+          gap: 8px;
+          flex: 0 0 auto;
+        }
+        
+        .header-btn {
+          background: rgba(255,255,255,0.12);
+          border: 1px solid rgba(255,255,255,0.15);
+          padding: 6px 12px;
+          border-radius: 12px;
+          color: white;
+          cursor: pointer;
+          font-size: 11px;
+          font-weight: 600;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+          white-space: nowrap;
+        }
+        
+        .header-btn:hover {
+          background: rgba(255,255,255,0.2);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .header-btn:active {
+          animation: buttonPress 0.2s ease;
+        }
+        
+        .header-btn.active {
+          background: rgba(100,180,255,0.35);
+          border-color: rgba(100,180,255,0.4);
+        }
+        
+        .main-content {
+          display: grid;
+          grid-template-columns: minmax(180px, 1fr) minmax(140px, 0.7fr) minmax(140px, 1fr);
+          gap: 12px;
+          margin: 0 -12px;
+          padding: 12px;
+          background: linear-gradient(165deg, rgba(5,15,35,0.9) 0%, rgba(0,8,25,0.95) 100%);
+          box-shadow: 
+            inset 0 2px 15px rgba(0,0,0,0.5), 
+            0 4px 20px rgba(0,0,0,0.3);
+          border: none;
+          position: relative;
+          min-height: 300px;
+        }
+        
+        .main-content::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 40px;
+          background: linear-gradient(to bottom, 
+            rgba(30,90,125,0.4) 0%, 
+            rgba(20,60,90,0.3) 25%,
+            rgba(10,40,70,0.2) 50%,
+            rgba(5,25,50,0.1) 75%,
+            transparent 100%);
+          pointer-events: none;
+        }
+        
+        .main-content::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 40px;
+          background: linear-gradient(to top, 
+            rgba(30,90,125,0.4) 0%, 
+            rgba(20,60,90,0.3) 25%,
+            rgba(10,40,70,0.2) 50%,
+            rgba(5,25,50,0.1) 75%,
+            transparent 100%);
+          pointer-events: none;
+        }
+        
+        @media (max-width: 650px) {
+          .main-content {
+            grid-template-columns: 1fr;
+          }
+          
+          :host {
+            max-width: 100%;
+          }
+        }
+        
+        .temp-section {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        
+        .temp-display {
+          background: linear-gradient(165deg, rgba(10,25,50,0.7) 0%, rgba(5,15,35,0.85) 100%);
+          border-radius: 12px;
+          padding: 14px;
+          border: 1px solid rgba(100,180,255,0.18);
+          box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        
+        .temp-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+        
+        .current-temp {
+          font-size: 56px;
+          font-weight: 200;
+          line-height: 0.9;
+          letter-spacing: -2px;
+          text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+        }
+        
+        .temp-unit {
+          font-size: 28px;
+          font-weight: 300;
+          opacity: 0.9;
+        }
+        
+        .temp-info-right {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 3px;
+        }
+        
+        .humidity {
+          font-size: 13px;
+          opacity: 0.9;
+          font-weight: 500;
+        }
+        
+        .fan-status {
+          font-size: 11px;
+          opacity: 0.8;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+        }
+        
+        .location {
+          font-size: 11px;
+          opacity: 0.85;
+          font-weight: 500;
+          letter-spacing: 0.8px;
+        }
+        
+        .outdoor-section {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding-top: 10px;
+          border-top: 1px solid rgba(100,180,255,0.12);
+        }
+        
+        .outdoor-temp {
+          font-size: 28px;
+          font-weight: 200;
+          line-height: 1;
+          letter-spacing: -1px;
+        }
+        
+        .outdoor-humidity {
+          font-size: 11px;
+          opacity: 0.85;
+        }
+        
+        .outdoor-label {
+          font-size: 10px;
+          opacity: 0.75;
+          font-weight: 500;
+          letter-spacing: 0.5px;
+        }
+        
+        .mode-fan-controls {
+          display: flex;
+          gap: 8px;
+        }
+        
+        .mode-fan-btn {
+          flex: 1;
+          background: linear-gradient(145deg, rgba(30,90,125,0.4), rgba(20,60,90,0.3));
+          border: 1px solid rgba(100,180,255,0.25);
+          border-radius: 8px;
+          padding: 8px;
+          color: white;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          align-items: center;
+        }
+        
+        .mode-fan-btn:hover {
+          background: linear-gradient(145deg, rgba(30,90,125,0.5), rgba(20,60,90,0.4));
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        
+        .mode-fan-btn:active {
+          animation: buttonPress 0.15s ease;
+        }
+        
+        .mode-fan-btn.active {
+          background: linear-gradient(145deg, rgba(66, 135, 245, 0.5), rgba(66, 135, 245, 0.3));
+          border-color: rgba(66, 135, 245, 0.6);
+          box-shadow: 0 4px 16px rgba(66, 135, 245, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        
+        .mode-fan-btn-label {
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.8px;
+          opacity: 0.9;
+        }
+        
+        .mode-fan-btn-value {
+          font-size: 11px;
+          font-weight: 600;
+        }
+        
+        .controls {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 240px;
+        }
+        
+        .heat-cool {
+          display: flex;
+          gap: 8px;
+          width: 100%;
+        }
+        
+        .temp-control {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+        }
+        
+        .temp-control-label {
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          opacity: 0.8;
+        }
+        
+        .temp-control-value {
+          font-size: 36px;
+          font-weight: 200;
+          margin: 3px 0;
+          text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        
+        .temp-control-value.heat {
+          color: #ff9999;
+        }
+        
+        .temp-control-value.cool {
+          color: #99ccff;
+        }
+        
+        .temp-btn {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: linear-gradient(145deg, rgba(30,90,125,0.5), rgba(20,60,90,0.4));
+          border: 1px solid rgba(100,180,255,0.3);
+          color: white;
+          font-size: 18px;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .temp-btn:hover {
+          background: linear-gradient(145deg, rgba(30,90,125,0.6), rgba(20,60,90,0.5));
+          transform: scale(1.05);
+          box-shadow: 0 6px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        
+        .temp-btn:active {
+          transform: scale(0.95);
+        }
+        
+        .side-controls {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          justify-content: center;
+          align-items: stretch;
+        }
+        
+        .side-btn {
+          background: linear-gradient(145deg, rgba(30,90,125,0.4), rgba(20,60,90,0.3));
+          border: 1px solid rgba(100,180,255,0.25);
+          border-radius: 12px;
+          padding: 10px 12px;
+          color: white;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          min-height: 52px;
+          position: relative;
+        }
+        
+        .side-btn::after {
+          content: '';
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.2);
+          transition: all 0.3s ease;
+        }
+        
+        .side-btn.active::after {
+          background: #4ade80;
+          box-shadow: 0 0 8px #4ade80, 0 0 16px rgba(74,222,128,0.4);
+          animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .side-btn:hover {
+          background: linear-gradient(145deg, rgba(30,90,125,0.5), rgba(20,60,90,0.4));
+          transform: translateX(-3px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        
+        .side-btn:active {
+          animation: buttonPress 0.15s ease;
+        }
+        
+        .side-btn.active {
+          background: linear-gradient(145deg, rgba(66, 135, 245, 0.5), rgba(66, 135, 245, 0.3));
+          border-color: rgba(66, 135, 245, 0.6);
+          box-shadow: 0 4px 16px rgba(66, 135, 245, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        
+        .side-btn.humidity {
+          background: linear-gradient(145deg, rgba(66, 135, 245, 0.4), rgba(50, 110, 200, 0.3));
+          border-color: rgba(66, 135, 245, 0.35);
+        }
+        
+        .side-btn.humidity:hover {
+          background: linear-gradient(145deg, rgba(66, 135, 245, 0.5), rgba(50, 110, 200, 0.4));
+        }
+        
+        .side-btn.thermostat-2 {
+          background: linear-gradient(145deg, rgba(82, 183, 136, 0.4), rgba(60, 150, 110, 0.3));
+          border-color: rgba(82, 183, 136, 0.35);
+        }
+        
+        .side-btn.thermostat-2:hover {
+          background: linear-gradient(145deg, rgba(82, 183, 136, 0.5), rgba(60, 150, 110, 0.4));
+        }
+        
+        .side-btn.thermostat-3 {
+          background: linear-gradient(145deg, rgba(168, 85, 247, 0.4), rgba(130, 65, 200, 0.3));
+          border-color: rgba(168, 85, 247, 0.35);
+        }
+        
+        .side-btn.thermostat-3:hover {
+          background: linear-gradient(145deg, rgba(168, 85, 247, 0.5), rgba(130, 65, 200, 0.4));
+        }
+        
+        .side-btn-icon {
+          font-size: 16px;
+          flex-shrink: 0;
+        }
+        
+        .side-btn-text {
+          flex: 1;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.3px;
+          line-height: 1.4;
+        }
+        
+        .side-btn-label {
+          font-size: 9px;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          opacity: 0.7;
+          text-transform: uppercase;
+        }
+        
+        .bottom-nav {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 8px;
+          margin-top: 12px;
+        }
+        
+        .nav-btn {
+          background: linear-gradient(145deg, rgba(30,90,125,0.3), rgba(20,60,90,0.25));
+          border: 1px solid rgba(100,180,255,0.2);
+          border-radius: 10px;
+          padding: 10px 6px;
+          color: white;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 5px;
+          position: relative;
+          min-height: 52px;
+        }
+        
+        .nav-btn::after {
+          content: '';
+          position: absolute;
+          bottom: 6px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.15);
+          transition: all 0.3s ease;
+        }
+        
+        .nav-btn.status-on::after {
+          background: #4ade80;
+          box-shadow: 0 0 8px #4ade80, 0 0 16px rgba(74,222,128,0.4);
+          animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .nav-btn:hover {
+          background: linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.1));
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        
+        .nav-btn:active {
+          animation: buttonPress 0.15s ease;
+        }
+        
+        .nav-btn.active {
+          background: linear-gradient(145deg, rgba(66, 135, 245, 0.5), rgba(66, 135, 245, 0.3));
+          border-color: rgba(66, 135, 245, 0.6);
+          box-shadow: 0 4px 16px rgba(66, 135, 245, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        
+        .nav-btn-label {
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.4px;
+        }
+        
+        .nav-btn-value {
+          font-size: 9px;
+          opacity: 0.85;
+          font-weight: 500;
+        }
+        
+        .weather-forecast {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+          gap: 10px;
+          padding: 10px 0;
+          width: 100%;
+        }
+        
+        .forecast-day {
+          background: linear-gradient(165deg, rgba(10,25,50,0.7) 0%, rgba(5,15,35,0.85) 100%);
+          border-radius: 10px;
+          padding: 10px 8px;
+          text-align: center;
+          border: 1px solid rgba(100,180,255,0.18);
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        
+        .forecast-day-name {
+          font-size: 10px;
+          font-weight: 600;
+          opacity: 0.9;
+        }
+        
+        .forecast-icon {
+          font-size: 26px;
+          margin: 3px 0;
+        }
+        
+        .forecast-temp {
+          font-size: 18px;
+          font-weight: 200;
+        }
+        
+        .forecast-condition {
+          font-size: 9px;
+          opacity: 0.8;
+          text-transform: capitalize;
+        }
+        
+        .dehumidifier-control {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+        }
+        
+        .dehumidifier-target {
+          font-size: 48px;
+          font-weight: 200;
+          color: #99d6ff;
+          text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+        }
+        
+        .dehumidifier-label {
+          font-size: 12px;
+          opacity: 0.9;
+          letter-spacing: 1px;
+          font-weight: 600;
+        }
+        
+        .dehumidifier-buttons {
+          display: flex;
+          gap: 12px;
+          margin-top: 8px;
+        }
+        
+        .view-hidden {
+          display: none !important;
+        }
+        
+        .weather-current {
+          font-size: 13px;
+          opacity: 0.8;
+          text-transform: capitalize;
+        }
+      </style>
+      
+      <div class="card-container">
+        <div class="header">
+          <div class="room-name">${this.config.name}</div>
+          <div class="datetime" id="datetime"></div>
+          <div class="header-buttons">
+            <button class="header-btn" id="weather-toggle-btn" onclick="this.getRootNode().host.toggleWeather()">Weather</button>
+          </div>
+        </div>
+        
+        <div class="main-content">
+          <div class="temp-section">
+            <div class="temp-display" id="temp-display">
+              <div class="temp-row">
+                <div class="current-temp">
+                  <span id="current-temp">--</span><span class="temp-unit">°</span>
+                </div>
+                <div class="temp-info-right">
+                  <div class="humidity" id="humidity">--% RH</div>
+                  <div class="fan-status" id="fan-status">Fan On</div>
+                </div>
+              </div>
+              <div class="location" id="location-label">Indoor</div>
+              
+              <div class="outdoor-section">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div class="outdoor-temp">
+                    <span id="outdoor-temp">--</span><span class="temp-unit" style="font-size: 14px;">°</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px;">
+                    <div class="outdoor-humidity" id="outdoor-humidity">--% RH</div>
+                    <div class="outdoor-label" id="outdoor-label">Outdoor</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mode-fan-controls">
+              <button class="mode-fan-btn active" id="mode-btn" onclick="this.getRootNode().host.cycleMode()">
+                <div class="mode-fan-btn-label">MODE</div>
+                <div class="mode-fan-btn-value" id="mode-value">AUTO</div>
+              </button>
+              <button class="mode-fan-btn" id="fan-btn" onclick="this.getRootNode().host.cycleFan()">
+                <div class="mode-fan-btn-label">FAN</div>
+                <div class="mode-fan-btn-value" id="fan-value">CIRC</div>
+              </button>
+            </div>
+          </div>
+          
+          <div class="controls" id="thermostat-controls">
+            <div class="heat-cool">
+              <div class="temp-control">
+                <div class="temp-control-label">HEAT</div>
+                <div class="temp-control-value heat" id="heat-temp">--</div>
+                <button class="temp-btn" onclick="this.getRootNode().host.adjustTemp('heat', 1)">▲</button>
+                <button class="temp-btn" onclick="this.getRootNode().host.adjustTemp('heat', -1)">▼</button>
+              </div>
+              <div class="temp-control">
+                <div class="temp-control-label">COOL</div>
+                <div class="temp-control-value cool" id="cool-temp">--</div>
+                <button class="temp-btn" onclick="this.getRootNode().host.adjustTemp('cool', 1)">▲</button>
+                <button class="temp-btn" onclick="this.getRootNode().host.adjustTemp('cool', -1)">▼</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="controls view-hidden" id="weather-view">
+            <div class="weather-forecast" id="weather-forecast"></div>
+          </div>
+          
+          <div class="controls view-hidden" id="dehumidifier-view">
+            <div class="dehumidifier-control">
+              <div class="dehumidifier-label">TARGET HUMIDITY</div>
+              <div class="dehumidifier-target"><span id="dehumidifier-target">--</span>%</div>
+              <div class="dehumidifier-buttons">
+                <button class="temp-btn" onclick="this.getRootNode().host.adjustDehumidifier(1)">▲</button>
+                <button class="temp-btn" onclick="this.getRootNode().host.adjustDehumidifier(-1)">▼</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="side-controls" id="side-controls"></div>
+        </div>
+        
+        <div class="bottom-nav" id="bottom-nav"></div>
+      </div>
+    `;
+    
+    console.log('Aprilaire Thermostat Card: Render complete');
+    this.content = this.shadowRoot.querySelector('.card-container');
+    this.renderSideControls();
+    this.renderBottomButtons();
+    this.updateDateTime();
+    setInterval(() => this.updateDateTime(), 60000);
+  }
+
+  renderSideControls() {
+    const sideControls = this.shadowRoot.getElementById('side-controls');
+    if (!sideControls) return;
+    
+    let html = '';
+    const dehumidifierConfig = this.config.thermostats.find(t => t.entity.includes('dehumidifier'));
+    
+    if (dehumidifierConfig) {
+      html += `
+        <button class="side-btn humidity" id="dehumidifier-btn" onclick="this.getRootNode().host.toggleDehumidifier()">
+          <span class="side-btn-icon">💧</span>
+          <span class="side-btn-text">${dehumidifierConfig.name || 'Dehumidifier'}<br/><span class="side-btn-label" id="dehumidifier-status-label">Control</span></span>
+        </button>
+      `;
+    }
+    
+    let thermostatIndex = 1;
+    this.config.thermostats.forEach((thermostat, index) => {
+      if (thermostat.entity.startsWith('climate.')) {
+        const isActive = this.activeEntity === thermostat.entity;
+        const colorClass = thermostatIndex === 1 ? 'thermostat-3' : 'thermostat-2';
+        html += `
+          <button class="side-btn ${colorClass} ${isActive ? 'active' : ''}" onclick="this.getRootNode().host.switchThermostat('${thermostat.entity}')">
+            <span class="side-btn-icon">🌡️</span>
+            <span class="side-btn-text">${thermostat.name || 'Thermostat ' + thermostatIndex}<br/><span class="side-btn-label">${isActive ? 'Active' : 'Off'}</span></span>
+          </button>
+        `;
+        thermostatIndex++;
+      }
+    });
+    
+    sideControls.innerHTML = html;
+  }
+
+  renderBottomButtons() {
+    const bottomNav = this.shadowRoot.getElementById('bottom-nav');
+    if (!bottomNav) return;
+    
+    let html = '';
+    const buttons = this.config.bottom_buttons || [];
+    const totalButtons = 5;
+    
+    for (let i = 0; i < totalButtons; i++) {
+      const button = buttons[i];
+      if (button) {
+        html += `
+          <button class="nav-btn" id="bottom-btn-${i}" onclick="this.getRootNode().host.handleBottomButton(${i})">
+            <div class="nav-btn-label">${button.label || 'BUTTON ' + (i + 1)}</div>
+            <div class="nav-btn-value" id="bottom-btn-${i}-value">--</div>
+          </button>
+        `;
+      } else {
+        html += `
+          <button class="nav-btn" id="bottom-btn-${i}" style="opacity: 0.3;">
+            <div class="nav-btn-label">EMPTY</div>
+            <div class="nav-btn-value">--</div>
+          </button>
+        `;
+      }
+    }
+    
+    bottomNav.innerHTML = html;
+  }
+
+  updateDateTime() {
+    const now = new Date();
+    const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true };
+    const formatted = now.toLocaleString('en-US', options);
+    const datetimeEl = this.shadowRoot.getElementById('datetime');
+    if (datetimeEl) {
+      datetimeEl.textContent = formatted;
+    }
+  }
+
+  update() {
+    if (!this._hass) return;
+    this.updateThermostat();
+    this.updateDehumidifier();
+    this.updateWeather();
+    this.updateBottomButtons();
+  }
+
+  updateThermostat() {
+    if (!this.activeEntity) return;
+    const entity = this._hass.states[this.activeEntity];
+    if (!entity) return;
+    
+    const currentTempEl = this.shadowRoot.getElementById('current-temp');
+    const heatTempEl = this.shadowRoot.getElementById('heat-temp');
+    const coolTempEl = this.shadowRoot.getElementById('cool-temp');
+    const humidityEl = this.shadowRoot.getElementById('humidity');
+    const fanStatusEl = this.shadowRoot.getElementById('fan-status');
+    const modeValueEl = this.shadowRoot.getElementById('mode-value');
+    const fanValueEl = this.shadowRoot.getElementById('fan-value');
+    const outdoorTempEl = this.shadowRoot.getElementById('outdoor-temp');
+    const outdoorHumidityEl = this.shadowRoot.getElementById('outdoor-humidity');
+    const modeBtnEl = this.shadowRoot.getElementById('mode-btn');
+    const fanBtnEl = this.shadowRoot.getElementById('fan-btn');
+    
+    if (currentTempEl) currentTempEl.textContent = Math.round(entity.attributes.current_temperature || 0);
+    if (heatTempEl) heatTempEl.textContent = Math.round(entity.attributes.temperature || entity.attributes.target_temp_low || 0);
+    if (coolTempEl) coolTempEl.textContent = Math.round(entity.attributes.target_temp_high || entity.attributes.temperature || 0);
+    if (humidityEl && entity.attributes.current_humidity) humidityEl.textContent = `${entity.attributes.current_humidity}% RH`;
+    
+    const fanMode = entity.attributes.fan_mode || 'auto';
+    if (fanStatusEl) fanStatusEl.textContent = `Fan ${fanMode === 'on' ? 'On' : fanMode === 'diffuse' ? 'Diffuse' : 'Auto'}`;
+    
+    const hvacMode = entity.state || 'off';
+    if (modeValueEl) modeValueEl.textContent = hvacMode.toUpperCase().replace('_', ' ');
+    if (fanValueEl) fanValueEl.textContent = fanMode.toUpperCase();
+    
+    if (modeBtnEl) {
+      modeBtnEl.classList.toggle('active', hvacMode !== 'off');
+    }
+    
+    const outdoorTempEntity = this._hass.states[this.config.outdoor_temperature];
+    const outdoorHumidityEntity = this._hass.states[this.config.outdoor_humidity];
+    
+    if (outdoorTempEl && outdoorTempEntity) {
+      outdoorTempEl.textContent = Math.round(parseFloat(outdoorTempEntity.state));
+    }
+    if (outdoorHumidityEl && outdoorHumidityEntity) {
+      outdoorHumidityEl.textContent = `${Math.round(parseFloat(outdoorHumidityEntity.state))}% RH`;
+    }
+    
+    this.config.thermostats.forEach((thermostat) => {
+      if (thermostat.entity.startsWith('climate.')) {
+        const btn = this.shadowRoot.querySelector(`[onclick*="${thermostat.entity}"]`);
+        if (btn) {
+          const isActive = this.activeEntity === thermostat.entity;
+          const label = btn.querySelector('.side-btn-label');
+          if (label) {
+            label.textContent = isActive ? 'Active' : 'Off';
+          }
+          btn.classList.toggle('active', isActive);
+        }
+      }
+    });
+  }
+
+  updateDehumidifier() {
+    const dehumidifierConfig = this.config.thermostats.find(t => t.entity.includes('dehumidifier'));
+    if (!dehumidifierConfig) return;
+    
+    const entity = this._hass.states[dehumidifierConfig.entity];
+    if (!entity) return;
+    
+    const statusLabelEl = this.shadowRoot.getElementById('dehumidifier-status-label');
+    const dehumidifierBtn = this.shadowRoot.getElementById('dehumidifier-btn');
+    const targetEl = this.shadowRoot.getElementById('dehumidifier-target');
+    
+    if (statusLabelEl) {
+      statusLabelEl.textContent = entity.state === 'on' ? 'ON' : 'Control';
+    }
+    
+    if (dehumidifierBtn) {
+      if (entity.state === 'on') {
+        dehumidifierBtn.classList.add('active');
+      } else {
+        dehumidifierBtn.classList.remove('active');
+      }
+    }
+    
+    if (targetEl && entity.attributes.humidity) {
+      targetEl.textContent = entity.attributes.humidity;
+    }
+    
+    if (this.viewMode === 'dehumidifier') {
+      const currentTempEl = this.shadowRoot.getElementById('current-temp');
+      const humidityEl = this.shadowRoot.getElementById('humidity');
+      const locationLabel = this.shadowRoot.getElementById('location-label');
+      
+      if (currentTempEl && entity.attributes.current_humidity) currentTempEl.textContent = Math.round(entity.attributes.current_humidity);
+      if (humidityEl && entity.attributes.humidity) humidityEl.textContent = `Target: ${entity.attributes.humidity}% RH`;
+      if (locationLabel) locationLabel.textContent = 'Dehumidifier';
+    }
+  }
+
+  updateWeather() {
+    console.log('updateWeather called, viewMode:', this.viewMode);
+    
+    const weatherEntity = this._hass.states[this.config.weather_entity];
+    console.log('Weather entity:', this.config.weather_entity, weatherEntity);
+    
+    if (!weatherEntity) {
+      console.error('Weather entity not found:', this.config.weather_entity);
+      return;
+    }
+    
+    if (this.viewMode === 'weather') {
+      // Update left panel with current weather
+      const currentTempEl = this.shadowRoot.getElementById('current-temp');
+      const humidityEl = this.shadowRoot.getElementById('humidity');
+      const fanStatusEl = this.shadowRoot.getElementById('fan-status');
+      const locationLabel = this.shadowRoot.getElementById('location-label');
+      const outdoorLabel = this.shadowRoot.getElementById('outdoor-label');
+      
+      if (currentTempEl && weatherEntity.attributes.temperature) {
+        currentTempEl.textContent = Math.round(weatherEntity.attributes.temperature);
+      }
+      if (humidityEl && weatherEntity.attributes.humidity) {
+        humidityEl.textContent = `${weatherEntity.attributes.humidity}% RH`;
+      }
+      if (fanStatusEl && weatherEntity.state) {
+        fanStatusEl.textContent = weatherEntity.state.charAt(0).toUpperCase() + weatherEntity.state.slice(1).replace('-', ' ');
+      }
+      if (locationLabel) {
+        locationLabel.textContent = 'Current Weather';
+      }
+      if (outdoorLabel && weatherEntity.attributes.attribution) {
+        outdoorLabel.textContent = 'Pirate weather';
+      }
+      
+      // Update forecast in center panel
+      if (!weatherEntity.attributes.forecast) {
+        console.error('No forecast data in weather entity:', weatherEntity);
+        return;
+      }
+      
+      const forecastContainer = this.shadowRoot.getElementById('weather-forecast');
+      if (!forecastContainer) {
+        console.error('Weather forecast container not found');
+        return;
+      }
+      
+      let html = '';
+      const forecast = weatherEntity.attributes.forecast.slice(0, 7);
+      console.log('Rendering forecast for', forecast.length, 'days');
+      
+      forecast.forEach(day => {
+        const date = new Date(day.datetime);
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+        const icon = this.getWeatherIcon(day.condition);
+        
+        html += `
+          <div class="forecast-day">
+            <div class="forecast-day-name">${dayName}</div>
+            <div class="forecast-icon">${icon}</div>
+            <div class="forecast-temp">${Math.round(day.temperature)}°</div>
+            <div class="forecast-condition">${day.condition.replace('-', ' ')}</div>
+          </div>
+        `;
+      });
+      
+      forecastContainer.innerHTML = html;
+      console.log('Weather forecast rendered');
+    }
+  }
+
+  getWeatherIcon(condition) {
+    const icons = {
+      'clear-night': '🌙', 'cloudy': '☁️', 'fog': '🌫️', 'hail': '🧊',
+      'lightning': '⚡', 'lightning-rainy': '⛈️', 'partlycloudy': '⛅',
+      'pouring': '🌧️', 'rainy': '🌦️', 'snowy': '🌨️',
+      'snowy-rainy': '🌨️', 'sunny': '☀️', 'windy': '💨',
+      'windy-variant': '💨', 'exceptional': '⚠️'
+    };
+    return icons[condition] || '🌤️';
+  }
+
+  updateBottomButtons() {
+    const buttons = this.config.bottom_buttons || [];
+    buttons.forEach((button, index) => {
+      if (!button.entity) return;
+      
+      const valueEl = this.shadowRoot.getElementById(`bottom-btn-${index}-value`);
+      const btnEl = this.shadowRoot.getElementById(`bottom-btn-${index}`);
+      if (!valueEl || !btnEl) return;
+      
+      const entity = this._hass.states[button.entity];
+      if (!entity) {
+        valueEl.textContent = '--';
+        return;
+      }
+      
+      let displayValue = entity.state;
+      if (button.attribute) displayValue = entity.attributes[button.attribute] || entity.state;
+      if (!isNaN(displayValue)) displayValue = Math.round(parseFloat(displayValue));
+      valueEl.textContent = displayValue.toUpperCase ? displayValue.toUpperCase() : displayValue;
+      
+      if (entity.state === 'on') {
+        btnEl.classList.add('status-on');
+      } else {
+        btnEl.classList.remove('status-on');
+      }
+    });
+  }
+
+  toggleWeather() {
+    console.log('Weather toggle clicked, current mode:', this.viewMode);
+    const weatherView = this.shadowRoot.getElementById('weather-view');
+    const thermostatControls = this.shadowRoot.getElementById('thermostat-controls');
+    const dehumidifierView = this.shadowRoot.getElementById('dehumidifier-view');
+    const weatherBtn = this.shadowRoot.getElementById('weather-toggle-btn');
+    
+    console.log('Elements found:', {
+      weatherView: !!weatherView,
+      thermostatControls: !!thermostatControls,
+      dehumidifierView: !!dehumidifierView,
+      weatherBtn: !!weatherBtn
+    });
+    
+    if (this.viewMode === 'weather') {
+      console.log('Switching back to thermostat');
+      this.viewMode = 'thermostat';
+      weatherView.classList.add('view-hidden');
+      thermostatControls.classList.remove('view-hidden');
+      dehumidifierView.classList.add('view-hidden');
+      weatherBtn.classList.remove('active');
+      const locationLabel = this.shadowRoot.getElementById('location-label');
+      const outdoorLabel = this.shadowRoot.getElementById('outdoor-label');
+      if (locationLabel) locationLabel.textContent = 'Indoor';
+      if (outdoorLabel) outdoorLabel.textContent = 'Outdoor';
+      this.updateThermostat();
+    } else {
+      console.log('Switching to weather');
+      this.viewMode = 'weather';
+      weatherView.classList.remove('view-hidden');
+      thermostatControls.classList.add('view-hidden');
+      dehumidifierView.classList.add('view-hidden');
+      weatherBtn.classList.add('active');
+      this.updateWeather();
+    }
+  }
+
+  toggleDehumidifier() {
+    const dehumidifierConfig = this.config.thermostats.find(t => t.entity.includes('dehumidifier'));
+    if (!dehumidifierConfig) return;
+    
+    const weatherView = this.shadowRoot.getElementById('weather-view');
+    const thermostatControls = this.shadowRoot.getElementById('thermostat-controls');
+    const dehumidifierView = this.shadowRoot.getElementById('dehumidifier-view');
+    const weatherBtn = this.shadowRoot.getElementById('weather-toggle-btn');
+    
+    if (this.viewMode === 'dehumidifier') {
+      this.viewMode = 'thermostat';
+      weatherView.classList.add('view-hidden');
+      thermostatControls.classList.remove('view-hidden');
+      dehumidifierView.classList.add('view-hidden');
+      weatherBtn.classList.remove('active');
+      const locationLabel = this.shadowRoot.getElementById('location-label');
+      const outdoorLabel = this.shadowRoot.getElementById('outdoor-label');
+      if (locationLabel) locationLabel.textContent = 'Indoor';
+      if (outdoorLabel) outdoorLabel.textContent = 'Outdoor';
+      this.updateThermostat();
+    } else {
+      this.viewMode = 'dehumidifier';
+      weatherView.classList.add('view-hidden');
+      thermostatControls.classList.add('view-hidden');
+      dehumidifierView.classList.remove('view-hidden');
+      weatherBtn.classList.remove('active');
+      this.updateDehumidifier();
+    }
+  }
+
+  adjustDehumidifier(delta) {
+    const dehumidifierConfig = this.config.thermostats.find(t => t.entity.includes('dehumidifier'));
+    if (!dehumidifierConfig) return;
+    
+    const entity = this._hass.states[dehumidifierConfig.entity];
+    if (!entity) return;
+    
+    const currentHumidity = entity.attributes.humidity || 50;
+    const newHumidity = Math.max(30, Math.min(70, currentHumidity + delta));
+    
+    this._hass.callService('humidifier', 'set_humidity', {
+      entity_id: dehumidifierConfig.entity,
+      humidity: newHumidity
+    });
+  }
+
+  switchThermostat(entity) {
+    if (!entity.startsWith('climate.')) return;
+    
+    this.activeEntity = entity;
+    this.viewMode = 'thermostat';
+    
+    const weatherView = this.shadowRoot.getElementById('weather-view');
+    const dehumidifierView = this.shadowRoot.getElementById('dehumidifier-view');
+    const thermostatControls = this.shadowRoot.getElementById('thermostat-controls');
+    const weatherBtn = this.shadowRoot.getElementById('weather-toggle-btn');
+    
+    if (weatherView) weatherView.classList.add('view-hidden');
+    if (dehumidifierView) dehumidifierView.classList.add('view-hidden');
+    if (thermostatControls) thermostatControls.classList.remove('view-hidden');
+    if (weatherBtn) weatherBtn.classList.remove('active');
+    
+    const locationLabel = this.shadowRoot.getElementById('location-label');
+    const outdoorLabel = this.shadowRoot.getElementById('outdoor-label');
+    if (locationLabel) locationLabel.textContent = 'Indoor';
+    if (outdoorLabel) outdoorLabel.textContent = 'Outdoor';
+    
+    this.renderSideControls();
+    this.updateThermostat();
+  }
+
+  handleBottomButton(index) {
+    const button = this.config.bottom_buttons[index];
+    if (!button) return;
+    
+    if (button.tap_action && button.tap_action.action === 'call-service') {
+      const serviceParts = button.tap_action.service.split('.');
+      this._hass.callService(serviceParts[0], serviceParts[1], button.tap_action.service_data || {});
+    } else if (button.entity) {
+      const entity = this._hass.states[button.entity];
+      if (!entity) return;
+      const domain = button.entity.split('.')[0];
+      this._hass.callService(domain, 'toggle', { entity_id: button.entity });
+    }
+  }
+
+  adjustTemp(type, delta) {
+    if (!this._hass || !this.activeEntity) return;
+    const entity = this._hass.states[this.activeEntity];
+    if (!entity) return;
+    
+    if (type === 'heat') {
+      const currentTemp = entity.attributes.temperature || entity.attributes.target_temp_low || 70;
+      this._hass.callService('climate', 'set_temperature', {
+        entity_id: this.activeEntity,
+        target_temp_low: currentTemp + delta
+      });
+    } else if (type === 'cool') {
+      const currentTemp = entity.attributes.target_temp_high || entity.attributes.temperature || 75;
+      this._hass.callService('climate', 'set_temperature', {
+        entity_id: this.activeEntity,
+        target_temp_high: currentTemp + delta
+      });
+    }
+  }
+
+  cycleMode() {
+    if (!this._hass || !this.activeEntity) return;
+    const entity = this._hass.states[this.activeEntity];
+    if (!entity) return;
+    
+    const modes = entity.attributes.hvac_modes || ['off', 'heat', 'cool', 'auto'];
+    const currentMode = entity.state;
+    const currentIndex = modes.indexOf(currentMode);
+    const nextMode = modes[(currentIndex + 1) % modes.length];
+    
+    this._hass.callService('climate', 'set_hvac_mode', {
+      entity_id: this.activeEntity,
+      hvac_mode: nextMode
+    });
+  }
+
+  cycleFan() {
+    if (!this._hass || !this.activeEntity) return;
+    if (this.activeEntity !== 'climate.thermostat') return;
+    
+    const entity = this._hass.states[this.activeEntity];
+    if (!entity) return;
+    
+    const fanModes = ['auto', 'on', 'diffuse'];
+    const currentFan = entity.attributes.fan_mode || 'auto';
+    const currentIndex = fanModes.indexOf(currentFan);
+    const nextFan = fanModes[(currentIndex + 1) % fanModes.length];
+    
+    this._hass.callService('climate', 'set_fan_mode', {
+      entity_id: this.activeEntity,
+      fan_mode: nextFan
+    });
+  }
+}
+
+console.log('Aprilaire Thermostat Card: Defining custom element...');
+customElements.define('aprilaire-thermostat-card', AprilaireThermostatCard);
+console.log('Aprilaire Thermostat Card: Custom element defined successfully!');
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: 'aprilaire-thermostat-card',
+  name: 'Aprilaire Thermostat Card',
+  description: 'A custom card that mimics the Aprilaire thermostat interface'
+});
+console.log('Aprilaire Thermostat Card: Registered with Home Assistant');
