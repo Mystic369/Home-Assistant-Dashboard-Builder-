@@ -1,4 +1,4 @@
-# Aprilaire Thermostat Card for Home Assistant
+ Thermostat Card for Home Assistant
 
 A beautiful custom Lovelace card for Aprilaire thermostats in Home Assistant.
 
