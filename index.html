@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HA Dashboard Builder v4.4 WYSIWYG</title>
+<title>HA Dashboard Builder v4.5 FLUID</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&family=Lato:wght@400;700&family=Montserrat:wght@400;600;700&family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Nunito:wght@400;700&family=Raleway:wght@400;600;700&family=Ubuntu:wght@400;500;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;color:#fff;overflow:hidden;height:100vh;position:relative}
@@ -19,9 +20,9 @@
 .sidebar{background:rgba(20,20,40,.85);backdrop-filter:blur(10px);border-right:1px solid rgba(67,238,255,.2);padding:20px;overflow-y:auto;z-index:1}.sidebar h2{color:#ff43ee;margin-bottom:15px;font-size:1.2em}.sidebar-tabs{display:flex;gap:8px;margin-bottom:15px}.sidebar-tab{padding:8px 16px;background:rgba(67,238,255,.1);border:none;border-radius:6px;color:#43eeff;cursor:pointer;font-size:.85em;flex:1;text-align:center}.sidebar-tab.active{background:rgba(67,238,255,.25);border:1px solid #ff43ee}
 .canvas-container{background:transparent;position:relative;overflow:auto;z-index:1}.canvas{min-height:100%;min-width:100%;background-image:repeating-linear-gradient(0deg,rgba(67,238,255,.05) 0px,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px),repeating-linear-gradient(90deg,rgba(67,238,255,.05) 0px,transparent 1px,transparent 50px,rgba(67,238,255,.05) 51px);background-size:50px 50px;position:relative;padding:40px;transition:all .3s}.canvas.mobile-preview{max-width:375px;margin:0 auto;background:rgba(0,0,0,.1);border:2px solid rgba(67,238,255,.3);border-radius:20px}.canvas.tablet-preview{max-width:768px;margin:0 auto;background:rgba(0,0,0,.1);border:2px solid rgba(67,238,255,.3);border-radius:12px}
 .canvas-card{position:absolute;background:#43eeff;border-radius:14px;padding:18px;cursor:move;box-shadow:0 4px 20px rgba(67,238,255,.5);min-width:150px;min-height:100px;transition:all .3s;overflow:hidden}.canvas-card.locked{cursor:not-allowed;opacity:.9}.canvas-card.locked::after{content:'🔒';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2em;opacity:.3;pointer-events:none}
-.canvas-card.anim-fade{animation:fadeIn .5s}.canvas-card.anim-slide{animation:slideIn .5s}.canvas-card.anim-bounce{animation:bounceIn .6s}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.05)}70%{transform:scale(.9)}100%{transform:scale(1)}}
+.canvas-card.anim-fade{animation:fadeIn .5s ease-out}.canvas-card.anim-slide{animation:slideIn .5s ease-out}.canvas-card.anim-bounce{animation:bounceIn .6s ease-out}.canvas-card.anim-float{animation:floatIn .8s ease-out}.canvas-card.anim-grow{animation:growIn .5s ease-out}.canvas-card.anim-blur{animation:blurIn .6s ease-out}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.05)}70%{transform:scale(.9)}100%{transform:scale(1)}}@keyframes floatIn{0%{opacity:0;transform:translateY(40px) scale(0.95)}60%{opacity:1;transform:translateY(-5px) scale(1.02)}100%{transform:translateY(0) scale(1)}}@keyframes growIn{0%{opacity:0;transform:scale(0.8)}100%{opacity:1;transform:scale(1)}}@keyframes blurIn{0%{opacity:0;filter:blur(10px);transform:scale(1.1)}100%{opacity:1;filter:blur(0);transform:scale(1)}}@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}.canvas-card.hover-breathe:hover{animation:breathe 2s ease-in-out infinite}
 /* Hover effects */
-.canvas-card.hover-scale:hover{transform:scale(1.05)}.canvas-card.hover-glow:hover{box-shadow:0 0 30px rgba(67,238,255,.8),0 0 60px rgba(67,238,255,.4)}.canvas-card.hover-lift:hover{transform:translateY(-8px);box-shadow:0 12px 40px rgba(0,0,0,.4)}.canvas-card.hover-border:hover{border:3px solid #fff}
+.canvas-card.hover-scale:hover{transform:scale(1.05)}.canvas-card.hover-glow:hover{box-shadow:0 0 30px rgba(67,238,255,.8),0 0 60px rgba(67,238,255,.4)}.canvas-card.hover-lift:hover{transform:translateY(-8px);box-shadow:0 12px 40px rgba(0,0,0,.4)}.canvas-card.hover-border:hover{border:3px solid #fff}.canvas-card.hover-breathe:hover{animation:breathe 2s ease-in-out infinite}.canvas-card.hover-pulse:hover{animation:pulse 1.5s ease-in-out infinite}.canvas-card.hover-tilt:hover{transform:perspective(1000px) rotateX(5deg) rotateY(-5deg)}
 .canvas-card:hover{box-shadow:0 8px 35px rgba(67,238,255,.7)}.canvas-card.selected{border:3px solid #ff43ee;box-shadow:0 0 0 4px rgba(255,67,238,.3)}.canvas-card.multi-selected{border:3px solid #ffeb3b;box-shadow:0 0 0 4px rgba(255,235,59,.3)}.canvas-card.drag-over{border:3px dashed #ffeb3b;background:rgba(255,235,59,.1)}
 /* Alignment guides */
 .align-guide{position:absolute;background:#ff43ee;z-index:1000;pointer-events:none;opacity:.8}.align-guide.vertical{width:2px;height:100%}.align-guide.horizontal{height:2px;width:100%}
@@ -40,7 +41,7 @@
 .theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.theme-card{padding:15px;border-radius:10px;cursor:pointer;transition:all .3s;border:2px solid transparent;text-align:center}.theme-card:hover{transform:scale(1.05);border-color:#43eeff}.theme-name{font-size:.85em;margin-top:8px;font-weight:600}
 .dashboard-list{display:grid;gap:10px;max-height:400px;overflow-y:auto}.dashboard-item{padding:15px;background:rgba(67,238,255,.08);border:2px solid rgba(67,238,255,.3);border-radius:10px;cursor:pointer;transition:all .2s}.dashboard-item:hover{background:rgba(67,238,255,.15);border-color:#43eeff}.dashboard-item.active{border-color:#ff43ee;background:rgba(255,67,238,.15)}.dashboard-name{font-weight:600;color:#43eeff;margin-bottom:5px}.dashboard-meta{font-size:.75em;color:#999}
 .search-box{width:100%;padding:10px;background:rgba(10,10,20,.9);border:1px solid rgba(67,238,255,.3);border-radius:8px;color:#fff;margin-bottom:15px;font-size:.9em}.search-box:focus{outline:none;border-color:#43eeff}
-.status-bar{grid-column:1/-1;background:rgba(15,15,30,.95);border-top:1px solid rgba(67,238,255,.2);padding:8px 20px;display:flex;justify-content:space-between;align-items:center;font-size:.75em;color:#999}.status-item{display:flex;align-items:center;gap:8px}.status-dot{width:8px;height:8px;border-radius:50%;background:#4caf50;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.status-bar{grid-column:1/-1;background:rgba(15,15,30,.95);border-top:1px solid rgba(67,238,255,.2);padding:8px 20px;display:flex;justify-content:space-between;align-items:center;font-size:.75em;color:#999}.status-item{display:flex;align-items:center;gap:8px}.status-dot{width:8px;height:8px;border-radius:50%;background:#4caf50;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 .context-menu{position:fixed;background:rgba(20,20,40,.98);border:2px solid #43eeff;border-radius:8px;padding:6px;min-width:160px;z-index:10000;box-shadow:0 4px 20px rgba(0,0,0,.5);display:none}.context-menu.active{display:block}.context-menu-item{padding:10px 14px;color:#43eeff;cursor:pointer;border-radius:4px;transition:all .2s;font-size:.85em}.context-menu-item:hover{background:rgba(67,238,255,.2)}
 .shortcuts-panel{background:#0a0a15;border:1px solid rgba(67,238,255,.4);border-radius:10px;padding:15px;max-height:400px;overflow-y:auto}.shortcut-item{display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid rgba(67,238,255,.1);font-size:.85em}.shortcut-key{background:rgba(67,238,255,.2);padding:4px 8px;border-radius:4px;font-family:monospace;color:#43eeff;font-size:.8em}
 .notification{position:fixed;top:80px;right:20px;background:linear-gradient(135deg,#43eeff,#2fdaeb);color:#000;padding:15px 20px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:10001;animation:slideInRight .3s;font-weight:600;min-width:250px}@keyframes slideInRight{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}.notification.error{background:linear-gradient(135deg,#f44,#c00);color:#fff}.notification.success{background:linear-gradient(135deg,#4caf50,#45a049);color:#fff}
@@ -66,16 +67,18 @@
 <div class="bg-layer"><div class="bg-image" id="bgImage"></div><div class="bg-overlay" id="bgOverlay"></div></div>
 <div class="app-container">
 <div class="header">
-<div class="logo" onclick="showDashboardManager()">🎨 HA Dashboard Builder<span class="version">v4.4</span><span class="badge">WYSIWYG</span></div>
+<div class="logo" onclick="showDashboardManager()">🎨 HA Dashboard Builder<span class="version">v4.5</span><span class="badge">FLUID</span></div>
 <div class="header-center"><div class="dashboard-selector" onclick="showDashboardManager()" id="currentDashboard">My Dashboard</div></div>
 <div class="header-actions">
 <button class="header-btn yaml-btn" onclick="downloadYAMLDirect()" data-tooltip="Download YAML">📄 YAML</button>
+<button class="header-btn yaml-btn" onclick="exportSelectedCard()" data-tooltip="Export selected card YAML">📤 Card</button>
 <button class="header-btn" onclick="showBackgroundSettings()" data-tooltip="Background settings">🖼️ BG</button>
 <button class="header-btn" onclick="showThemeMarketplace()" data-tooltip="Themes">🎨</button>
 <button class="header-btn" onclick="showGallery()" data-tooltip="Gallery">🖼️</button>
 <button class="header-btn" onclick="showTemplateLibrary()" data-tooltip="Templates">⭐</button>
 <button class="header-btn" onclick="showImportModal()" data-tooltip="Import YAML">📥</button>
 <button class="header-btn" onclick="showStylePresets()" data-tooltip="Style presets">🎭</button>
+<button class="header-btn" onclick="showCardTemplates()" data-tooltip="Card templates">📦</button>
 <button class="header-btn" onclick="showShareModal()" data-tooltip="Share dashboard">🔗</button>
 <button class="header-btn" onclick="exportAsPNG()" data-tooltip="Export as PNG">📸</button>
 <button class="header-btn premium" onclick="showCloudSave()" data-tooltip="Cloud save">☁️</button>
@@ -107,6 +110,7 @@
 <div class="tool-group">
 <button class="tool-btn" onclick="changeZIndex('up')" data-tooltip="Bring forward">⬆️</button>
 <button class="tool-btn" onclick="changeZIndex('down')" data-tooltip="Send back">⬇️</button>
+<button class="tool-btn" onclick="duplicateCard()" data-tooltip="Duplicate card">📋</button>
 </div>
 <div class="tool-group">
 <button class="tool-btn" onclick="toggleGridSnap()" id="gridSnapBtn" data-tooltip="Grid snap">🧲</button>
@@ -140,9 +144,28 @@
 <div class="card-type-btn" onclick="selectCardType('map')" data-tooltip="Map"><span class="card-type-icon">🗺️</span>Map</div>
 <div class="card-type-btn" onclick="selectCardType('iframe')" data-tooltip="Iframe"><span class="card-type-icon">🌐</span>Iframe</div>
 <div class="card-type-btn" onclick="selectCardType('light')" data-tooltip="Light"><span class="card-type-icon">💡</span>Light</div>
+<div class="card-type-btn" onclick="selectCardType('area')" data-tooltip="Area"><span class="card-type-icon">🏠</span>Area</div>
+<div class="card-type-btn" onclick="selectCardType('calendar')" data-tooltip="Calendar"><span class="card-type-icon">📅</span>Calendar</div>
+<div class="card-type-btn" onclick="selectCardType('mushroom')" data-tooltip="Mushroom"><span class="card-type-icon">🍄</span>Mushroom</div>
+<div class="card-type-btn" onclick="selectCardType('person')" data-tooltip="Person"><span class="card-type-icon">👤</span>Person</div>
+<div class="card-type-btn" onclick="selectCardType('vacuum')" data-tooltip="Vacuum"><span class="card-type-icon">🤖</span>Vacuum</div>
+<div class="card-type-btn" onclick="selectCardType('scene')" data-tooltip="Scene"><span class="card-type-icon">🎬</span>Scene</div>
+<div class="card-type-btn" onclick="selectCardType('forecast')" data-tooltip="Forecast"><span class="card-type-icon">📅</span>Forecast</div>
+<div class="card-type-btn" onclick="selectCardType('tile')" data-tooltip="Tile"><span class="card-type-icon">⬜</span>Tile</div>
 </div>
 <div class="divider"></div>
 <div id="cardConfig"></div>
+<div class="form-group">
+<label>Card Animation</label>
+<select id="animationSelect" onchange="animationType=this.value">
+<option value="fade">Fade In</option>
+<option value="slide">Slide Up</option>
+<option value="bounce">Bounce</option>
+<option value="float">Float (Organic)</option>
+<option value="grow">Grow</option>
+<option value="blur">Blur Reveal</option>
+</select>
+</div>
 <button class="btn" onclick="addCardToCanvas()">➕ Add to Canvas</button>
 </div>
 <div id="searchTab" style="display:none">
@@ -205,12 +228,15 @@
 <div class="theme-grid">
 <div class="theme-card" onclick="applyTheme('default')" style="background:linear-gradient(135deg,#0f0f1e,#1a1a2e)"><div style="padding:30px"></div><div class="theme-name">Default</div></div>
 <div class="theme-card" onclick="applyTheme('light')" style="background:linear-gradient(135deg,#f5f5f5,#e0e0e0)"><div style="padding:30px"></div><div class="theme-name" style="color:#333">Light</div></div>
-<div class="theme-card" onclick="applyTheme('neon')" style="background:linear-gradient(135deg,#ff006e,#8338ec)"><div style="padding:30px"></div><div class="theme-name">Neon</div></div>
+<div class="theme-card" onclick="applyTheme('calm')" style="background:linear-gradient(135deg,#1a1f36,#252d4a)"><div style="padding:30px"></div><div class="theme-name">Calm ✨</div></div>
+<div class="theme-card" onclick="applyTheme('cozy')" style="background:linear-gradient(135deg,#2d2418,#3d3225)"><div style="padding:30px"></div><div class="theme-name">Cozy 🏠</div></div>
+<div class="theme-card" onclick="applyTheme('nature')" style="background:linear-gradient(135deg,#1a2f1a,#2a4a2a)"><div style="padding:30px"></div><div class="theme-name">Nature 🌿</div></div>
+<div class="theme-card" onclick="applyTheme('warmth')" style="background:linear-gradient(135deg,#2d1f1a,#4a3228)"><div style="padding:30px"></div><div class="theme-name">Warmth 🔥</div></div>
 <div class="theme-card" onclick="applyTheme('ocean')" style="background:linear-gradient(135deg,#006994,#003d5c)"><div style="padding:30px"></div><div class="theme-name">Ocean</div></div>
 <div class="theme-card" onclick="applyTheme('forest')" style="background:linear-gradient(135deg,#1e4d2b,#0d2818)"><div style="padding:30px"></div><div class="theme-name">Forest</div></div>
 <div class="theme-card" onclick="applyTheme('sunset')" style="background:linear-gradient(135deg,#ff6b35,#f7931e)"><div style="padding:30px"></div><div class="theme-name">Sunset</div></div>
 <div class="theme-card" onclick="applyTheme('purple')" style="background:linear-gradient(135deg,#7209b7,#3a0ca3)"><div style="padding:30px"></div><div class="theme-name">Purple</div></div>
-<div class="theme-card" onclick="applyTheme('minimal')" style="background:#1a1a1a"><div style="padding:30px"></div><div class="theme-name">Minimal</div></div>
+<div class="theme-card" onclick="applyTheme('neon')" style="background:linear-gradient(135deg,#ff006e,#8338ec)"><div style="padding:30px"></div><div class="theme-name">Neon</div></div>
 <div class="theme-card" onclick="applyTheme('cyberpunk')" style="background:linear-gradient(135deg,#00ff9f,#00b8ff)"><div style="padding:30px"></div><div class="theme-name">Cyber</div></div>
 </div>
 <button class="btn" onclick="closeModal('themeModal');showThemeImport()" style="margin-top:15px">📥 Import HA Theme</button>
@@ -301,19 +327,40 @@
 
 <div class="modal" id="importModal"><div class="modal-content">
 <h2>📥 Import YAML</h2>
+<div class="sidebar-tabs" style="margin-bottom:15px">
+<button class="sidebar-tab active" onclick="setImportMode('dashboard')" id="importModeDashboard">Full Dashboard</button>
+<button class="sidebar-tab" onclick="setImportMode('card')" id="importModeCard">Single Card</button>
+</div>
 <div class="lovelace-toggle">
 <button class="lovelace-btn active" onclick="setLovelaceMode('standard')" id="lovelaceStandard">Standard</button>
 <button class="lovelace-btn" onclick="setLovelaceMode('custom')" id="lovelaceCustom">Custom Cards</button>
 </div>
-<textarea id="importYaml" rows="10" placeholder="Paste YAML here..." style="width:100%;padding:15px;background:#0a0a15;border:1px solid rgba(67,238,255,.4);border-radius:8px;color:#43eeff;font-family:monospace"></textarea>
+<textarea id="importYaml" rows="10" placeholder="Paste YAML here...
+
+For single card, paste just the card YAML:
+- type: entities
+  title: My Card
+  entities:
+    - light.living_room
+  card_mod:
+    style: |
+      ha-card {
+        background: linear-gradient(...);
+      }" style="width:100%;padding:15px;background:#0a0a15;border:1px solid rgba(67,238,255,.4);border-radius:8px;color:#43eeff;font-family:monospace;font-size:0.85em"></textarea>
 <div class="import-options">
 <label>Options</label>
-<div class="import-option"><input type="checkbox" id="importPreserveColors" checked>Preserve colors</div>
+<div class="import-option"><input type="checkbox" id="importPreserveColors">Use default colors (ignore card_mod)</div>
 <div class="import-option"><input type="checkbox" id="importPreserveFonts" checked>Preserve fonts</div>
-<div class="import-option"><input type="checkbox" id="importPreserveShadows" checked>Preserve shadows</div>
+<div class="import-option"><input type="checkbox" id="importParseCardMod" checked>Parse card_mod styles</div>
 </div>
 <button class="btn" onclick="importYAML()">🚀 Import</button>
 <button class="btn btn-secondary" onclick="closeModal('importModal')">Close</button>
+</div></div>
+
+<div class="modal" id="importSummaryModal"><div class="modal-content">
+<h2>📋 Import Summary</h2>
+<div id="importSummaryContent"></div>
+<button class="btn" onclick="closeModal('importSummaryModal')">Done</button>
 </div></div>
 
 <div class="modal" id="stylePresetsModal"><div class="modal-content">
@@ -324,6 +371,19 @@
 <h3 style="color:#43eeff;margin-bottom:15px">Load Preset</h3>
 <div class="preset-grid" id="presetGrid"></div>
 <button class="btn btn-secondary" onclick="closeModal('stylePresetsModal')" style="margin-top:15px">Close</button>
+</div></div>
+
+<div class="modal" id="cardTemplatesModal"><div class="modal-content">
+<h2>📦 Card Templates</h2>
+<p style="color:#888;margin-bottom:15px">Save complete cards as reusable templates</p>
+<div class="prop-section">
+<div class="form-group"><label>Template Name</label><input type="text" id="templateName" placeholder="My Card Template"></div>
+<button class="btn" onclick="saveCardTemplate()">💾 Save Selected Card as Template</button>
+</div>
+<div class="divider"></div>
+<h3 style="color:#43eeff;margin-bottom:15px">My Templates</h3>
+<div class="template-list" id="cardTemplateList"></div>
+<button class="btn btn-secondary" onclick="closeModal('cardTemplatesModal')" style="margin-top:15px">Close</button>
 </div></div>
 
 <div class="modal" id="shareModal"><div class="modal-content">
@@ -404,13 +464,13 @@ let draggedEntity=null,draggedFromCard=null,draggedEntityIndex=-1,contextEntity=
 let bgSettings={type:'gradient',grad1:'#0f0f1e',grad2:'#1a1a2e',angle:135,imageUrl:'',solid:'#1a1a2e',opacity:30,blur:0,overlay:50};
 let previewMode='desktop',animationType='fade',clipboard=null,styleClipboard=null,autoSave=true,autoSaveInterval=null;
 let dashboards=[{id:1,name:'My Dashboard',cards:[],bg:bgSettings,created:Date.now()}],currentDashboardId=1;
-let versionHistory=[],groups={},cloudDashboards=[],stylePresets=[],lovelaceMode='standard',exportMode='standard';
+let versionHistory=[],groups={},cloudDashboards=[],stylePresets=[],cardTemplates=[],lovelaceMode='standard',exportMode='standard';
 let responsiveLayouts={desktop:{},tablet:{},mobile:{}};
 let lastCardSettings={bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'rgba(0,0,0,0.5)'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'rgba(0,0,0,0.5)'}};
 let currentIconCallback=null;
 
 const canvas=document.getElementById('canvas'),propertiesPanel=document.getElementById('propertiesPanel'),cardConfig=document.getElementById('cardConfig');
-const themes={default:{bg1:'#0f0f1e',bg2:'#1a1a2e',card:'#43eeff',title:'#ff43ee',entity:'#ffeb3b'},light:{bg1:'#f5f5f5',bg2:'#e0e0e0',card:'#2196f3',title:'#e91e63',entity:'#ff9800'},neon:{bg1:'#ff006e',bg2:'#8338ec',card:'#00ff9f',title:'#ffbe0b',entity:'#fb5607'},ocean:{bg1:'#006994',bg2:'#003d5c',card:'#00b4d8',title:'#0077b6',entity:'#90e0ef'},forest:{bg1:'#1e4d2b',bg2:'#0d2818',card:'#52b788',title:'#95d5b2',entity:'#d8f3dc'},sunset:{bg1:'#ff6b35',bg2:'#f7931e',card:'#ffd60a',title:'#ff006e',entity:'#ffbe0b'},purple:{bg1:'#7209b7',bg2:'#3a0ca3',card:'#c77dff',title:'#e0aaff',entity:'#f72585'},minimal:{bg1:'#1a1a1a',bg2:'#1a1a1a',card:'#333',title:'#fff',entity:'#ccc'},cyberpunk:{bg1:'#00ff9f',bg2:'#00b8ff',card:'#ff006e',title:'#ffbe0b',entity:'#8338ec'}};
+const themes={default:{bg1:'#0f0f1e',bg2:'#1a1a2e',card:'#43eeff',title:'#ff43ee',entity:'#ffeb3b'},light:{bg1:'#f5f5f5',bg2:'#e0e0e0',card:'#2196f3',title:'#e91e63',entity:'#ff9800'},neon:{bg1:'#ff006e',bg2:'#8338ec',card:'#00ff9f',title:'#ffbe0b',entity:'#fb5607'},ocean:{bg1:'#006994',bg2:'#003d5c',card:'#00b4d8',title:'#0077b6',entity:'#90e0ef'},forest:{bg1:'#1e4d2b',bg2:'#0d2818',card:'#52b788',title:'#95d5b2',entity:'#d8f3dc'},sunset:{bg1:'#ff6b35',bg2:'#f7931e',card:'#ffd60a',title:'#ff006e',entity:'#ffbe0b'},purple:{bg1:'#7209b7',bg2:'#3a0ca3',card:'#c77dff',title:'#e0aaff',entity:'#f72585'},minimal:{bg1:'#1a1a1a',bg2:'#1a1a1a',card:'#333',title:'#fff',entity:'#ccc'},cyberpunk:{bg1:'#00ff9f',bg2:'#00b8ff',card:'#ff006e',title:'#ffbe0b',entity:'#8338ec'},calm:{bg1:'#1a1f36',bg2:'#252d4a',card:'#3d4a6b',title:'#e8e8e8',entity:'#a0aec0'},cozy:{bg1:'#2d2418',bg2:'#3d3225',card:'#5c4a32',title:'#f5e6d3',entity:'#d4c4a8'},nature:{bg1:'#1a2f1a',bg2:'#2a4a2a',card:'#3d5a3d',title:'#c8e6c9',entity:'#a5d6a7'},warmth:{bg1:'#2d1f1a',bg2:'#4a3228',card:'#6b4a3d',title:'#ffccbc',entity:'#ffab91'}};
 
 function getFontOptionsHTML(sel="'Segoe UI', sans-serif"){return availableFonts.map(f=>`<option value="${f.value}"${f.value===sel?' selected':''}>${f.name}</option>`).join('')}
 function snapVal(v){return snapToGrid?Math.round(v/gridSize)*gridSize:v}
@@ -421,7 +481,7 @@ function redo(){if(historyIndex<history.length-1){historyIndex++;const s=JSON.pa
 document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey){if(e.key==='z'&&!e.shiftKey){e.preventDefault();undo()}else if(e.key==='y'||(e.key==='z'&&e.shiftKey)){e.preventDefault();redo()}else if(e.key==='d'){e.preventDefault();duplicateCard()}else if(e.key==='c'&&selectedCard){e.preventDefault();clipboard=JSON.parse(JSON.stringify(selectedCard));showNotification('Copied')}else if(e.key==='v'&&clipboard){e.preventDefault();pasteCard()}else if(e.key==='a'){e.preventDefault();selectAll()}else if(e.key==='s'){e.preventDefault();saveProject()}else if(e.key==='g'){e.preventDefault();groupSelected()}}else if(e.key==='Delete'){if(selectedCards.length>0)deleteMultiple();else if(selectedCard)deleteCard()}else if(e.key==='g')toggleGridSnap();else if(e.key==='l')toggleLockSelected();else if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)&&selectedCard){e.preventDefault();moveCardWithKeys(e.key)}});
 document.addEventListener('click',()=>document.getElementById('contextMenu').classList.remove('active'));
 
-const cardTypeConfigs={entities:{defaultSize:{width:300,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="My Entities"></div><div class="form-group"><label>Entities</label><textarea id="newCardEntities" rows="5" placeholder="light.living_room\nswitch.fan"></textarea></div>`},thermostat:{defaultSize:{width:300,height:280},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Thermostat"></div><div class="form-group"><label>Entities</label><textarea id="thermostatEntities" rows="3" placeholder="climate.thermostat"></textarea></div>`},weather:{defaultSize:{width:350,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Weather"></div><div class="form-group"><label>Entity</label><input type="text" id="weatherEntity" value="weather.home"></div>`},camera:{defaultSize:{width:400,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Camera"></div><div class="form-group"><label>Entity</label><input type="text" id="cameraEntity" value="camera.front"></div>`},media:{defaultSize:{width:350,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Media"></div><div class="form-group"><label>Entity</label><input type="text" id="mediaEntity" value="media_player.speaker"></div>`},gauge:{defaultSize:{width:250,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Gauge"></div><div class="form-group"><label>Entity</label><input type="text" id="gaugeEntity" value="sensor.battery"></div><div class="form-group"><label>Min</label><input type="number" id="gaugeMin" value="0"></div><div class="form-group"><label>Max</label><input type="number" id="gaugeMax" value="100"></div>`},button:{defaultSize:{width:200,height:150},fields:`<div class="form-group"><label>Name</label><input type="text" id="newCardTitle" value="Button"></div><div class="form-group"><label>Entity</label><input type="text" id="buttonEntity" value="switch.device"></div>`},clock:{defaultSize:{width:300,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Clock"></div><div class="form-group"><label>Format</label><select id="clockFormat"><option value="12">12-Hour</option><option value="24">24-Hour</option></select></div>`},markdown:{defaultSize:{width:350,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Notes"></div><div class="form-group"><label>Content</label><textarea id="markdownContent" rows="5">**Bold** text</textarea></div>`},picture:{defaultSize:{width:400,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Picture"></div><div class="form-group"><label>URL</label><input type="text" id="pictureUrl" placeholder="https://..."></div>`},glance:{defaultSize:{width:350,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Glance"></div><div class="form-group"><label>Entities</label><textarea id="glanceEntities" rows="3" placeholder="light.living\nswitch.fan"></textarea></div>`},chart:{defaultSize:{width:450,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Chart"></div><div class="form-group"><label>Entity</label><input type="text" id="chartEntity" value="sensor.temp"></div>`},map:{defaultSize:{width:500,height:400},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Map"></div><div class="form-group"><label>Entities</label><textarea id="mapEntities" rows="3" placeholder="device_tracker.phone"></textarea></div>`},iframe:{defaultSize:{width:600,height:400},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Iframe"></div><div class="form-group"><label>URL</label><input type="text" id="iframeUrl" placeholder="https://..."></div>`},light:{defaultSize:{width:300,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Lights"></div><div class="form-group"><label>Entities</label><textarea id="lightEntities" rows="3" placeholder="light.living_room"></textarea></div>`}};
+const cardTypeConfigs={entities:{defaultSize:{width:300,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="My Entities"></div><div class="form-group"><label>Entities</label><textarea id="newCardEntities" rows="5" placeholder="light.living_room\nswitch.fan"></textarea></div>`},thermostat:{defaultSize:{width:300,height:280},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Thermostat"></div><div class="form-group"><label>Entities</label><textarea id="thermostatEntities" rows="3" placeholder="climate.thermostat"></textarea></div>`},weather:{defaultSize:{width:350,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Weather"></div><div class="form-group"><label>Entity</label><input type="text" id="weatherEntity" value="weather.home"></div>`},camera:{defaultSize:{width:400,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Camera"></div><div class="form-group"><label>Entity</label><input type="text" id="cameraEntity" value="camera.front"></div>`},media:{defaultSize:{width:350,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Media"></div><div class="form-group"><label>Entity</label><input type="text" id="mediaEntity" value="media_player.speaker"></div>`},gauge:{defaultSize:{width:250,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Gauge"></div><div class="form-group"><label>Entity</label><input type="text" id="gaugeEntity" value="sensor.battery"></div><div class="form-group"><label>Min</label><input type="number" id="gaugeMin" value="0"></div><div class="form-group"><label>Max</label><input type="number" id="gaugeMax" value="100"></div>`},button:{defaultSize:{width:200,height:150},fields:`<div class="form-group"><label>Name</label><input type="text" id="newCardTitle" value="Button"></div><div class="form-group"><label>Entity</label><input type="text" id="buttonEntity" value="switch.device"></div>`},clock:{defaultSize:{width:300,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Clock"></div><div class="form-group"><label>Format</label><select id="clockFormat"><option value="12">12-Hour</option><option value="24">24-Hour</option></select></div>`},markdown:{defaultSize:{width:350,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Notes"></div><div class="form-group"><label>Content</label><textarea id="markdownContent" rows="5">**Bold** text</textarea></div>`},picture:{defaultSize:{width:400,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Picture"></div><div class="form-group"><label>URL</label><input type="text" id="pictureUrl" placeholder="https://..."></div>`},glance:{defaultSize:{width:350,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Glance"></div><div class="form-group"><label>Entities</label><textarea id="glanceEntities" rows="3" placeholder="light.living\nswitch.fan"></textarea></div>`},chart:{defaultSize:{width:450,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Chart"></div><div class="form-group"><label>Entity</label><input type="text" id="chartEntity" value="sensor.temp"></div><div class="form-group"><label>Chart Type</label><select id="chartType"><option value="line">Line</option><option value="bar">Bar</option><option value="area">Area</option></select></div>`},map:{defaultSize:{width:500,height:400},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Map"></div><div class="form-group"><label>Entities</label><textarea id="mapEntities" rows="3" placeholder="device_tracker.phone"></textarea></div>`},iframe:{defaultSize:{width:600,height:400},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Iframe"></div><div class="form-group"><label>URL</label><input type="text" id="iframeUrl" placeholder="https://..."></div>`},light:{defaultSize:{width:300,height:200},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Lights"></div><div class="form-group"><label>Entities</label><textarea id="lightEntities" rows="3" placeholder="light.living_room"></textarea></div>`},area:{defaultSize:{width:350,height:280},fields:`<div class="form-group"><label>Area Name</label><input type="text" id="newCardTitle" value="Living Room"></div><div class="form-group"><label>Entities</label><textarea id="areaEntities" rows="5" placeholder="light.living_room\nswitch.tv\nsensor.temperature"></textarea></div><div class="form-group"><label>Background Image URL (optional)</label><input type="text" id="areaBgImage" placeholder="https://..."></div>`},calendar:{defaultSize:{width:350,height:300},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Calendar"></div><div class="form-group"><label>Entity</label><input type="text" id="calendarEntity" value="calendar.home"></div>`},mushroom:{defaultSize:{width:180,height:80},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Light"></div><div class="form-group"><label>Entity</label><input type="text" id="mushroomEntity" value="light.living_room"></div>`},person:{defaultSize:{width:200,height:220},fields:`<div class="form-group"><label>Name</label><input type="text" id="newCardTitle" value="John"></div><div class="form-group"><label>Entity</label><input type="text" id="personEntity" value="person.john"></div>`},vacuum:{defaultSize:{width:300,height:250},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Robot Vacuum"></div><div class="form-group"><label>Entity</label><input type="text" id="vacuumEntity" value="vacuum.roomba"></div>`},scene:{defaultSize:{width:200,height:120},fields:`<div class="form-group"><label>Scene Name</label><input type="text" id="newCardTitle" value="Movie Night"></div><div class="form-group"><label>Entity</label><input type="text" id="sceneEntity" value="scene.movie_night"></div>`},forecast:{defaultSize:{width:400,height:180},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="5-Day Forecast"></div><div class="form-group"><label>Entity</label><input type="text" id="forecastEntity" value="weather.home"></div>`},tile:{defaultSize:{width:150,height:150},fields:`<div class="form-group"><label>Title</label><input type="text" id="newCardTitle" value="Light"></div><div class="form-group"><label>Entity</label><input type="text" id="tileEntity" value="light.living_room"></div>`}};
 
 function selectCardType(t){selectedCardType=t;document.querySelectorAll('.card-type-btn').forEach(b=>b.classList.remove('active'));event.target.closest('.card-type-btn').classList.add('active');cardConfig.innerHTML=cardTypeConfigs[t].fields}
 cardConfig.innerHTML=cardTypeConfigs.entities.fields;saveState();
@@ -436,8 +496,16 @@ else if(selectedCardType==='button'){cardData.entity=document.getElementById('bu
 else if(selectedCardType==='clock'){cardData.format=document.getElementById('clockFormat')?.value||'12'}
 else if(selectedCardType==='markdown'){cardData.content=document.getElementById('markdownContent')?.value||''}
 else if(selectedCardType==='picture'){cardData.imageUrl=document.getElementById('pictureUrl')?.value||''}
-else if(selectedCardType==='chart'){cardData.entity=document.getElementById('chartEntity')?.value||''}
+else if(selectedCardType==='chart'){cardData.entity=document.getElementById('chartEntity')?.value||'';cardData.chartType=document.getElementById('chartType')?.value||'line'}
 else if(selectedCardType==='iframe'){cardData.iframeUrl=document.getElementById('iframeUrl')?.value||''}
+else if(selectedCardType==='area'){cardData.entities=(document.getElementById('areaEntities')?.value||'').split('\n').filter(e=>e.trim());cardData.bgImage=document.getElementById('areaBgImage')?.value||''}
+else if(selectedCardType==='calendar'){cardData.entity=document.getElementById('calendarEntity')?.value||'calendar.home'}
+else if(selectedCardType==='mushroom'){cardData.entity=document.getElementById('mushroomEntity')?.value||'light.living_room'}
+else if(selectedCardType==='person'){cardData.entity=document.getElementById('personEntity')?.value||'person.john'}
+else if(selectedCardType==='vacuum'){cardData.entity=document.getElementById('vacuumEntity')?.value||'vacuum.roomba'}
+else if(selectedCardType==='scene'){cardData.entity=document.getElementById('sceneEntity')?.value||'scene.movie_night'}
+else if(selectedCardType==='forecast'){cardData.entity=document.getElementById('forecastEntity')?.value||'weather.home'}
+else if(selectedCardType==='tile'){cardData.entity=document.getElementById('tileEntity')?.value||'light.living_room'}
 if(selectedCardType==='gauge'){cardData.min=document.getElementById('gaugeMin')?.value||0;cardData.max=document.getElementById('gaugeMax')?.value||100}
 cards.push(cardData);saveState();renderCanvas();selectCard(cardData);updateCardCount();showNotification('Card added','success')}
 
@@ -450,6 +518,7 @@ const el=document.createElement('div');el.className='canvas-card';if(c.animation
 el.id=`card-${c.id}`;el.style.left=c.x+'px';el.style.top=c.y+'px';el.style.width=c.width+'px';el.style.height=c.height+'px';
 el.style.background=c.useGradient?`linear-gradient(135deg,${c.gradientColor1},${c.gradientColor2})`:c.bgColor;
 el.style.zIndex=c.zIndex||0;el.style.borderRadius=(c.cornerStyle==='square'?0:(c.borderRadius||14))+'px';
+if(c.customCSS){try{c.customCSS.split(';').forEach(rule=>{const[prop,val]=rule.split(':').map(s=>s.trim());if(prop&&val)el.style[prop.replace(/-([a-z])/g,g=>g[1].toUpperCase())]=val})}catch(e){}}
 if(selectedCard?.id===c.id)el.classList.add('selected');if(selectedCards.some(s=>s.id===c.id))el.classList.add('multi-selected');
 const baseScale=getScaleFactor(c),scale=baseScale*(c.contentScale||1.0),titleFont=c.titleFont||"'Segoe UI', sans-serif",entityFont=c.entityFont||"'Segoe UI', sans-serif",titleShadow=getTextShadowCSS(c.titleShadow),entityShadow=getTextShadowCSS(c.entityShadow);
 const titleSize=(c.titleSize||1.2)*scale,entitySize=(c.entitySize||0.85)*scale;
@@ -477,7 +546,16 @@ else if(c.type==='media'){el.appendChild(createHAMedia(c,scale,entitySize))}
 else if(c.type==='clock'){el.appendChild(createHAClock(c,scale))}
 else if(c.type==='camera'){el.appendChild(createHACamera(c,scale))}
 else if(c.type==='markdown'){el.innerHTML+=`<div style="color:${c.entityColor};padding:10px;font-size:${entitySize}em;opacity:0.9">${(c.content||'**Markdown** content').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>`}
-else{el.innerHTML+=`<div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:${2*scale}em;color:rgba(255,255,255,.3)">${c.type==='chart'?'📊':c.type==='map'?'🗺️':c.type==='iframe'?'🌐':c.type==='picture'?'🖼️':'📋'}</div>`}
+else if(c.type==='chart'){el.appendChild(createHAHistoryGraph(c,scale,entitySize))}
+else if(c.type==='area'){el.appendChild(createHAArea(c,scale,entitySize))}
+else if(c.type==='calendar'){el.appendChild(createHACalendar(c,scale))}
+else if(c.type==='mushroom'){el.appendChild(createHAMushroom(c,scale))}
+else if(c.type==='person'){el.appendChild(createHAPerson(c,scale))}
+else if(c.type==='vacuum'){el.appendChild(createHAVacuum(c,scale))}
+else if(c.type==='scene'){el.appendChild(createHAScene(c,scale))}
+else if(c.type==='forecast'){el.appendChild(createHAForecast(c,scale))}
+else if(c.type==='tile'){el.appendChild(createHATile(c,scale))}
+else{el.innerHTML+=`<div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:${2*scale}em;color:rgba(255,255,255,.3)">${c.type==='map'?'🗺️':c.type==='iframe'?'🌐':c.type==='picture'?'🖼️':'📋'}</div>`}
 
 ['nw','ne','sw','se'].forEach(p=>{const h=document.createElement('div');h.className=`resize-handle resize-${p}`;h.dataset.position=p;el.appendChild(h)});
 el.ondragover=ev=>{if(draggedEntity&&['entities','light','thermostat'].includes(c.type)){ev.preventDefault();el.classList.add('drag-over')}};
@@ -516,27 +594,100 @@ return name.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase()).substring(0,22
 
 function createHAEntityRow(ent,idx,c,entityFont,entityShadow,entitySize,scale){
 const domain=ent.split('.')[0];
+const name=ent.split('.')[1]||'';
+const isLight=domain==='light';
 const isToggleable=['light','switch','fan','input_boolean','automation','script'].includes(domain);
-const state=getMockState(ent);const isOn=state==='on';
+const isBattery=name.includes('battery');
+const state=getMockState(ent);
+const isOn=state==='on';
+const brightness=isLight?Math.floor(40+Math.random()*60):0;
 
 const row=document.createElement('div');row.className='ha-entity-row';row.draggable=true;
-row.style.cssText=`display:flex;align-items:center;justify-content:space-between;padding:${8*scale}px ${10*scale}px;margin:${3*scale}px 0;background:rgba(255,255,255,0.08);border-radius:8px;cursor:grab;transition:all 0.2s`;
+row.style.cssText=`display:flex;flex-direction:column;padding:${8*scale}px ${10*scale}px;margin:${3*scale}px 0;background:rgba(255,255,255,0.08);border-radius:8px;cursor:grab;transition:all 0.2s`;
+
+const topRow=document.createElement('div');topRow.style.cssText='display:flex;align-items:center;justify-content:space-between;width:100%';
 
 const leftSide=document.createElement('div');leftSide.style.cssText='display:flex;align-items:center;gap:8px;flex:1;min-width:0';
-const icon=document.createElement('span');icon.textContent=getEntityIcon(ent);icon.style.cssText=`font-size:${1.1*scale}em;${isOn?'filter:drop-shadow(0 0 4px rgba(255,200,0,0.6))':'opacity:0.5'}`;
+const icon=document.createElement('span');icon.textContent=getEntityIcon(ent);icon.style.cssText=`font-size:${1.1*scale}em;${isOn||!isToggleable?'filter:drop-shadow(0 0 4px rgba(255,200,0,0.6))':'opacity:0.5'}`;
 const nameSpan=document.createElement('span');nameSpan.textContent=formatEntityName(ent);nameSpan.style.cssText=`color:${c.entityColor};font-family:${entityFont};text-shadow:${entityShadow};font-size:${entitySize}em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap`;
-leftSide.appendChild(icon);leftSide.appendChild(nameSpan);row.appendChild(leftSide);
+leftSide.appendChild(icon);leftSide.appendChild(nameSpan);topRow.appendChild(leftSide);
 
-if(isToggleable){
+// Battery indicator
+if(isBattery){
+const battLevel=parseInt(state)||Math.floor(20+Math.random()*80);
+const battColor=battLevel>60?'#4caf50':battLevel>20?'#ff9800':'#f44336';
+const battEl=document.createElement('div');battEl.style.cssText=`display:flex;align-items:center;gap:4px`;
+battEl.innerHTML=`<div style="width:${24*scale}px;height:${12*scale}px;border:2px solid ${battColor};border-radius:2px;position:relative;padding:1px"><div style="width:${battLevel}%;height:100%;background:${battColor};border-radius:1px"></div><div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:2px;height:6px;background:${battColor};border-radius:0 1px 1px 0"></div></div><span style="font-size:${0.75*scale}em;color:${battColor}">${battLevel}%</span>`;
+topRow.appendChild(battEl);
+}
+else if(isToggleable){
 const toggle=document.createElement('div');toggle.className='ha-toggle';
 toggle.style.cssText=`width:${40*scale}px;height:${22*scale}px;background:${isOn?'#4CAF50':'rgba(255,255,255,0.15)'};border-radius:${11*scale}px;position:relative;cursor:pointer;transition:all 0.3s;flex-shrink:0`;
 const knob=document.createElement('div');knob.style.cssText=`width:${18*scale}px;height:${18*scale}px;background:#fff;border-radius:50%;position:absolute;top:${2*scale}px;left:${isOn?(20*scale):(2*scale)}px;transition:left 0.3s;box-shadow:0 2px 4px rgba(0,0,0,0.3)`;
 toggle.appendChild(knob);toggle.onclick=e=>{e.stopPropagation();showNotification('Toggled '+formatEntityName(ent))};
-row.appendChild(toggle);
+topRow.appendChild(toggle);
 }else{
 const stateEl=document.createElement('span');stateEl.textContent=state;stateEl.style.cssText=`color:${c.entityColor};opacity:0.7;font-size:${entitySize*0.9}em;font-family:${entityFont}`;
-row.appendChild(stateEl);
+topRow.appendChild(stateEl);
 }
+
+row.appendChild(topRow);
+
+// Brightness slider for lights when ON
+if(isLight&&isOn){
+const sliderRow=document.createElement('div');sliderRow.style.cssText=`display:flex;align-items:center;gap:8px;margin-top:${6*scale}px;padding-left:${20*scale}px`;
+sliderRow.innerHTML=`<span style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5)">☀️</span><input type="range" min="1" max="100" value="${brightness}" style="flex:1;height:4px;-webkit-appearance:none;background:linear-gradient(to right,#4CAF50 ${brightness}%,rgba(255,255,255,0.2) ${brightness}%);border-radius:2px;cursor:pointer" onclick="event.stopPropagation()"><span style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.6);min-width:30px">${brightness}%</span>`;
+const slider=sliderRow.querySelector('input');
+slider.oninput=e=>{e.stopPropagation();const v=e.target.value;slider.style.background=`linear-gradient(to right,#4CAF50 ${v}%,rgba(255,255,255,0.2) ${v}%)`;sliderRow.querySelector('span:last-child').textContent=v+'%'};
+row.appendChild(sliderRow);
+
+// RGB color picker for lights
+const isRGB=name.includes('rgb')||name.includes('color')||name.includes('hue')||name.includes('bulb');
+if(isRGB){
+const colorRow=document.createElement('div');colorRow.style.cssText=`display:flex;align-items:center;gap:8px;margin-top:${4*scale}px;padding-left:${20*scale}px`;
+const randomHue=Math.floor(Math.random()*360);
+colorRow.innerHTML=`<span style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5)">🎨</span>
+<div style="display:flex;gap:3px;flex:1">
+<div style="width:20px;height:20px;border-radius:50%;background:#ff5555;cursor:pointer;border:2px solid transparent;transition:all 0.2s" onclick="event.stopPropagation();this.parentElement.querySelectorAll('div').forEach(d=>d.style.borderColor='transparent');this.style.borderColor='#fff';showNotification('Color: Red')"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#ffaa00;cursor:pointer;border:2px solid transparent;transition:all 0.2s" onclick="event.stopPropagation();this.parentElement.querySelectorAll('div').forEach(d=>d.style.borderColor='transparent');this.style.borderColor='#fff';showNotification('Color: Orange')"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#ffff55;cursor:pointer;border:2px solid transparent;transition:all 0.2s" onclick="event.stopPropagation();this.parentElement.querySelectorAll('div').forEach(d=>d.style.borderColor='transparent');this.style.borderColor='#fff';showNotification('Color: Yellow')"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#55ff55;cursor:pointer;border:2px solid transparent;transition:all 0.2s" onclick="event.stopPropagation();this.parentElement.querySelectorAll('div').forEach(d=>d.style.borderColor='transparent');this.style.borderColor='#fff';showNotification('Color: Green')"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#55ffff;cursor:pointer;border:2px solid transparent;transition:all 0.2s" onclick="event.stopPropagation();this.parentElement.querySelectorAll('div').forEach(d=>d.style.borderColor='transparent');this.style.borderColor='#fff';showNotification('Color: Cyan')"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#5555ff;cursor:pointer;border:2px solid transparent;transition:all 0.2s" onclick="event.stopPropagation();this.parentElement.querySelectorAll('div').forEach(d=>d.style.borderColor='transparent');this.style.borderColor='#fff';showNotification('Color: Blue')"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#ff55ff;cursor:pointer;border:2px solid transparent;transition:all 0.2s" onclick="event.stopPropagation();this.parentElement.querySelectorAll('div').forEach(d=>d.style.borderColor='transparent');this.style.borderColor='#fff';showNotification('Color: Purple')"></div>
+<div style="width:20px;height:20px;border-radius:50%;background:#ffffff;cursor:pointer;border:2px solid transparent;transition:all 0.2s" onclick="event.stopPropagation();this.parentElement.querySelectorAll('div').forEach(d=>d.style.borderColor='transparent');this.style.borderColor='#43eeff';showNotification('Color: White')"></div>
+</div>`;
+row.appendChild(colorRow);
+}
+}
+
+// Fan speed control
+const isFan=domain==='fan';
+if(isFan&&isOn){
+const fanSpeed=Math.floor(Math.random()*3)+1;
+const speedRow=document.createElement('div');speedRow.style.cssText=`display:flex;align-items:center;gap:8px;margin-top:${6*scale}px;padding-left:${20*scale}px`;
+speedRow.innerHTML=`<span style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5)">🌀</span>
+<div style="display:flex;gap:4px;flex:1">
+${[1,2,3].map(s=>`<button style="flex:1;padding:4px 8px;border:none;border-radius:4px;background:${s===fanSpeed?'#4CAF50':'rgba(255,255,255,0.1)'};color:#fff;font-size:${0.7*scale}em;cursor:pointer" onclick="event.stopPropagation();this.parentElement.querySelectorAll('button').forEach(b=>b.style.background='rgba(255,255,255,0.1)');this.style.background='#4CAF50';showNotification('Fan speed: ${s}')">${s}</button>`).join('')}
+</div>`;
+row.appendChild(speedRow);
+}
+
+// Cover/blind position control
+const isCover=domain==='cover';
+if(isCover){
+const position=Math.floor(Math.random()*100);
+const coverRow=document.createElement('div');coverRow.style.cssText=`display:flex;align-items:center;gap:8px;margin-top:${6*scale}px;padding-left:${20*scale}px`;
+coverRow.innerHTML=`<span style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5)">🪟</span>
+<input type="range" min="0" max="100" value="${position}" style="flex:1;height:4px;-webkit-appearance:none;background:linear-gradient(to right,#2196F3 ${position}%,rgba(255,255,255,0.2) ${position}%);border-radius:2px;cursor:pointer" onclick="event.stopPropagation()">
+<div style="display:flex;gap:2px">
+<button style="width:24px;height:24px;border:none;border-radius:4px;background:rgba(255,255,255,0.1);cursor:pointer;font-size:10px" onclick="event.stopPropagation();showNotification('Cover: Open')">▲</button>
+<button style="width:24px;height:24px;border:none;border-radius:4px;background:rgba(255,255,255,0.1);cursor:pointer;font-size:10px" onclick="event.stopPropagation();showNotification('Cover: Stop')">⏹</button>
+<button style="width:24px;height:24px;border:none;border-radius:4px;background:rgba(255,255,255,0.1);cursor:pointer;font-size:10px" onclick="event.stopPropagation();showNotification('Cover: Close')">▼</button>
+</div>`;
+row.appendChild(coverRow);
+}
+
 row.onmouseenter=()=>row.style.background='rgba(255,255,255,0.12)';
 row.onmouseleave=()=>row.style.background='rgba(255,255,255,0.08)';
 return row;
@@ -603,10 +754,11 @@ return container;
 
 function createHAClock(c,scale){
 const container=document.createElement('div');container.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100% - 55px);overflow:hidden';
-const now=new Date();const time=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
-const date=now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+const now=new Date();
+const time=c.format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+const date=now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
 const timeSize=Math.min(2.5*scale, c.width/100, (c.height-55)/50);
-container.innerHTML=`<div style="font-size:${timeSize}em;font-weight:bold;color:${c.entityColor};letter-spacing:1px">${time}</div><div style="font-size:${timeSize*0.32}em;color:rgba(255,255,255,0.5);margin-top:${8*scale}px">${date}</div>`;
+container.innerHTML=`<div class="live-clock" data-format="${c.format||'12'}" style="font-size:${timeSize}em;font-weight:bold;color:${c.entityColor};letter-spacing:1px;font-family:'SF Pro Display','Segoe UI',sans-serif">${time}</div><div style="font-size:${timeSize*0.32}em;color:rgba(255,255,255,0.5);margin-top:${8*scale}px">${date}</div>`;
 return container;
 }
 
@@ -614,6 +766,302 @@ function createHACamera(c,scale){
 const container=document.createElement('div');container.style.cssText='flex:1;margin-top:8px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:6px;display:flex;flex-direction:column;overflow:hidden;height:calc(100% - 60px)';
 const iconSize=Math.min(2.5*scale, c.width/120, (c.height-80)/60);
 container.innerHTML=`<div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative"><div style="font-size:${iconSize}em;color:rgba(255,255,255,0.15)">📷</div><div style="position:absolute;top:8px;left:8px;background:rgba(255,0,0,0.8);padding:2px 6px;border-radius:3px;font-size:${Math.max(0.55,0.65*scale)}em;display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;background:#fff;border-radius:50%;animation:pulse 1s infinite"></span>LIVE</div></div><div style="padding:6px 10px;background:rgba(0,0,0,0.25);font-size:${Math.max(0.6,0.7*scale)}em;color:rgba(255,255,255,0.6);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.entity||'camera.front'}</div>`;
+return container;
+}
+
+function createHAHistoryGraph(c,scale,entitySize){
+const container=document.createElement('div');
+container.style.cssText='display:flex;flex-direction:column;height:calc(100% - 55px);padding:10px';
+
+const chartType=c.chartType||'line';
+const points=24;
+const data=[];
+for(let i=0;i<points;i++){
+data.push(30+Math.random()*40+Math.sin(i/3)*15);
+}
+const max=Math.max(...data);
+const min=Math.min(...data);
+const range=max-min||1;
+
+const chartWidth=c.width-60;
+const chartHeight=Math.max(60,(c.height-120));
+
+const entityName=c.entities?.[0]||c.entity||'sensor.temperature';
+const currentVal=data[data.length-1].toFixed(1);
+const unit=entityName.includes('temp')?'°F':entityName.includes('humid')?'%':'';
+
+let chartContent='';
+
+if(chartType==='bar'){
+// Bar chart
+const barWidth=(chartWidth/points)*0.7;
+const barGap=(chartWidth/points)*0.3;
+chartContent=data.map((v,i)=>{
+const x=i*(barWidth+barGap);
+const h=((v-min)/range)*chartHeight;
+const y=chartHeight-h;
+return `<rect x="${x}" y="${y}" width="${barWidth}" height="${h}" fill="${c.titleColor}" opacity="0.8" rx="2"/>`;
+}).join('');
+}else{
+// Line/Area chart
+const pathD=data.map((v,i)=>{
+const x=(i/(points-1))*chartWidth;
+const y=chartHeight-((v-min)/range)*chartHeight;
+return (i===0?'M':'L')+x.toFixed(1)+','+y.toFixed(1);
+}).join(' ');
+const fillD=pathD+` L${chartWidth},${chartHeight} L0,${chartHeight} Z`;
+chartContent=`
+<defs>
+<linearGradient id="chartGrad${c.id}" x1="0%" y1="0%" x2="0%" y2="100%">
+<stop offset="0%" style="stop-color:${c.titleColor};stop-opacity:${chartType==='area'?0.6:0.4}"/>
+<stop offset="100%" style="stop-color:${c.titleColor};stop-opacity:0.05"/>
+</linearGradient>
+</defs>
+<path d="${fillD}" fill="url(#chartGrad${c.id})"/>
+<path d="${pathD}" fill="none" stroke="${c.titleColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="${chartWidth}" cy="${chartHeight-((data[data.length-1]-min)/range)*chartHeight}" r="4" fill="${c.titleColor}"/>`;
+}
+
+container.innerHTML=`
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+<span style="font-size:${0.75*scale}em;color:rgba(255,255,255,0.6)">${formatEntityName(entityName)}</span>
+<span style="font-size:${1.1*scale}em;font-weight:bold;color:${c.entityColor}">${currentVal}${unit}</span>
+</div>
+<svg viewBox="0 0 ${chartWidth} ${chartHeight}" style="flex:1;width:100%">
+${chartContent}
+</svg>
+<div style="display:flex;justify-content:space-between;margin-top:5px;font-size:${0.65*scale}em;color:rgba(255,255,255,0.4)">
+<span>24h ago</span>
+<span>12h ago</span>
+<span>Now</span>
+</div>`;
+return container;
+}
+
+function createHAArea(c,scale,entitySize){
+const container=document.createElement('div');
+container.style.cssText='display:flex;flex-direction:column;height:calc(100% - 55px);position:relative;overflow:hidden';
+
+// Background image if provided
+if(c.bgImage){
+container.innerHTML=`<div style="position:absolute;top:0;left:0;right:0;bottom:0;background-image:url('${c.bgImage}');background-size:cover;background-position:center;opacity:0.3"></div>`;
+}
+
+// Room stats header
+const stats=document.createElement('div');
+stats.style.cssText='display:flex;justify-content:space-around;padding:10px;background:rgba(0,0,0,0.2);border-radius:8px;margin:5px';
+const lightCount=(c.entities||[]).filter(e=>e.startsWith('light.')).length;
+const switchCount=(c.entities||[]).filter(e=>e.startsWith('switch.')).length;
+const sensorCount=(c.entities||[]).filter(e=>e.startsWith('sensor.')).length;
+stats.innerHTML=`
+<div style="text-align:center"><div style="font-size:${1.2*scale}em">💡</div><div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.6)">${lightCount}</div></div>
+<div style="text-align:center"><div style="font-size:${1.2*scale}em">🔌</div><div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.6)">${switchCount}</div></div>
+<div style="text-align:center"><div style="font-size:${1.2*scale}em">📊</div><div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.6)">${sensorCount}</div></div>
+`;
+container.appendChild(stats);
+
+// Entity icons grid
+const grid=document.createElement('div');
+grid.style.cssText=`display:flex;flex-wrap:wrap;justify-content:center;gap:${8*scale}px;padding:10px;flex:1;align-content:start`;
+(c.entities||[]).slice(0,12).forEach(ent=>{
+const state=getMockState(ent);
+const isOn=state==='on';
+const item=document.createElement('div');
+item.style.cssText=`width:${40*scale}px;height:${40*scale}px;background:rgba(255,255,255,${isOn?0.2:0.08});border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s`;
+item.innerHTML=`<span style="font-size:${1.3*scale}em;${isOn?'filter:drop-shadow(0 0 4px rgba(255,200,0,0.6))':'opacity:0.5'}">${getEntityIcon(ent)}</span>`;
+item.onclick=()=>showNotification('Toggled '+formatEntityName(ent));
+item.onmouseenter=()=>item.style.background=`rgba(255,255,255,${isOn?0.3:0.15})`;
+item.onmouseleave=()=>item.style.background=`rgba(255,255,255,${isOn?0.2:0.08})`;
+grid.appendChild(item);
+});
+container.appendChild(grid);
+
+return container;
+}
+
+function createHACalendar(c,scale){
+const container=document.createElement('div');
+container.style.cssText='display:flex;flex-direction:column;height:calc(100% - 55px);padding:10px';
+
+const now=new Date();
+const month=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+const day=now.getDate();
+const weekday=now.toLocaleDateString('en-US',{weekday:'long'});
+
+// Header
+const header=document.createElement('div');
+header.style.cssText='display:flex;justify-content:space-between;align-items:center;margin-bottom:10px';
+header.innerHTML=`<span style="font-size:${0.9*scale}em;color:${c.entityColor}">${month}</span>`;
+container.appendChild(header);
+
+// Today highlight
+const today=document.createElement('div');
+today.style.cssText=`background:${c.titleColor};border-radius:12px;padding:15px;text-align:center;margin-bottom:10px`;
+today.innerHTML=`<div style="font-size:${2*scale}em;font-weight:bold;color:#000">${day}</div><div style="font-size:${0.8*scale}em;color:rgba(0,0,0,0.7)">${weekday}</div>`;
+container.appendChild(today);
+
+// Mock events
+const events=[{time:'9:00 AM',title:'Team Meeting',color:'#4CAF50'},{time:'2:00 PM',title:'Doctor Appt',color:'#2196F3'},{time:'6:00 PM',title:'Dinner',color:'#FF9800'}];
+const eventList=document.createElement('div');eventList.style.cssText='flex:1;overflow-y:auto';
+events.forEach(ev=>{
+const eventEl=document.createElement('div');
+eventEl.style.cssText=`display:flex;align-items:center;gap:8px;padding:8px;margin:4px 0;background:rgba(255,255,255,0.05);border-radius:6px;border-left:3px solid ${ev.color}`;
+eventEl.innerHTML=`<span style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5);min-width:60px">${ev.time}</span><span style="font-size:${0.8*scale}em;color:${c.entityColor}">${ev.title}</span>`;
+eventList.appendChild(eventEl);
+});
+container.appendChild(eventList);
+
+return container;
+}
+
+function createHAMushroom(c,scale){
+const container=document.createElement('div');
+container.style.cssText='display:flex;align-items:center;gap:12px;height:100%;padding:12px;cursor:pointer';
+const entity=c.entities?.[0]||c.entity||'light.living_room';
+const state=getMockState(entity);
+const isOn=state==='on';
+const domain=entity.split('.')[0];
+
+// Icon circle
+const iconCircle=document.createElement('div');
+const circleSize=Math.min(48*scale, c.height*0.6);
+iconCircle.style.cssText=`width:${circleSize}px;height:${circleSize}px;border-radius:50%;background:${isOn?c.titleColor:'rgba(255,255,255,0.1)'};display:flex;align-items:center;justify-content:center;transition:all 0.3s;flex-shrink:0`;
+iconCircle.innerHTML=`<span style="font-size:${circleSize*0.45}px;${isOn?'':'opacity:0.5'}">${getEntityIcon(entity)}</span>`;
+
+// Text
+const textDiv=document.createElement('div');
+textDiv.style.cssText='flex:1;min-width:0;overflow:hidden';
+textDiv.innerHTML=`<div style="font-size:${0.9*scale}em;font-weight:600;color:${c.entityColor};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.title||formatEntityName(entity)}</div><div style="font-size:${0.75*scale}em;color:rgba(255,255,255,0.5);text-transform:capitalize">${state}</div>`;
+
+container.appendChild(iconCircle);
+container.appendChild(textDiv);
+container.onclick=()=>showNotification('Toggled '+formatEntityName(entity));
+return container;
+}
+
+function createHAPerson(c,scale){
+const container=document.createElement('div');
+container.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100% - 55px);padding:10px';
+
+const locations=['Home','Away','Work','School','Gym'][Math.floor(Math.random()*5)];
+const isHome=locations==='Home';
+
+// Avatar circle
+const avatarSize=Math.min(80*scale, c.width*0.4, (c.height-80)*0.5);
+const avatar=document.createElement('div');
+avatar.style.cssText=`width:${avatarSize}px;height:${avatarSize}px;border-radius:50%;background:linear-gradient(135deg,${c.titleColor},${c.entityColor});display:flex;align-items:center;justify-content:center;font-size:${avatarSize*0.5}px;box-shadow:0 4px 15px rgba(0,0,0,0.3);position:relative`;
+avatar.innerHTML='👤';
+
+// Status dot
+const statusDot=document.createElement('div');
+statusDot.style.cssText=`position:absolute;bottom:2px;right:2px;width:${avatarSize*0.25}px;height:${avatarSize*0.25}px;border-radius:50%;background:${isHome?'#4CAF50':'#9e9e9e'};border:2px solid ${c.bgColor||'#1a1a2e'}`;
+avatar.appendChild(statusDot);
+container.appendChild(avatar);
+
+// Name
+const name=document.createElement('div');
+name.style.cssText=`margin-top:12px;font-size:${1*scale}em;font-weight:600;color:${c.entityColor}`;
+name.textContent=c.title||'Person';
+container.appendChild(name);
+
+// Location
+const loc=document.createElement('div');
+loc.style.cssText=`margin-top:4px;font-size:${0.8*scale}em;color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:4px`;
+loc.innerHTML=`<span>📍</span>${locations}`;
+container.appendChild(loc);
+
+return container;
+}
+
+function createHAVacuum(c,scale){
+const container=document.createElement('div');
+container.style.cssText='display:flex;flex-direction:column;height:calc(100% - 55px);padding:10px';
+
+const states=['Docked','Cleaning','Returning','Paused','Error'][Math.floor(Math.random()*5)];
+const battery=Math.floor(20+Math.random()*80);
+const area=Math.floor(Math.random()*50);
+const stateColors={Docked:'#4CAF50',Cleaning:'#2196F3',Returning:'#FF9800',Paused:'#9e9e9e',Error:'#f44336'};
+
+// Status header
+const header=document.createElement('div');
+header.style.cssText='display:flex;justify-content:space-between;align-items:center;margin-bottom:10px';
+header.innerHTML=`<span style="font-size:${0.85*scale}em;padding:4px 10px;background:${stateColors[states]};border-radius:12px;color:#fff">${states}</span><span style="font-size:${0.8*scale}em;color:${battery>20?'#4CAF50':'#f44336'}">🔋 ${battery}%</span>`;
+container.appendChild(header);
+
+// Robot icon
+const robot=document.createElement('div');
+robot.style.cssText='flex:1;display:flex;align-items:center;justify-content:center';
+const robotSize=Math.min(60*scale, c.width*0.3);
+robot.innerHTML=`<div style="font-size:${robotSize}px;${states==='Cleaning'?'animation:spin 2s linear infinite':''}">🤖</div>`;
+container.appendChild(robot);
+
+// Stats
+const stats=document.createElement('div');
+stats.style.cssText='display:flex;justify-content:space-around;padding:10px;background:rgba(255,255,255,0.05);border-radius:8px';
+stats.innerHTML=`<div style="text-align:center"><div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5)">Area</div><div style="font-size:${0.9*scale}em;color:${c.entityColor}">${area}m²</div></div><div style="text-align:center"><div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5)">Time</div><div style="font-size:${0.9*scale}em;color:${c.entityColor}">${Math.floor(area*1.5)}min</div></div>`;
+container.appendChild(stats);
+
+// Controls
+const controls=document.createElement('div');
+controls.style.cssText=`display:flex;justify-content:center;gap:${10*scale}px;margin-top:10px`;
+['▶️','⏸️','🏠','📍'].forEach(btn=>{
+const b=document.createElement('button');
+b.style.cssText=`width:${36*scale}px;height:${36*scale}px;border-radius:50%;border:none;background:rgba(255,255,255,0.1);font-size:${16*scale}px;cursor:pointer;transition:all 0.2s`;
+b.textContent=btn;
+b.onclick=e=>{e.stopPropagation();showNotification('Vacuum command sent')};
+b.onmouseenter=()=>b.style.background='rgba(255,255,255,0.2)';
+b.onmouseleave=()=>b.style.background='rgba(255,255,255,0.1)';
+controls.appendChild(b);
+});
+container.appendChild(controls);
+
+return container;
+}
+
+function createHAScene(c,scale){
+const container=document.createElement('div');
+container.style.cssText='display:flex;align-items:center;justify-content:center;height:calc(100% - 55px);cursor:pointer;padding:15px';
+
+const sceneIcons=['🎬','🌙','☀️','🎉','🍿','💤','🎮','🍽️'][Math.floor(Math.random()*8)];
+const iconSize=Math.min(2.5*scale, c.width/60, (c.height-55)/40);
+
+container.innerHTML=`
+<div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+<div style="font-size:${iconSize}em;filter:drop-shadow(0 0 10px rgba(255,200,0,0.3));transition:all 0.3s">${sceneIcons}</div>
+<div style="font-size:${0.85*scale}em;color:${c.entityColor};font-weight:500;text-align:center">${c.title||'Scene'}</div>
+<div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.4)">Tap to activate</div>
+</div>`;
+
+container.onclick=()=>showNotification('Scene activated: '+c.title);
+container.onmouseenter=()=>container.querySelector('div>div').style.transform='scale(1.1)';
+container.onmouseleave=()=>container.querySelector('div>div').style.transform='scale(1)';
+return container;
+}
+
+function createHAForecast(c,scale){
+const container=document.createElement('div');
+container.style.cssText='display:flex;justify-content:space-around;align-items:center;height:calc(100% - 55px);padding:10px;gap:5px';
+const days=['Mon','Tue','Wed','Thu','Fri'];
+const icons=['☀️','⛅','🌧️','☁️','🌤️'];
+const temps=[[72,58],[68,55],[65,52],[70,54],[75,60]];
+days.forEach((d,i)=>{
+const day=document.createElement('div');
+day.style.cssText='text-align:center;flex:1';
+day.innerHTML=`<div style="font-size:${0.7*scale}em;color:rgba(255,255,255,0.5);margin-bottom:4px">${d}</div><div style="font-size:${1.5*scale}em;margin:4px 0">${icons[i]}</div><div style="font-size:${0.8*scale}em;color:${c.entityColor};font-weight:bold">${temps[i][0]}°</div><div style="font-size:${0.65*scale}em;color:rgba(255,255,255,0.4)">${temps[i][1]}°</div>`;
+container.appendChild(day);
+});
+return container;
+}
+
+function createHATile(c,scale){
+const container=document.createElement('div');
+container.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;cursor:pointer;padding:10px';
+const entity=c.entity||'light.living_room';
+const state=getMockState(entity);
+const isOn=state==='on';
+const iconSize=Math.min(2.5*scale,c.width/50,(c.height-20)/40);
+container.innerHTML=`<div style="font-size:${iconSize}em;margin-bottom:8px;${isOn?'filter:drop-shadow(0 0 12px rgba(255,200,0,0.6))':'opacity:0.4'};transition:all 0.3s">${getEntityIcon(entity)}</div><div style="font-size:${0.8*scale}em;color:${c.entityColor};font-weight:500;text-align:center">${c.title||formatEntityName(entity)}</div>`;
+container.onclick=()=>showNotification('Toggled '+formatEntityName(entity));
 return container;
 }
 
@@ -680,7 +1128,7 @@ ${entField}
 <div class="form-group"><label>Color</label><input type="color" id="prop-es-color" value="${c.entityShadow?.color||'#000000'}"></div>
 </div></div>
 <div class="prop-section"><h3>✨ Effects</h3>
-<div class="form-group"><label>Hover Effect</label><select id="prop-hover"><option value="none" ${c.hoverEffect==='none'?'selected':''}>None</option><option value="scale" ${c.hoverEffect==='scale'?'selected':''}>Scale Up</option><option value="glow" ${c.hoverEffect==='glow'?'selected':''}>Glow</option><option value="lift" ${c.hoverEffect==='lift'?'selected':''}>Lift</option><option value="border" ${c.hoverEffect==='border'?'selected':''}>Border</option></select></div>
+<div class="form-group"><label>Hover Effect</label><select id="prop-hover"><option value="none" ${c.hoverEffect==='none'?'selected':''}>None</option><option value="scale" ${c.hoverEffect==='scale'?'selected':''}>Scale Up</option><option value="glow" ${c.hoverEffect==='glow'?'selected':''}>Glow</option><option value="lift" ${c.hoverEffect==='lift'?'selected':''}>Lift</option><option value="border" ${c.hoverEffect==='border'?'selected':''}>Border</option><option value="breathe" ${c.hoverEffect==='breathe'?'selected':''}>Breathe</option><option value="pulse" ${c.hoverEffect==='pulse'?'selected':''}>Pulse</option><option value="tilt" ${c.hoverEffect==='tilt'?'selected':''}>3D Tilt</option></select></div>
 <div class="form-group"><label>Corner Style</label><select id="prop-corner"><option value="rounded" ${c.cornerStyle==='rounded'?'selected':''}>Rounded</option><option value="square" ${c.cornerStyle==='square'?'selected':''}>Square</option></select></div>
 <div class="form-group"><label>Border Radius: ${c.borderRadius}px</label><input type="range" id="prop-radius" min="0" max="50" value="${c.borderRadius}"></div>
 </div>
@@ -697,6 +1145,12 @@ ${entField}
 </div>
 <div class="prop-section"><h3>🔍 Conditions</h3>
 <div class="form-group"><label>Visibility Conditions (notes)</label><textarea id="prop-conditions" rows="2" placeholder="Show when state is 'on'">${c.conditions}</textarea></div>
+</div>
+<div class="prop-section"><h3>🎨 Custom CSS</h3>
+<div class="form-group"><label>Additional CSS (card_mod style)</label><textarea id="prop-custom-css" rows="4" placeholder="box-shadow: 0 0 20px gold;
+backdrop-filter: blur(10px);
+transform: rotate(1deg);">${c.customCSS||''}</textarea></div>
+<button class="btn btn-small" onclick="applyCustomCSS()">Apply CSS</button>
 </div>
 <button class="btn btn-half btn-small" onclick="duplicateCard()">📋 Clone</button>
 <button class="btn btn-half btn-danger btn-small" onclick="deleteCard()">🗑️ Delete</button>`;
@@ -758,6 +1212,14 @@ function copyEntity(){if(contextEntity){navigator.clipboard.writeText(contextEnt
 function deleteEntity(){if(contextCard&&contextEntityIndex>=0){contextCard.entities.splice(contextEntityIndex,1);saveState();renderCanvas();document.getElementById('contextMenu').classList.remove('active')}}
 function deleteCard(){if(!selectedCard)return;cards=cards.filter(c=>c.id!==selectedCard.id);selectedCard=null;saveState();renderCanvas();showProperties(null);updateCardCount()}
 function deleteMultiple(){cards=cards.filter(c=>!selectedCards.some(s=>s.id===c.id));selectedCards=[];selectedCard=null;saveState();renderCanvas();updateCardCount()}
+function applyCustomCSS(){
+if(!selectedCard)return;
+const css=document.getElementById('prop-custom-css').value;
+selectedCard.customCSS=css;
+saveState();renderCanvas();
+showNotification('Custom CSS applied');
+}
+
 function duplicateCard(){if(!selectedCard)return;const n={...JSON.parse(JSON.stringify(selectedCard)),id:cardIdCounter++,x:selectedCard.x+30,y:selectedCard.y+30,locked:false};cards.push(n);saveState();renderCanvas();selectCard(n)}
 function pasteCard(){if(!clipboard)return;const n={...JSON.parse(JSON.stringify(clipboard)),id:cardIdCounter++,x:clipboard.x+30,y:clipboard.y+30,locked:false};cards.push(n);saveState();renderCanvas();selectCard(n)}
 function selectAll(){selectedCards=cards.slice();renderCanvas();updateSelectedCount()}
@@ -807,13 +1269,121 @@ function loadPresets(){stylePresets=JSON.parse(localStorage.getItem('ha_style_pr
 function saveStylePreset(){if(!selectedCard){showNotification('Select a card first','error');return}const name=document.getElementById('presetName').value||'Preset '+(stylePresets.length+1);stylePresets.push({name,bgColor:selectedCard.bgColor,titleColor:selectedCard.titleColor,entityColor:selectedCard.entityColor,titleFont:selectedCard.titleFont,entityFont:selectedCard.entityFont,hoverEffect:selectedCard.hoverEffect,borderRadius:selectedCard.borderRadius});localStorage.setItem('ha_style_presets',JSON.stringify(stylePresets));loadPresets();showNotification('Preset saved')}
 function applyPreset(i){const p=stylePresets[i];const targets=selectedCards.length?selectedCards:(selectedCard?[selectedCard]:cards);targets.forEach(c=>{c.bgColor=p.bgColor;c.titleColor=p.titleColor;c.entityColor=p.entityColor;c.titleFont=p.titleFont;c.entityFont=p.entityFont;c.hoverEffect=p.hoverEffect;c.borderRadius=p.borderRadius});saveState();renderCanvas();closeModal('stylePresetsModal');showNotification('Preset applied')}
 
+// Card Templates
+function showCardTemplates(){loadCardTemplates();document.getElementById('cardTemplatesModal').classList.add('active')}
+function loadCardTemplates(){
+cardTemplates=JSON.parse(localStorage.getItem('ha_card_templates')||'[]');
+const list=document.getElementById('cardTemplateList');
+list.innerHTML=cardTemplates.map((t,i)=>`
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;margin:8px 0;background:rgba(67,238,255,0.1);border-radius:8px;border-left:4px solid ${t.bgColor||'#43eeff'}">
+<div style="flex:1">
+<div style="font-weight:600;color:#43eeff">${t.name}</div>
+<div style="font-size:0.8em;color:#888;margin-top:4px">${t.type} • ${t.entities?.length||0} entities</div>
+</div>
+<div style="display:flex;gap:8px">
+<button class="btn-small" style="padding:6px 12px;background:#4caf50;border:none;border-radius:4px;color:#fff;cursor:pointer" onclick="addFromTemplate(${i})">+ Add</button>
+<button class="btn-small" style="padding:6px 12px;background:#f44336;border:none;border-radius:4px;color:#fff;cursor:pointer" onclick="deleteTemplate(${i})">🗑️</button>
+</div>
+</div>`).join('')||'<p style="color:#666">No templates saved. Select a card and save it as a template!</p>';
+}
+function saveCardTemplate(){
+if(!selectedCard){showNotification('Select a card first','error');return}
+const name=document.getElementById('templateName').value||'Template '+(cardTemplates.length+1);
+const template=JSON.parse(JSON.stringify(selectedCard));
+template.name=name;
+delete template.id;delete template.x;delete template.y;delete template.zIndex;
+cardTemplates.push(template);
+localStorage.setItem('ha_card_templates',JSON.stringify(cardTemplates));
+loadCardTemplates();
+document.getElementById('templateName').value='';
+showNotification('Card template saved!');
+}
+function addFromTemplate(i){
+const t=JSON.parse(JSON.stringify(cardTemplates[i]));
+t.id=cardIdCounter++;
+t.x=50+(cards.length%4)*320;
+t.y=50+Math.floor(cards.length/4)*240;
+t.zIndex=cards.length;
+cards.push(t);
+saveState();renderCanvas();updateCardCount();
+closeModal('cardTemplatesModal');
+showNotification('Card added from template!');
+}
+function deleteTemplate(i){
+if(confirm('Delete this template?')){
+cardTemplates.splice(i,1);
+localStorage.setItem('ha_card_templates',JSON.stringify(cardTemplates));
+loadCardTemplates();
+showNotification('Template deleted');
+}
+}
+
 // Lovelace mode
 function setLovelaceMode(m){lovelaceMode=m;document.getElementById('lovelaceStandard').classList.toggle('active',m==='standard');document.getElementById('lovelaceCustom').classList.toggle('active',m==='custom')}
 function setExportMode(m){exportMode=m;document.getElementById('exportStandard').classList.toggle('active',m==='standard');document.getElementById('exportCustom').classList.toggle('active',m==='custom');document.getElementById('yamlOutput').textContent=generateYAML()}
 
-function saveProject(){const d={cards,bg:bgSettings,v:'4.3'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dashboard-v4.3-'+Date.now()+'.json';a.click();URL.revokeObjectURL(u);showNotification('Saved')}
+function saveProject(){const d={cards,bg:bgSettings,v:'4.5'};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dashboard-v4.5-'+Date.now()+'.json';a.click();URL.revokeObjectURL(u);showNotification('Saved')}
 function downloadYAMLDirect(){const y=generateYAML();const b=new Blob([y],{type:'text/yaml'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dashboard.yaml';a.click();URL.revokeObjectURL(u);showNotification('YAML downloaded')}
-function generateYAML(){const prefix=exportMode==='custom'?'custom:':'';let y=`# HA Dashboard v4.3\nviews:\n  - title: Dashboard\n    cards:\n`;cards.forEach(c=>{y+=`      - type: ${prefix}${c.type}\n        title: "${c.title}"\n`;if(c.icon)y+=`        icon: ${c.icon}\n`;if(c.entities){y+='        entities:\n';c.entities.forEach(e=>y+=`          - ${e}\n`)}else if(c.entity)y+=`        entity: ${c.entity}\n`;if(c.tapAction&&c.tapAction.action!=='toggle'){y+=`        tap_action:\n          action: ${c.tapAction.action}\n`;if(c.tapAction.service)y+=`          ${c.tapAction.action==='call-service'?'service':'navigation_path'}: ${c.tapAction.service}\n`}if(c.conditions)y+=`        # Condition: ${c.conditions}\n`;y+='\n'});return y}
+
+function exportSelectedCard(){
+if(!selectedCard){showNotification('Select a card first','error');return}
+const c=selectedCard;
+let y=`# Single Card Export - HA Dashboard Builder v4.5\n`;
+y+=`- type: ${c.type}\n`;
+y+=`  title: "${c.title}"\n`;
+if(c.icon)y+=`  icon: ${c.icon}\n`;
+if(c.entities&&c.entities.length>0){
+y+=`  entities:\n`;
+c.entities.forEach(e=>y+=`    - entity: ${e}\n`);
+}else if(c.entity){
+y+=`  entity: ${c.entity}\n`;
+}
+if(c.tapAction&&c.tapAction.action!=='toggle'){
+y+=`  tap_action:\n`;
+y+=`    action: ${c.tapAction.action}\n`;
+if(c.tapAction.service)y+=`    ${c.tapAction.action==='call-service'?'service':'navigation_path'}: ${c.tapAction.service}\n`;
+}
+// Generate card_mod styles
+y+=`  card_mod:\n`;
+y+=`    style: |\n`;
+y+=`      ha-card {\n`;
+if(c.useGradient){
+y+=`        background: linear-gradient(to bottom, ${c.gradientColor1}, ${c.gradientColor2});\n`;
+}else{
+y+=`        background: ${c.bgColor};\n`;
+}
+y+=`        border-radius: ${c.borderRadius||14}px;\n`;
+if(c.titleShadow?.enabled||c.hoverEffect==='glow'){
+y+=`        box-shadow: 0 4px 20px rgba(0,0,0,0.5);\n`;
+}
+y+=`        color: ${c.titleColor};\n`;
+y+=`      }\n`;
+
+const blob=new Blob([y],{type:'text/yaml'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+a.href=url;
+a.download=`${c.title.replace(/\s+/g,'-').toLowerCase()}-card.yaml`;
+a.click();
+URL.revokeObjectURL(url);
+showNotification('Card YAML exported!');
+}
+
+// Live clock update
+let clockInterval=null;
+function startLiveClock(){
+if(clockInterval)clearInterval(clockInterval);
+clockInterval=setInterval(()=>{
+document.querySelectorAll('.live-clock').forEach(el=>{
+const format=el.dataset.format||'12';
+const now=new Date();
+const time=format==='12'?now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}):now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+el.textContent=time;
+});
+},1000);
+}
+startLiveClock();
+function generateYAML(){const prefix=exportMode==='custom'?'custom:':'';let y=`# HA Dashboard v4.5 FLUID\n# Generated by HA Dashboard Builder\nviews:\n  - title: Dashboard\n    cards:\n`;cards.forEach(c=>{y+=`      - type: ${prefix}${c.type}\n        title: "${c.title}"\n`;if(c.icon)y+=`        icon: ${c.icon}\n`;if(c.entities&&c.entities.length>0){y+='        entities:\n';c.entities.forEach(e=>y+=`          - entity: ${e}\n`)}else if(c.entity)y+=`        entity: ${c.entity}\n`;if(c.tapAction&&c.tapAction.action!=='toggle'){y+=`        tap_action:\n          action: ${c.tapAction.action}\n`;if(c.tapAction.service)y+=`          ${c.tapAction.action==='call-service'?'service':'navigation_path'}: ${c.tapAction.service}\n`}if(c.conditions)y+=`        # Condition: ${c.conditions}\n`;y+=`        card_mod:\n          style: |\n            ha-card {\n`;if(c.useGradient){y+=`              background: linear-gradient(to bottom, ${c.gradientColor1}, ${c.gradientColor2});\n`}else{y+=`              background: ${c.bgColor};\n`}y+=`              border-radius: ${c.borderRadius||14}px;\n              color: ${c.titleColor};\n            }\n`;y+='\n'});return y}
 function copyYAML(){navigator.clipboard.writeText(document.getElementById('yamlOutput').textContent).then(()=>showNotification('Copied'))}
 function downloadYAML(){const b=new Blob([document.getElementById('yamlOutput').textContent],{type:'text/yaml'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='dashboard.yaml';a.click()}
 function showYAML(){document.getElementById('yamlOutput').textContent=generateYAML();document.getElementById('yamlModal').classList.add('active')}
@@ -843,14 +1413,44 @@ function cloneGalleryDashboard(t){const tpls={'smart-home':[{type:'entities',tit
 function showTemplateLibrary(){document.getElementById('templateModal').classList.add('active')}
 function applyTemplate(n){const tpls={living:[{type:'entities',title:'Living',x:50,y:50,entities:['light.living_room','switch.tv']}],kitchen:[{type:'entities',title:'Kitchen',x:50,y:50,entities:['light.kitchen']}],bedroom:[{type:'entities',title:'Bedroom',x:50,y:50,entities:['light.bedroom']}],security:[{type:'camera',title:'Cam',x:50,y:50,entity:'camera.front'}],energy:[{type:'gauge',title:'Power',x:50,y:50,entity:'sensor.power'}],outdoor:[{type:'weather',title:'Weather',x:50,y:50,entity:'weather.home'}]};const tpl=tpls[n];if(tpl){cards.push(...tpl.map(c=>({...c,id:cardIdCounter++,width:cardTypeConfigs[c.type].defaultSize.width,height:cardTypeConfigs[c.type].defaultSize.height,bgColor:'#43eeff',titleColor:'#ff43ee',entityColor:'#ffeb3b',zIndex:cards.length,locked:false,hoverEffect:'none',icon:'',titleFont:"'Segoe UI', sans-serif",entityFont:"'Segoe UI', sans-serif",titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},borderRadius:14,cornerStyle:'rounded',tapAction:{action:'toggle'},conditions:''})));saveState();renderCanvas();closeModal('templateModal')}}
 function showImportModal(){document.getElementById('importModal').classList.add('active')}
-function importYAML(){const yaml=document.getElementById('importYaml').value,preserveC=document.getElementById('importPreserveColors').checked,preserveF=document.getElementById('importPreserveFonts').checked;
+let importMode='dashboard';
+function setImportMode(mode){importMode=mode;document.getElementById('importModeDashboard').classList.toggle('active',mode==='dashboard');document.getElementById('importModeCard').classList.toggle('active',mode==='card')}
+
+function parseCardModCSS(css){
+const styles={};
+// Parse background gradient
+const gradMatch=css.match(/background:\s*linear-gradient\s*\(\s*(?:to\s+\w+|[\d]+deg)?\s*,?\s*(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\))\s*,\s*(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\))/i);
+if(gradMatch){styles.useGradient=true;styles.gradientColor1=gradMatch[1];styles.gradientColor2=gradMatch[2]}
+// Parse solid background
+const bgMatch=css.match(/background:\s*(#[0-9a-fA-F]{3,8})/i);
+if(bgMatch&&!gradMatch){styles.bgColor=bgMatch[1]}
+// Parse border-radius
+const brMatch=css.match(/border-radius:\s*([\d.]+)(em|px|%)/i);
+if(brMatch){const val=parseFloat(brMatch[1]);styles.borderRadius=brMatch[2]==='em'?Math.round(val*16):val}
+// Parse box-shadow for glow effects
+const shadowMatch=css.match(/box-shadow:\s*([^;]+)/i);
+if(shadowMatch&&shadowMatch[1].includes('rgba')){styles.hoverEffect='glow'}
+// Parse color for text
+const colorMatch=css.match(/(?:^|\s)color:\s*(#[0-9a-fA-F]{3,8})/i);
+if(colorMatch){styles.titleColor=colorMatch[1];styles.entityColor=colorMatch[1]}
+return styles;
+}
+
+function importYAML(){
+const yaml=document.getElementById('importYaml').value;
+const useDefaultColors=document.getElementById('importPreserveColors').checked;
+const preserveF=document.getElementById('importPreserveFonts').checked;
+const parseCardMod=document.getElementById('importParseCardMod').checked;
+
 if(!yaml.trim()){showNotification('Paste YAML first','error');return}
 try{
 const lines=yaml.split('\n');
 let cardsList=[];
 let currentCard=null;
 let inEntities=false;
-let lastIndent=0;
+let inCardMod=false;
+let cardModCSS='';
+let cardModIndent=0;
 
 for(let i=0;i<lines.length;i++){
 const line=lines[i];
@@ -858,34 +1458,67 @@ const trimmed=line.trim();
 const indent=line.search(/\S/);
 if(indent===-1)continue;
 
+// Detect card_mod section
+if(trimmed==='card_mod:'&&currentCard){
+inCardMod=true;
+cardModIndent=indent;
+cardModCSS='';
+continue;
+}
+
+// Collect card_mod CSS content
+if(inCardMod){
+if(indent>cardModIndent||trimmed.startsWith('style:')||trimmed==='|'){
+cardModCSS+=trimmed.replace('style:','').replace('|','')+' ';
+continue;
+}else{
+// End of card_mod section - parse and apply styles
+if(parseCardMod&&cardModCSS.trim()){
+const styles=parseCardModCSS(cardModCSS);
+Object.assign(currentCard,styles);
+}
+inCardMod=false;
+cardModCSS='';
+}
+}
+
 // Detect new card by "- type:" pattern
 if(trimmed.match(/^-\s*type:\s*/)){
 // Save previous card if it has content
-if(currentCard&&(currentCard.entities?.length>0||currentCard.entity)){
+if(currentCard){
+// Apply any remaining card_mod styles
+if(inCardMod&&parseCardMod&&cardModCSS.trim()){
+const styles=parseCardModCSS(cardModCSS);
+Object.assign(currentCard,styles);
+}
+if(currentCard.entities?.length>0||currentCard.entity||currentCard.title!==currentCard.type){
 cardsList.push(currentCard);
 }
+}
+inCardMod=false;cardModCSS='';
+
 // Get card type
 let type=trimmed.replace(/^-\s*type:\s*/,'').replace(/['"]/g,'').trim();
-// Handle custom cards and type variations
 type=type.replace('custom:','').replace('mushroom-','').replace('-card','');
 if(type==='weather-forecast')type='weather';
 if(type==='history-graph')type='chart';
 if(type==='media-player')type='media';
-// Skip headings
-if(type==='heading'||type==='vertical-stack'||type==='horizontal-stack'||type==='grid'){
-currentCard=null;
-continue;
+if(type==='hue-like-light')type='light';
+
+// Skip structural cards
+if(type==='heading'||type==='vertical-stack'||type==='horizontal-stack'||type==='grid'||type==='sections'){
+currentCard=null;continue;
 }
-// Handle tile cards as button type
+
 let cardType=type;
 if(type==='tile')cardType='button';
-// Map to supported types or default to entities
-const supportedTypes=['entities','thermostat','weather','camera','media','gauge','button','clock','markdown','picture','glance','chart','map','iframe','light'];
+const supportedTypes=['entities','thermostat','weather','camera','media','gauge','button','clock','markdown','picture','glance','chart','map','iframe','light','calendar'];
 if(!supportedTypes.includes(cardType)){
 if(type.includes('light'))cardType='light';
 else if(type.includes('media'))cardType='media';
 else cardType='entities';
 }
+
 const size=cardTypeConfigs[cardType]?.defaultSize||{width:300,height:200};
 currentCard={
 id:cardIdCounter++,
@@ -893,27 +1526,20 @@ type:cardType,
 title:cardType.charAt(0).toUpperCase()+cardType.slice(1),
 x:50+(cardsList.length%4)*320,
 y:50+Math.floor(cardsList.length/4)*240,
-width:size.width,
-height:size.height,
-entities:[],
-entity:'',
-bgColor:preserveC?lastCardSettings.bgColor:'#43eeff',
-titleColor:preserveC?lastCardSettings.titleColor:'#ff43ee',
-entityColor:preserveC?lastCardSettings.entityColor:'#ffeb3b',
+width:size.width,height:size.height,
+entities:[],entity:'',
+bgColor:useDefaultColors?lastCardSettings.bgColor:'#1e2847',
+titleColor:useDefaultColors?lastCardSettings.titleColor:'#ffffff',
+entityColor:useDefaultColors?lastCardSettings.entityColor:'#b3b3b3',
 useGradient:false,
-gradientColor1:'#43eeff',
-gradientColor2:'#ff43ee',
+gradientColor1:'#101633',gradientColor2:'#1f3e66',
 titleFont:preserveF?lastCardSettings.titleFont:"'Segoe UI', sans-serif",
 entityFont:preserveF?lastCardSettings.entityFont:"'Segoe UI', sans-serif",
 titleShadow:{enabled:false,x:2,y:2,blur:4,color:'#000'},
 entityShadow:{enabled:false,x:1,y:1,blur:2,color:'#000'},
-zIndex:cardsList.length,
-locked:false,
-hoverEffect:'none',
-borderRadius:14,
-cornerStyle:'rounded',
-tapAction:{action:'toggle'},
-conditions:''
+zIndex:cardsList.length,locked:false,hoverEffect:'none',
+borderRadius:24,cornerStyle:'rounded',
+tapAction:{action:'toggle'},conditions:'',contentScale:1.0
 };
 inEntities=false;
 continue;
@@ -921,31 +1547,22 @@ continue;
 
 if(!currentCard)continue;
 
-// Get title or name for the card
-if(trimmed.match(/^(title|name):\s*/)&&!trimmed.startsWith('-')){
-const val=trimmed.replace(/^(title|name):\s*/,'').replace(/['"]/g,'').trim();
-if(val){
-currentCard.title=val;
-}
+// Get title or name
+if(trimmed.match(/^(title|name|heading):\s*/)&&!trimmed.startsWith('-')){
+const val=trimmed.replace(/^(title|name|heading):\s*/,'').replace(/['"]/g,'').trim();
+if(val)currentCard.title=val;
 continue;
 }
 
 // Detect entities list start
-if(trimmed==='entities:'){
-inEntities=true;
-continue;
-}
+if(trimmed==='entities:'){inEntities=true;continue}
 
-// Parse single entity for tile/thermostat/weather/etc (not in entities list)
+// Parse single entity
 if(trimmed.match(/^entity:\s*/)&&!inEntities){
 const ent=trimmed.replace(/^entity:\s*/,'').replace(/['"]/g,'').trim();
 if(ent&&ent.includes('.')){
 currentCard.entity=ent;
-// For thermostat/button, also add to entities array
-if(currentCard.type==='thermostat'||currentCard.type==='button'){
-currentCard.entities=[ent];
-}
-// Use entity name as title if title is generic
+if(currentCard.type==='thermostat'||currentCard.type==='button')currentCard.entities=[ent];
 const parts=ent.split('.');
 if(currentCard.title===currentCard.type.charAt(0).toUpperCase()+currentCard.type.slice(1)){
 currentCard.title=parts[1]?.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase())||currentCard.title;
@@ -954,57 +1571,67 @@ currentCard.title=parts[1]?.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase()
 continue;
 }
 
-// Parse entity in entities list: "- entity: light.xxx" format
+// Parse entity in entities list
 if(inEntities&&trimmed.match(/^-\s*entity:\s*/)){
 const ent=trimmed.replace(/^-\s*entity:\s*/,'').replace(/['"]/g,'').trim();
-if(ent&&ent.includes('.')){
-currentCard.entities.push(ent);
-}
+if(ent&&ent.includes('.'))currentCard.entities.push(ent);
 continue;
 }
 
-// Parse simple entity format: "- light.xxx" or "- sensor.xxx"
+// Parse simple entity format
 if(inEntities&&trimmed.match(/^-\s*[a-z_]+\.[a-z0-9_]+/i)){
 const ent=trimmed.replace(/^-\s*/,'').replace(/['"]/g,'').trim();
-if(ent&&ent.includes('.')&&!ent.includes(':')){
-currentCard.entities.push(ent);
-}
+if(ent&&ent.includes('.')&&!ent.includes(':'))currentCard.entities.push(ent);
 continue;
 }
 
-// Check if we've exited entities section
-if(inEntities&&!trimmed.startsWith('-')&&trimmed.includes(':')&&!trimmed.startsWith('name')){
+// Exit entities section
+if(inEntities&&!trimmed.startsWith('-')&&trimmed.includes(':')&&!trimmed.startsWith('name')&&!trimmed.startsWith('secondary')){
 const propName=trimmed.split(':')[0].trim();
-if(['state_color','show_header_toggle','card_mod','theme','secondary_info','style'].includes(propName)){
-// Still card properties, not a new card section
-}else if(indent<lastIndent){
+if(!['state_color','show_header_toggle','theme','secondary_info','style','icon'].includes(propName)){
 inEntities=false;
 }
 }
-
-lastIndent=indent;
 }
 
-// Don't forget the last card
-if(currentCard&&(currentCard.entities?.length>0||currentCard.entity)){
-cardsList.push(currentCard);
+// Don't forget last card
+if(currentCard){
+if(inCardMod&&parseCardMod&&cardModCSS.trim()){
+const styles=parseCardModCSS(cardModCSS);
+Object.assign(currentCard,styles);
+}
+if(currentCard.entities?.length>0||currentCard.entity||currentCard.title!==currentCard.type)cardsList.push(currentCard);
 }
 
-if(cardsList.length===0){
-showNotification('No valid cards found in YAML','error');
-return;
-}
+if(cardsList.length===0){showNotification('No valid cards found','error');return}
 
 cards.push(...cardsList);
-saveState();
-renderCanvas();
-updateCardCount();
+saveState();renderCanvas();updateCardCount();
 closeModal('importModal');
-showNotification(`Imported ${cardsList.length} cards with entities!`,'success');
+
+// Show import summary
+showImportSummary(cardsList);
 }catch(e){
 console.error('Import error:',e);
 showNotification('Error: '+e.message,'error');
 }}
+
+function showImportSummary(cardsList){
+const summary=cardsList.map((c,i)=>{
+const entityCount=c.entities?.length||0;
+const hasGradient=c.useGradient?'🎨 Gradient':'';
+const hasMod=c.useGradient||c.borderRadius!==24?'✅ Styled':'⚪ Default';
+return `<div style="display:flex;justify-content:space-between;padding:10px;margin:5px 0;background:rgba(255,255,255,0.05);border-radius:8px;border-left:4px solid ${c.useGradient?c.gradientColor1:c.bgColor}">
+<div><strong>${c.title}</strong><br><small style="color:#888">${c.type} • ${entityCount} entities</small></div>
+<div style="text-align:right"><small>${hasMod}</small></div>
+</div>`;
+}).join('');
+document.getElementById('importSummaryContent').innerHTML=`
+<p style="color:#4caf50;margin-bottom:15px">✅ Imported ${cardsList.length} cards successfully!</p>
+<div style="max-height:300px;overflow-y:auto">${summary}</div>
+<p style="color:#888;margin-top:15px;font-size:0.9em">Cards with card_mod styles have been converted to gradients and styling.</p>`;
+document.getElementById('importSummaryModal').classList.add('active');
+}
 
 function showVersionHistory(){document.getElementById('versionList').innerHTML=versionHistory.slice().reverse().map((v,i)=>`<div class="version-item" onclick="restoreVersion(${versionHistory.length-1-i})"><div class="version-time">${new Date(v.time).toLocaleString()}</div><div class="version-cards">${v.cardCount} cards</div></div>`).join('')||'<p style="color:#666">No history</p>';document.getElementById('versionHistoryModal').classList.add('active')}
 function restoreVersion(i){const v=versionHistory[i];cards=JSON.parse(JSON.stringify(v.cards));saveState();renderCanvas();closeModal('versionHistoryModal')}
