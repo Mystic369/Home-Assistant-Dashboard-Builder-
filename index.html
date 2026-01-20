@@ -4110,34 +4110,118 @@
         }
         
         function parseYAML(yaml) {
-            // This is a simplified YAML parser for demo purposes
-            // In production, use a proper YAML library like js-yaml
+            // Enhanced YAML parser that handles both old and new dashboard formats
             try {
-                // Try to extract card type and basic properties
                 const cards = [];
                 const lines = yaml.split('\n');
                 let currentCard = null;
+                let inSections = false;
+                let inCards = false;
+                let indent = 0;
                 
-                for (const line of lines) {
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
                     const trimmed = line.trim();
-                    if (trimmed.startsWith('type:')) {
-                        if (currentCard) cards.push(currentCard);
-                        currentCard = {
-                            id: Date.now().toString() + Math.random(),
-                            type: trimmed.split(':')[1].trim(),
-                            properties: {}
-                        };
-                    } else if (currentCard && trimmed.includes(':')) {
-                        const [key, ...valueParts] = trimmed.split(':');
-                        const value = valueParts.join(':').trim();
-                        currentCard.properties[key.trim()] = value;
+                    const currentIndent = line.search(/\S/);
+                    
+                    // Detect sections layout
+                    if (trimmed === 'sections:') {
+                        inSections = true;
+                        continue;
+                    }
+                    
+                    // Detect cards array within sections
+                    if (trimmed === 'cards:') {
+                        inCards = true;
+                        continue;
+                    }
+                    
+                    // Look for card type
+                    if (trimmed.startsWith('- type:') || trimmed.startsWith('type:')) {
+                        // Save previous card if exists
+                        if (currentCard && currentCard.type) {
+                            cards.push(currentCard);
+                        }
+                        
+                        // Start new card
+                        const typeMatch = trimmed.match(/type:\s*(.+)/);
+                        if (typeMatch) {
+                            currentCard = {
+                                id: Date.now().toString() + Math.random(),
+                                type: typeMatch[1].trim(),
+                                properties: {}
+                            };
+                            indent = currentIndent;
+                        }
+                    } 
+                    // Parse properties for current card
+                    else if (currentCard && trimmed && !trimmed.startsWith('-') && !trimmed.startsWith('#')) {
+                        const colonIndex = trimmed.indexOf(':');
+                        if (colonIndex > 0) {
+                            const key = trimmed.substring(0, colonIndex).trim();
+                            let value = trimmed.substring(colonIndex + 1).trim();
+                            
+                            // Skip structural keywords
+                            if (key === 'views' || key === 'sections' || key === 'cards' || 
+                                key === 'title' && currentIndent < 4) {
+                                continue;
+                            }
+                            
+                            // Handle entities array
+                            if (key === 'entity' || key === 'entities') {
+                                if (value === '' || value === '[]') {
+                                    // Start collecting array items
+                                    const arrayItems = [];
+                                    let j = i + 1;
+                                    while (j < lines.length) {
+                                        const nextLine = lines[j];
+                                        const nextTrimmed = nextLine.trim();
+                                        if (nextTrimmed.startsWith('- ')) {
+                                            const item = nextTrimmed.substring(2).trim();
+                                            if (item.startsWith('entity:')) {
+                                                arrayItems.push(item.substring(7).trim());
+                                            } else {
+                                                arrayItems.push(item);
+                                            }
+                                            j++;
+                                        } else if (nextTrimmed && !nextTrimmed.startsWith(' ') && !nextTrimmed.startsWith('-')) {
+                                            break;
+                                        } else {
+                                            j++;
+                                        }
+                                    }
+                                    if (arrayItems.length > 0) {
+                                        currentCard.properties[key] = arrayItems;
+                                        i = j - 1;
+                                        continue;
+                                    }
+                                } else {
+                                    currentCard.properties[key] = value;
+                                }
+                            }
+                            // Handle other properties
+                            else if (key && value && key !== 'type') {
+                                currentCard.properties[key] = value;
+                            }
+                        }
                     }
                 }
                 
-                if (currentCard) cards.push(currentCard);
-                return cards.length > 0 ? cards : [{ id: Date.now().toString(), type: 'entities', properties: {} }];
+                // Don't forget the last card
+                if (currentCard && currentCard.type) {
+                    cards.push(currentCard);
+                }
+                
+                console.log(`Parsed ${cards.length} cards from YAML`);
+                
+                return cards.length > 0 ? cards : [{ 
+                    id: Date.now().toString(), 
+                    type: 'entities', 
+                    properties: { title: 'Empty Card' } 
+                }];
             } catch (error) {
-                throw new Error('Failed to parse YAML');
+                console.error('YAML parse error:', error);
+                throw new Error('Failed to parse YAML: ' + error.message);
             }
         }
         
