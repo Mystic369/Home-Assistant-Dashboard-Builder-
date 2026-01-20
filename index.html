@@ -4069,15 +4069,24 @@
                     return;
                 }
                 
+                console.log('=== YAML IMPORT DEBUG ===');
+                console.log('YAML length:', yaml.length);
+                console.log('First 200 characters:', yaml.substring(0, 200));
+                
                 try {
                     // Simple YAML parsing (you'd want a proper YAML library in production)
                     const parsedCards = parseYAML(yaml);
+                    console.log('Parsed cards count:', parsedCards.length);
+                    console.log('First 3 cards:', parsedCards.slice(0, 3));
+                    
                     cards = parsedCards;
                     saveState();
                     renderCards();
                     closeModal('importModal');
                     showToast(`Imported ${cards.length} cards successfully`, 'success');
+                    addNotification(`Imported ${cards.length} cards from YAML`, 'success');
                 } catch (error) {
+                    console.error('YAML parse error:', error);
                     showToast('Error parsing YAML: ' + error.message, 'error');
                 }
             } else if (tabId === 'haImport') {
@@ -4118,6 +4127,9 @@
                 let inSections = false;
                 let inCards = false;
                 let indent = 0;
+                let cardCount = 0;
+                
+                console.log('parseYAML: Starting parse with', lines.length, 'lines');
                 
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i];
@@ -4127,28 +4139,44 @@
                     // Detect sections layout
                     if (trimmed === 'sections:') {
                         inSections = true;
+                        console.log('Found sections layout at line', i);
                         continue;
                     }
                     
                     // Detect cards array within sections
                     if (trimmed === 'cards:') {
                         inCards = true;
+                        console.log('Found cards array at line', i);
                         continue;
                     }
                     
-                    // Look for card type
-                    if (trimmed.startsWith('- type:') || trimmed.startsWith('type:')) {
+                    // Look for card type - ONLY "- type:" creates a new card!
+                    // Plain "type:" is usually a section/container type, not an actual card
+                    if (trimmed.startsWith('- type:')) {
                         // Save previous card if exists
                         if (currentCard && currentCard.type) {
                             cards.push(currentCard);
+                            cardCount++;
+                            if (cardCount <= 5) {
+                                console.log('Saved card #' + cardCount + ':', currentCard.type);
+                            }
                         }
                         
                         // Start new card
-                        const typeMatch = trimmed.match(/type:\s*(.+)/);
+                        const typeMatch = trimmed.match(/- type:\s*(.+)/);
                         if (typeMatch) {
+                            const cardType = typeMatch[1].trim();
+                            
+                            // Skip "heading" type as it's usually just section labels
+                            if (cardType === 'heading') {
+                                console.log('Skipping heading card');
+                                currentCard = null;
+                                continue;
+                            }
+                            
                             currentCard = {
                                 id: Date.now().toString() + Math.random(),
-                                type: typeMatch[1].trim(),
+                                type: cardType,
                                 properties: {}
                             };
                             indent = currentIndent;
@@ -4162,8 +4190,7 @@
                             let value = trimmed.substring(colonIndex + 1).trim();
                             
                             // Skip structural keywords
-                            if (key === 'views' || key === 'sections' || key === 'cards' || 
-                                key === 'title' && currentIndent < 4) {
+                            if (key === 'views' || key === 'sections' || key === 'cards') {
                                 continue;
                             }
                             
@@ -4210,9 +4237,11 @@
                 // Don't forget the last card
                 if (currentCard && currentCard.type) {
                     cards.push(currentCard);
+                    cardCount++;
                 }
                 
-                console.log(`Parsed ${cards.length} cards from YAML`);
+                console.log(`parseYAML: Finished - Parsed ${cards.length} cards total`);
+                console.log('Card types found:', cards.map(c => c.type).slice(0, 10));
                 
                 return cards.length > 0 ? cards : [{ 
                     id: Date.now().toString(), 
