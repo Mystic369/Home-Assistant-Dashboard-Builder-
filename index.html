@@ -335,6 +335,54 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
         
+        /* Resize handle for selected cards */
+        .card-preview.selected::after {
+            content: '⋰';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--accent-primary);
+            cursor: nwse-resize;
+            opacity: 0.6;
+            transition: opacity var(--transition-fast);
+            user-select: none;
+        }
+        
+        .card-preview.selected::after:hover {
+            opacity: 1;
+        }
+        
+        /* Width indicator while resizing */
+        .card-width-badge {
+            position: absolute;
+            top: -28px;
+            right: 0;
+            background: var(--accent-primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: var(--radius-md);
+            font-size: 11px;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .card-preview.resizing .card-width-badge {
+            opacity: 1;
+        }
+        
+        .card-preview.resizing {
+            transition: none;
+        }
+        
         .card-drag-handle {
             position: absolute;
             top: 8px;
@@ -3749,6 +3797,8 @@
             
             grid.innerHTML = cards.map(card => `
                 <div class="card-preview ${selectedCardId === card.id ? 'selected' : ''} ${selectedCards.has(card.id) ? 'selected' : ''}" 
+                     data-card-id="${card.id}"
+                     style="${card.properties.style?.width ? `width: ${card.properties.style.width};` : ''}"
                      onclick="${multiSelectMode ? '' : `selectCard('${card.id}')`}"
                      draggable="true"
                      ondragstart="startDrag(event, '${card.id}')"
@@ -3782,6 +3832,16 @@
                     </div>
                 </div>
             `).join('');
+            
+            // Initialize resize handlers for all cards
+            setTimeout(() => {
+                document.querySelectorAll('.card-preview').forEach(cardElement => {
+                    const cardId = cardElement.dataset.cardId;
+                    if (cardId) {
+                        initializeCardResize(cardElement, cardId);
+                    }
+                });
+            }, 0);
             
             document.getElementById('cardCount').textContent = `${cards.length} card${cards.length !== 1 ? 's' : ''}`;
         }
@@ -4181,8 +4241,8 @@
         }
         
         async function importFromHA() {
-            const url = document.getElementById('haUrl').value;
-            const token = document.getElementById('haToken').value;
+            const url = document.getElementById('haUrl').value.trim();
+            const token = document.getElementById('haToken').value.trim();
             const dashboard = document.getElementById('haDashboard').value || 'lovelace';
             
             if (!url || !token) {
@@ -4190,17 +4250,67 @@
                 return;
             }
             
+            // Remove trailing slash from URL
+            const baseUrl = url.replace(/\/$/, '');
+            
             try {
-                const response = await fetch(`${url}/api/lovelace/${dashboard}`, {
+                showToast('Connecting to Home Assistant...', 'info');
+                
+                // First, test connection and fetch entities
+                const statesResponse = await fetch(`${baseUrl}/api/states`, {
+                    method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
                 
-                if (!response.ok) throw new Error('Failed to fetch dashboard');
+                if (!statesResponse.ok) {
+                    if (statesResponse.status === 401) {
+                        throw new Error('Invalid token. Please check your long-lived access token.');
+                    }
+                    throw new Error(`Connection failed: HTTP ${statesResponse.status}`);
+                }
                 
-                const data = await response.json();
+                const states = await statesResponse.json();
+                
+                // Store connection for future use
+                haConnection = { url: baseUrl, token: token };
+                localStorage.setItem('ha_connection', JSON.stringify(haConnection));
+                
+                // Convert states to entities
+                entities = states.map(state => ({
+                    entity_id: state.entity_id,
+                    name: state.attributes.friendly_name || state.entity_id,
+                    state: state.state,
+                    domain: state.entity_id.split('.')[0]
+                }));
+                
+                entities.sort((a, b) => {
+                    if (a.domain !== b.domain) return a.domain.localeCompare(b.domain);
+                    return a.name.localeCompare(b.name);
+                });
+                
+                showToast(`✅ Connected! Found ${entities.length} entities`, 'success');
+                addNotification(`Connected to Home Assistant - ${entities.length} entities loaded`, 'success');
+                
+                // Now try to fetch the dashboard
+                const dashResponse = await fetch(`${baseUrl}/api/lovelace/${dashboard}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!dashResponse.ok) {
+                    // Connection worked but dashboard not found - that's OK
+                    renderEntities();
+                    closeModal('importModal');
+                    showToast(`Connected successfully! (Dashboard "${dashboard}" not found, but entities loaded)`, 'info');
+                    return;
+                }
+                
+                const data = await dashResponse.json();
                 const importedCards = [];
                 
                 if (data.views) {
@@ -4217,13 +4327,53 @@
                     });
                 }
                 
-                cards = importedCards;
-                saveState();
-                renderCards();
+                if (importedCards.length > 0) {
+                    cards = importedCards;
+                    saveState();
+                    renderCards();
+                }
+                
+                renderEntities();
                 closeModal('importModal');
-                showToast(`Imported ${cards.length} cards from HA`, 'success');
+                showToast(`✅ Imported ${importedCards.length} cards from HA dashboard`, 'success');
+                
             } catch (error) {
-                showToast('Failed to import from HA: ' + error.message, 'error');
+                console.error('HA Import error:', error);
+                showToast(`❌ Failed: ${error.message}`, 'error');
+                
+                // Show helpful troubleshooting
+                let helpMessage = 'Connection Failed!\n\n';
+                
+                if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                    helpMessage += 'Network Error - Troubleshooting:\n\n';
+                    helpMessage += '1. Enable CORS in Home Assistant:\n';
+                    helpMessage += '   Add to configuration.yaml:\n';
+                    helpMessage += '   http:\n';
+                    helpMessage += '     cors_allowed_origins:\n';
+                    helpMessage += '       - https://claude.ai\n';
+                    helpMessage += '       - file://\n';
+                    helpMessage += '       - http://localhost\n';
+                    helpMessage += '   Then restart HA\n\n';
+                    helpMessage += '2. OR run this file from http://localhost:\n';
+                    helpMessage += '   python3 -m http.server 8000\n';
+                    helpMessage += '   Then open: http://localhost:8000\n\n';
+                    helpMessage += '3. Check URL format includes http:// or https://';
+                } else if (error.message.includes('Invalid token')) {
+                    helpMessage += 'Token Authentication Failed!\n\n';
+                    helpMessage += 'Create a Long-Lived Access Token:\n';
+                    helpMessage += '1. In Home Assistant, click your profile (bottom left)\n';
+                    helpMessage += '2. Scroll down to "Long-Lived Access Tokens"\n';
+                    helpMessage += '3. Click "Create Token"\n';
+                    helpMessage += '4. Give it a name like "Dashboard Builder"\n';
+                    helpMessage += '5. Copy the token and paste it here\n\n';
+                    helpMessage += 'Note: You only see the token once!';
+                } else {
+                    helpMessage += error.message;
+                }
+                
+                setTimeout(() => {
+                    alert(helpMessage);
+                }, 500);
             }
         }
         
@@ -7203,11 +7353,113 @@
             loadFavorites();
             loadCustomShortcuts();
             loadInstalledPlugins();
+            setupCardResizing();
             
             // Add welcome notification
             setTimeout(() => {
                 addNotification('Welcome to HA Dashboard Builder v5.0 Ultimate! 🎉', 'success');
             }, 2000);
+        }
+        
+        // Card Resizing System
+        let isResizing = false;
+        let resizingCard = null;
+        let startX = 0;
+        let startWidth = 0;
+        
+        function setupCardResizing() {
+            // Setup will be called when cards are rendered
+            console.log('Card resizing system initialized');
+        }
+        
+        function initializeCardResize(cardElement, cardId) {
+            // Add resize handle click handler
+            cardElement.addEventListener('mousedown', function(e) {
+                if (!cardElement.classList.contains('selected')) return;
+                
+                // Check if click is on resize handle (bottom-right corner)
+                const rect = cardElement.getBoundingClientRect();
+                const handleSize = 20;
+                const isOnHandle = (
+                    e.clientX > rect.right - handleSize &&
+                    e.clientX < rect.right &&
+                    e.clientY > rect.bottom - handleSize &&
+                    e.clientY < rect.bottom
+                );
+                
+                if (isOnHandle) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    startResizing(e, cardElement, cardId);
+                }
+            });
+        }
+        
+        function startResizing(e, cardElement, cardId) {
+            isResizing = true;
+            resizingCard = cardElement;
+            startX = e.clientX;
+            startWidth = cardElement.offsetWidth;
+            
+            cardElement.classList.add('resizing');
+            
+            // Add or update width badge
+            let badge = cardElement.querySelector('.card-width-badge');
+            if (!badge) {
+                badge = document.createElement('div');
+                badge.className = 'card-width-badge';
+                cardElement.appendChild(badge);
+            }
+            badge.textContent = `${Math.round(startWidth)}px`;
+            
+            document.addEventListener('mousemove', handleResize);
+            document.addEventListener('mouseup', stopResizing);
+            
+            // Prevent text selection
+            document.body.style.userSelect = 'none';
+        }
+        
+        function handleResize(e) {
+            if (!isResizing || !resizingCard) return;
+            
+            const delta = e.clientX - startX;
+            const newWidth = Math.max(200, Math.min(800, startWidth + delta));
+            
+            resizingCard.style.width = newWidth + 'px';
+            
+            // Update badge
+            const badge = resizingCard.querySelector('.card-width-badge');
+            if (badge) {
+                badge.textContent = `${Math.round(newWidth)}px`;
+            }
+        }
+        
+        function stopResizing(e) {
+            if (!isResizing) return;
+            
+            isResizing = false;
+            
+            if (resizingCard) {
+                resizingCard.classList.remove('resizing');
+                
+                // Save the width to the card's properties
+                const cardId = resizingCard.dataset.cardId;
+                const card = cards.find(c => c.id === cardId);
+                if (card) {
+                    if (!card.properties.style) card.properties.style = {};
+                    card.properties.style.width = resizingCard.style.width;
+                    saveState();
+                }
+                
+                showToast(`Card resized to ${resizingCard.style.width}`, 'success');
+            }
+            
+            resizingCard = null;
+            document.removeEventListener('mousemove', handleResize);
+            document.removeEventListener('mouseup', stopResizing);
+            
+            // Re-enable text selection
+            document.body.style.userSelect = '';
         }
         
         // Toast Notifications
