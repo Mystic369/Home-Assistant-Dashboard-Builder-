@@ -1145,6 +1145,10 @@
                     <i class="fas fa-plug"></i>
                     Connect HA
                 </button>
+                <button class="btn" onclick="clearAllCards()" style="background: #dc2626; color: white; border-color: #dc2626;" title="Delete all cards and start fresh">
+                    <i class="fas fa-trash-alt"></i>
+                    Clear All
+                </button>
             </div>
         </div>
         
@@ -1433,7 +1437,33 @@
                 </div>
                 
                 <div class="tab-content active" id="yamlImport">
-                    <textarea class="code-editor" id="importYamlInput" placeholder="Paste your dashboard YAML here..."></textarea>
+                    <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-md); border-left: 3px solid var(--accent-primary);">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">Import Mode:</div>
+                        <label style="display: flex; align-items: center; margin-bottom: 8px; cursor: pointer;">
+                            <input type="radio" name="importMode" value="visual" checked style="margin-right: 8px;">
+                            <div>
+                                <strong>Visual Mode (Recommended)</strong> - Import only cards you see in HA
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Imports ~30-50 top-level cards, skips nested cards inside containers</div>
+                            </div>
+                        </label>
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="radio" name="importMode" value="full" style="margin-right: 8px;">
+                            <div>
+                                <strong>Full Mode (Advanced)</strong> - Import every card including nested ones
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Imports all cards, including those inside vertical-stacks, grids, etc.</div>
+                            </div>
+                        </label>
+                    </div>
+                    <textarea class="code-editor" id="importYamlInput" placeholder="Paste your Home Assistant dashboard YAML here...
+
+Example:
+views:
+  - title: Home
+    cards:
+      - type: entities
+        title: Living Room
+        entities:
+          - light.living_room"></textarea>
                 </div>
                 
                 <div class="tab-content" id="haImport">
@@ -3849,13 +3879,59 @@
         function renderCardContent(card) {
             const { type, properties } = card;
             
+            // Entities card - show title and entity list
             if (type === 'entities') {
-                return properties.title || 'Entities Card';
+                const title = properties.title || 'Entities Card';
+                const entities = properties.entities || [];
+                const entityList = Array.isArray(entities) 
+                    ? entities.slice(0, 5).map(e => {
+                        const entityId = typeof e === 'string' ? e : (e.entity || '');
+                        const name = entityId.split('.').pop().replace(/_/g, ' ');
+                        return `<div style="font-size: 11px; color: var(--text-muted); padding: 2px 0;">• ${name}</div>`;
+                      }).join('')
+                    : '';
+                const more = entities.length > 5 ? `<div style="font-size: 11px; color: var(--text-muted); padding: 2px 0;">+ ${entities.length - 5} more...</div>` : '';
+                return `<div style="font-weight: 600; margin-bottom: 6px;">${title}</div>${entityList}${more}`;
             }
+            
+            // Weather card
+            if (type === 'weather-forecast') {
+                return `<div style="font-weight: 600;">🌤️ ${properties.entity || 'Weather Forecast'}</div>`;
+            }
+            
+            // Thermostat/Climate card
+            if (type.includes('thermostat') || type.includes('climate')) {
+                const title = properties.name || properties.title || 'Climate Control';
+                return `<div style="font-weight: 600;">🌡️ ${title}</div>`;
+            }
+            
+            // Camera card
+            if (type.includes('camera') || type.includes('picture')) {
+                const entity = properties.entity || 'Camera';
+                return `<div style="font-weight: 600;">📷 ${entity.split('.').pop().replace(/_/g, ' ')}</div>`;
+            }
+            
+            // Tile card
+            if (type === 'tile') {
+                const entity = properties.entity || 'Tile';
+                return `<div style="font-weight: 600;">${entity.split('.').pop().replace(/_/g, ' ')}</div>`;
+            }
+            
+            // Stack cards
             if (type.includes('stack')) {
-                return `Stack Card (${properties.cards?.length || 0} cards)`;
+                const cardCount = properties.cards?.length || 0;
+                return `<div style="font-weight: 600;">📚 ${type.replace('-', ' ')}</div><div style="font-size: 11px; color: var(--text-muted);">${cardCount} cards inside</div>`;
             }
-            return properties.name || properties.title || type;
+            
+            // Markdown card
+            if (type === 'markdown') {
+                const preview = properties.content ? properties.content.substring(0, 50) + '...' : 'Markdown Content';
+                return `<div style="font-weight: 600;">📝 Markdown</div><div style="font-size: 11px; color: var(--text-muted);">${preview}</div>`;
+            }
+            
+            // Default - show title or name or type
+            const title = properties.name || properties.title || type;
+            return `<div style="font-weight: 600;">${title}</div>`;
         }
         
         function dropEntity(event, cardId) {
@@ -4030,6 +4106,25 @@
             }
         }
         
+        function clearAllCards() {
+            if (confirm('⚠️ DELETE ALL CARDS?\n\nThis will delete all ' + cards.length + ' cards and cannot be undone!\n\nAre you absolutely sure?')) {
+                cards = [];
+                selectedCardId = null;
+                selectedCards.clear();
+                
+                // Clear localStorage
+                localStorage.removeItem('ha_builder_cards');
+                localStorage.removeItem('ha_dashboards');
+                
+                saveState();
+                renderCards();
+                renderProperties();
+                
+                showToast('✅ All cards cleared! Starting fresh.', 'success');
+                addNotification('Dashboard cleared - all cards deleted', 'info');
+            }
+        }
+        
         // Import/Export
         function showImportModal() {
             document.getElementById('importModal').classList.add('show');
@@ -4069,13 +4164,17 @@
                     return;
                 }
                 
+                // Get import mode selection
+                const importMode = document.querySelector('input[name="importMode"]:checked')?.value || 'visual';
+                
                 console.log('=== YAML IMPORT DEBUG ===');
+                console.log('Import mode:', importMode);
                 console.log('YAML length:', yaml.length);
                 console.log('First 200 characters:', yaml.substring(0, 200));
                 
                 try {
-                    // Simple YAML parsing (you'd want a proper YAML library in production)
-                    const parsedCards = parseYAML(yaml);
+                    // Parse YAML with selected mode
+                    const parsedCards = parseYAML(yaml, importMode);
                     console.log('Parsed cards count:', parsedCards.length);
                     console.log('First 3 cards:', parsedCards.slice(0, 3));
                     
@@ -4083,8 +4182,10 @@
                     saveState();
                     renderCards();
                     closeModal('importModal');
-                    showToast(`Imported ${cards.length} cards successfully`, 'success');
-                    addNotification(`Imported ${cards.length} cards from YAML`, 'success');
+                    
+                    const modeText = importMode === 'visual' ? ' (Visual Mode - top-level cards only)' : ' (Full Mode - all cards)';
+                    showToast(`✅ Imported ${cards.length} cards${modeText}`, 'success');
+                    addNotification(`Imported ${cards.length} cards from YAML${modeText}`, 'success');
                 } catch (error) {
                     console.error('YAML parse error:', error);
                     showToast('Error parsing YAML: ' + error.message, 'error');
@@ -4118,8 +4219,8 @@
             }
         }
         
-        function parseYAML(yaml) {
-            // Enhanced YAML parser that handles both old and new dashboard formats
+        function parseYAML(yaml, mode = 'visual') {
+            // Enhanced YAML parser with Visual Mode (WYSIWYG) and Full Mode
             try {
                 const cards = [];
                 const lines = yaml.split('\n');
@@ -4128,8 +4229,10 @@
                 let inCards = false;
                 let indent = 0;
                 let cardCount = 0;
+                let depth = 0; // Track nesting depth
+                let cardsArrayDepth = -1; // Track which depth level has the main cards array
                 
-                console.log('parseYAML: Starting parse with', lines.length, 'lines');
+                console.log(`parseYAML: Starting parse in ${mode.toUpperCase()} mode with ${lines.length} lines`);
                 
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i];
@@ -4143,16 +4246,42 @@
                         continue;
                     }
                     
-                    // Detect cards array within sections
+                    // Detect cards array within sections - this is our target depth in visual mode
                     if (trimmed === 'cards:') {
                         inCards = true;
-                        console.log('Found cards array at line', i);
+                        if (cardsArrayDepth === -1) {
+                            cardsArrayDepth = currentIndent;
+                            console.log('Found PRIMARY cards array at line', i, 'with indent', currentIndent);
+                        }
                         continue;
                     }
                     
                     // Look for card type - ONLY "- type:" creates a new card!
-                    // Plain "type:" is usually a section/container type, not an actual card
                     if (trimmed.startsWith('- type:')) {
+                        const typeMatch = trimmed.match(/- type:\s*(.+)/);
+                        if (!typeMatch) continue;
+                        
+                        const cardType = typeMatch[1].trim();
+                        
+                        // Skip "heading" type as it's usually just section labels
+                        if (cardType === 'heading') {
+                            console.log('Skipping heading card at line', i);
+                            currentCard = null;
+                            continue;
+                        }
+                        
+                        // VISUAL MODE: Only import cards at the PRIMARY cards array level
+                        // Skip cards nested inside vertical-stacks, grids, etc.
+                        if (mode === 'visual') {
+                            // If this card is indented MORE than the primary cards array,
+                            // it's nested inside another card (like vertical-stack)
+                            if (cardsArrayDepth !== -1 && currentIndent > cardsArrayDepth + 2) {
+                                console.log(`Skipping nested card "${cardType}" at line ${i} (indent ${currentIndent} > ${cardsArrayDepth + 2})`);
+                                currentCard = null;
+                                continue;
+                            }
+                        }
+                        
                         // Save previous card if exists
                         if (currentCard && currentCard.type) {
                             cards.push(currentCard);
@@ -4163,24 +4292,12 @@
                         }
                         
                         // Start new card
-                        const typeMatch = trimmed.match(/- type:\s*(.+)/);
-                        if (typeMatch) {
-                            const cardType = typeMatch[1].trim();
-                            
-                            // Skip "heading" type as it's usually just section labels
-                            if (cardType === 'heading') {
-                                console.log('Skipping heading card');
-                                currentCard = null;
-                                continue;
-                            }
-                            
-                            currentCard = {
-                                id: Date.now().toString() + Math.random(),
-                                type: cardType,
-                                properties: {}
-                            };
-                            indent = currentIndent;
-                        }
+                        currentCard = {
+                            id: Date.now().toString() + Math.random(),
+                            type: cardType,
+                            properties: {}
+                        };
+                        indent = currentIndent;
                     } 
                     // Parse properties for current card
                     else if (currentCard && trimmed && !trimmed.startsWith('-') && !trimmed.startsWith('#')) {
@@ -4240,7 +4357,7 @@
                     cardCount++;
                 }
                 
-                console.log(`parseYAML: Finished - Parsed ${cards.length} cards total`);
+                console.log(`parseYAML: Finished ${mode.toUpperCase()} mode - Parsed ${cards.length} cards total`);
                 console.log('Card types found:', cards.map(c => c.type).slice(0, 10));
                 
                 return cards.length > 0 ? cards : [{ 
