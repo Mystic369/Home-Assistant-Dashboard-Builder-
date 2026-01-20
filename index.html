@@ -311,6 +311,40 @@
             gap: 16px;
             max-width: 1400px;
             margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+        
+        /* Canvas Mode - Free Positioning */
+        .canvas-grid.canvas-mode {
+            display: block;
+            position: relative;
+            max-width: none;
+            width: 100%;
+            min-height: 2000px;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: -1px -1px;
+            padding: 40px;
+        }
+        
+        .canvas-grid.canvas-mode .card-preview {
+            position: absolute;
+            width: 320px;
+            cursor: move !important;
+            margin: 0;
+        }
+        
+        .canvas-grid.canvas-mode .card-preview.canvas-dragging {
+            opacity: 0.8;
+            z-index: 1000;
+            cursor: grabbing !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .canvas-grid.canvas-mode .card-preview:hover {
+            transform: none; /* Disable hover lift in canvas mode */
         }
         
         .card-preview {
@@ -1141,6 +1175,10 @@
                     <i class="fas fa-file-export"></i>
                     Export
                 </button>
+                <button class="btn" onclick="toggleCanvasMode()" id="canvasModeBtn" title="Switch between Grid Mode (spreadsheet layout) and Canvas Mode (free positioning)">
+                    <i class="fas fa-th" id="canvasModeIcon"></i>
+                    <span id="canvasModeText">Canvas Mode</span>
+                </button>
                 <button class="btn btn-success" onclick="connectHA()">
                     <i class="fas fa-plug"></i>
                     Connect HA
@@ -1454,6 +1492,17 @@
                             </div>
                         </label>
                     </div>
+                    
+                    <!-- View/Page Selector -->
+                    <div id="viewSelectorContainer" style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-md); display: none;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">📑 Dashboard Pages Detected:</div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Your dashboard has multiple pages/views. Select which one to import:</div>
+                        <select id="viewSelector" style="width: 100%; padding: 8px; background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-md); font-size: 14px;">
+                            <option value="all">All Pages (combine all cards from all pages)</option>
+                        </select>
+                        <div id="viewStats" style="margin-top: 8px; font-size: 12px; color: var(--text-muted);"></div>
+                    </div>
+                    
                     <textarea class="code-editor" id="importYamlInput" placeholder="Paste your Home Assistant dashboard YAML here...
 
 Example:
@@ -1463,7 +1512,11 @@ views:
       - type: entities
         title: Living Room
         entities:
-          - light.living_room"></textarea>
+          - light.living_room
+  - title: Bedroom
+    cards:
+      - type: entities
+        title: Bedroom Lights"></textarea>
                 </div>
                 
                 <div class="tab-content" id="haImport">
@@ -3676,6 +3729,13 @@ views:
         let draggedCardId = null;
         let conditions = [];
         
+        // Canvas Mode State
+        let canvasMode = false; // false = Grid Mode, true = Canvas Mode
+        let canvasDragging = false;
+        let canvasDragCard = null;
+        let canvasDragOffsetX = 0;
+        let canvasDragOffsetY = 0;
+        
         // Initialize
         function init() {
             loadFromLocalStorage();
@@ -3825,25 +3885,39 @@ views:
                 return;
             }
             
-            grid.innerHTML = cards.map(card => `
+            grid.innerHTML = cards.map(card => {
+                // Calculate style for canvas mode positioning
+                const positionStyle = canvasMode && card.position 
+                    ? `left: ${card.position.x}px; top: ${card.position.y}px;` 
+                    : '';
+                
+                const widthStyle = card.properties.style?.width ? `width: ${card.properties.style.width};` : '';
+                const combinedStyle = positionStyle + widthStyle;
+                
+                // In canvas mode, use different drag handler
+                const dragHandlers = canvasMode 
+                    ? `onmousedown="startCanvasDrag(event, '${card.id}')"`
+                    : `draggable="true"
+                       ondragstart="startDrag(event, '${card.id}')"
+                       ondragend="endDrag(event)"
+                       ondragover="allowDrop(event)"
+                       ondrop="dropCard(event, '${card.id}')"
+                       ondragenter="event.preventDefault()"`;
+                
+                return `
                 <div class="card-preview ${selectedCardId === card.id ? 'selected' : ''} ${selectedCards.has(card.id) ? 'selected' : ''}" 
                      data-card-id="${card.id}"
-                     style="${card.properties.style?.width ? `width: ${card.properties.style.width};` : ''}"
+                     style="${combinedStyle}"
                      onclick="${multiSelectMode ? '' : `selectCard('${card.id}')`}"
-                     draggable="true"
-                     ondragstart="startDrag(event, '${card.id}')"
-                     ondragend="endDrag(event)"
-                     ondragover="allowDrop(event)"
-                     ondrop="dropCard(event, '${card.id}')"
-                     ondragenter="event.preventDefault()">
+                     ${dragHandlers}>
                     ${multiSelectMode ? `
                         <input type="checkbox" 
                                class="card-select-checkbox" 
                                ${selectedCards.has(card.id) ? 'checked' : ''}
                                onchange="toggleCardSelection('${card.id}', event)">
                     ` : `
-                        <div class="card-drag-handle" title="Drag to reorder">
-                            <i class="fas fa-grip-vertical"></i>
+                        <div class="card-drag-handle" title="${canvasMode ? 'Drag anywhere' : 'Drag to reorder'}">
+                            <i class="fas ${canvasMode ? 'fa-arrows-alt' : 'fa-grip-vertical'}"></i>
                         </div>
                     `}
                     <div class="card-header">
@@ -3861,7 +3935,8 @@ views:
                         ${renderCardContent(card)}
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
             
             // Initialize resize handlers for all cards
             setTimeout(() => {
@@ -4125,6 +4200,237 @@ views:
             }
         }
         
+        // Canvas Mode Functions
+        function toggleCanvasMode() {
+            canvasMode = !canvasMode;
+            const grid = document.getElementById('canvasGrid');
+            const btn = document.getElementById('canvasModeBtn');
+            const icon = document.getElementById('canvasModeIcon');
+            const text = document.getElementById('canvasModeText');
+            
+            if (canvasMode) {
+                // Switch to Canvas Mode
+                grid.classList.add('canvas-mode');
+                icon.className = 'fas fa-paint-brush';
+                text.textContent = 'Grid Mode';
+                btn.style.background = '#10b981';
+                btn.style.borderColor = '#10b981';
+                btn.style.color = 'white';
+                
+                // Initialize positions for cards that don't have them
+                cards.forEach((card, index) => {
+                    if (!card.position) {
+                        card.position = {
+                            x: 40 + (index % 4) * 350,
+                            y: 40 + Math.floor(index / 4) * 250
+                        };
+                    }
+                });
+                
+                showToast('🎨 Canvas Mode: Drag cards anywhere!', 'success');
+                addNotification('Switched to Canvas Mode - Free positioning enabled', 'info');
+            } else {
+                // Switch to Grid Mode
+                grid.classList.remove('canvas-mode');
+                icon.className = 'fas fa-th';
+                text.textContent = 'Canvas Mode';
+                btn.style.background = '';
+                btn.style.borderColor = '';
+                btn.style.color = '';
+                
+                showToast('📐 Grid Mode: Spreadsheet layout', 'success');
+                addNotification('Switched to Grid Mode - Cards in grid layout', 'info');
+            }
+            
+            renderCards();
+            saveState();
+        }
+        
+        function startCanvasDrag(e, cardId) {
+            if (!canvasMode) return;
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            canvasDragging = true;
+            canvasDragCard = cardId;
+            
+            const card = cards.find(c => c.id === cardId);
+            if (!card || !card.position) return;
+            
+            const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+            if (!cardElement) return;
+            
+            // Calculate offset from card's top-left corner to mouse position
+            const rect = cardElement.getBoundingClientRect();
+            const gridRect = document.getElementById('canvasGrid').getBoundingClientRect();
+            
+            canvasDragOffsetX = e.clientX - rect.left;
+            canvasDragOffsetY = e.clientY - rect.top;
+            
+            cardElement.classList.add('canvas-dragging');
+            
+            // Add global event listeners
+            document.addEventListener('mousemove', handleCanvasDrag);
+            document.addEventListener('mouseup', stopCanvasDrag);
+            
+            // Prevent text selection
+            document.body.style.userSelect = 'none';
+        }
+        
+        function handleCanvasDrag(e) {
+            if (!canvasDragging || !canvasDragCard) return;
+            
+            const card = cards.find(c => c.id === canvasDragCard);
+            if (!card) return;
+            
+            const grid = document.getElementById('canvasGrid');
+            const gridRect = grid.getBoundingClientRect();
+            
+            // Calculate new position relative to grid
+            const newX = e.clientX - gridRect.left - canvasDragOffsetX;
+            const newY = e.clientY - gridRect.top - canvasDragOffsetY;
+            
+            // Optional: Snap to grid (20px grid)
+            const snapSize = 20;
+            card.position = {
+                x: Math.max(0, Math.round(newX / snapSize) * snapSize),
+                y: Math.max(0, Math.round(newY / snapSize) * snapSize)
+            };
+            
+            // Update card position immediately
+            const cardElement = document.querySelector(`[data-card-id="${canvasDragCard}"]`);
+            if (cardElement) {
+                cardElement.style.left = card.position.x + 'px';
+                cardElement.style.top = card.position.y + 'px';
+            }
+        }
+        
+        function stopCanvasDrag(e) {
+            if (!canvasDragging) return;
+            
+            const cardElement = document.querySelector(`[data-card-id="${canvasDragCard}"]`);
+            if (cardElement) {
+                cardElement.classList.remove('canvas-dragging');
+            }
+            
+            canvasDragging = false;
+            canvasDragCard = null;
+            
+            // Remove global event listeners
+            document.removeEventListener('mousemove', handleCanvasDrag);
+            document.removeEventListener('mouseup', stopCanvasDrag);
+            
+            // Re-enable text selection
+            document.body.style.userSelect = '';
+            
+            // Save state
+            saveState();
+        }
+        
+        // Detect views/pages in dashboard YAML
+        function detectViews(yaml) {
+            const views = [];
+            const lines = yaml.split('\n');
+            let currentView = null;
+            let inViews = false;
+            let viewStartLine = -1;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const trimmed = line.trim();
+                const indent = line.search(/\S/);
+                
+                if (trimmed === 'views:') {
+                    inViews = true;
+                    continue;
+                }
+                
+                if (inViews && trimmed.startsWith('- ') && indent <= 2) {
+                    // Save previous view
+                    if (currentView) {
+                        views.push(currentView);
+                    }
+                    
+                    // Check if this line has title on same line
+                    const titleMatch = trimmed.match(/- title:\s*(.+)/);
+                    if (titleMatch) {
+                        currentView = {
+                            title: titleMatch[1].replace(/['"]/g, ''),
+                            index: views.length,
+                            startLine: i
+                        };
+                    } else {
+                        // Title might be on next line
+                        currentView = {
+                            title: 'Unnamed View',
+                            index: views.length,
+                            startLine: i
+                        };
+                    }
+                } else if (currentView && trimmed.startsWith('title:') && indent <= 4) {
+                    const titleMatch = trimmed.match(/title:\s*(.+)/);
+                    if (titleMatch) {
+                        currentView.title = titleMatch[1].replace(/['"]/g, '');
+                    }
+                } else if (currentView && trimmed.startsWith('path:') && indent <= 4) {
+                    const pathMatch = trimmed.match(/path:\s*(.+)/);
+                    if (pathMatch) {
+                        currentView.path = pathMatch[1].replace(/['"]/g, '');
+                    }
+                }
+            }
+            
+            // Don't forget last view
+            if (currentView) {
+                views.push(currentView);
+            }
+            
+            return views;
+        }
+        
+        // Update view selector dropdown when YAML is pasted
+        function updateViewSelector() {
+            const yaml = document.getElementById('importYamlInput').value;
+            const container = document.getElementById('viewSelectorContainer');
+            const selector = document.getElementById('viewSelector');
+            const stats = document.getElementById('viewStats');
+            
+            if (!yaml.trim()) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            const views = detectViews(yaml);
+            
+            if (views.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            // Show selector and populate it
+            container.style.display = 'block';
+            
+            // Clear existing options except "All Pages"
+            selector.innerHTML = '<option value="all">All Pages (combine all cards from all pages)</option>';
+            
+            // Add each view
+            views.forEach((view, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                const displayTitle = view.title || `View ${index + 1}`;
+                const displayPath = view.path ? ` (${view.path})` : '';
+                option.textContent = `${index + 1}. ${displayTitle}${displayPath}`;
+                selector.appendChild(option);
+            });
+            
+            // Update stats
+            stats.textContent = `Found ${views.length} page${views.length !== 1 ? 's' : ''} in this dashboard`;
+            
+            // Store views data for later use
+            selector.dataset.views = JSON.stringify(views);
+        }
+        
         // Import/Export
         function showImportModal() {
             document.getElementById('importModal').classList.add('show');
@@ -4167,14 +4473,18 @@ views:
                 // Get import mode selection
                 const importMode = document.querySelector('input[name="importMode"]:checked')?.value || 'visual';
                 
+                // Get selected view (page)
+                const viewSelector = document.getElementById('viewSelector');
+                const selectedView = viewSelector.value; // 'all' or index number
+                
                 console.log('=== YAML IMPORT DEBUG ===');
                 console.log('Import mode:', importMode);
+                console.log('Selected view:', selectedView);
                 console.log('YAML length:', yaml.length);
-                console.log('First 200 characters:', yaml.substring(0, 200));
                 
                 try {
-                    // Parse YAML with selected mode
-                    const parsedCards = parseYAML(yaml, importMode);
+                    // Parse YAML with selected mode and view
+                    const parsedCards = parseYAML(yaml, importMode, selectedView);
                     console.log('Parsed cards count:', parsedCards.length);
                     console.log('First 3 cards:', parsedCards.slice(0, 3));
                     
@@ -4183,9 +4493,10 @@ views:
                     renderCards();
                     closeModal('importModal');
                     
-                    const modeText = importMode === 'visual' ? ' (Visual Mode - top-level cards only)' : ' (Full Mode - all cards)';
-                    showToast(`✅ Imported ${cards.length} cards${modeText}`, 'success');
-                    addNotification(`Imported ${cards.length} cards from YAML${modeText}`, 'success');
+                    const modeText = importMode === 'visual' ? ' (Visual Mode)' : ' (Full Mode)';
+                    const viewText = selectedView === 'all' ? ' from all pages' : ` from page ${parseInt(selectedView) + 1}`;
+                    showToast(`✅ Imported ${cards.length} cards${modeText}${viewText}`, 'success');
+                    addNotification(`Imported ${cards.length} cards${modeText}${viewText}`, 'success');
                 } catch (error) {
                     console.error('YAML parse error:', error);
                     showToast('Error parsing YAML: ' + error.message, 'error');
@@ -4219,20 +4530,23 @@ views:
             }
         }
         
-        function parseYAML(yaml, mode = 'visual') {
+        function parseYAML(yaml, mode = 'visual', viewIndex = 'all') {
             // SMART YAML parser that understands Home Assistant dashboard structure
+            // Now supports multi-page dashboards with view selection!
             try {
                 const cards = [];
                 const lines = yaml.split('\n');
                 
                 // Track structure as we parse
                 let inViews = false;
+                let currentViewIndex = -1;
+                let targetViewActive = (viewIndex === 'all'); // If "all", always active
                 let inSections = false;
-                let deepestCardsIndent = -1; // The indent level of the ACTUAL cards array
+                let deepestCardsIndent = -1;
                 let currentCard = null;
                 let currentCardIndent = -1;
                 
-                console.log(`🧠 SMART PARSER: Starting in ${mode.toUpperCase()} mode with ${lines.length} lines`);
+                console.log(`🧠 SMART PARSER: Mode=${mode.toUpperCase()}, View=${viewIndex === 'all' ? 'ALL PAGES' : 'Page ' + (parseInt(viewIndex) + 1)}`);
                 
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i];
@@ -4249,6 +4563,46 @@ views:
                         continue;
                     }
                     
+                    // Detect start of a new view (dashboard page/tab)
+                    if (inViews && trimmed.startsWith('- ') && indent <= 2) {
+                        currentViewIndex++;
+                        
+                        // Check if this is the view we want to import
+                        if (viewIndex === 'all') {
+                            targetViewActive = true;
+                        } else {
+                            targetViewActive = (currentViewIndex === parseInt(viewIndex));
+                        }
+                        
+                        // Extract view title for logging
+                        let viewTitle = 'Unknown';
+                        const titleMatch = trimmed.match(/- title:\s*(.+)/);
+                        if (titleMatch) {
+                            viewTitle = titleMatch[1].replace(/['"]/g, '');
+                        } else {
+                            // Check next line for title
+                            if (i + 1 < lines.length) {
+                                const nextLine = lines[i + 1];
+                                const nextTrimmed = nextLine.trim();
+                                const nextTitleMatch = nextTrimmed.match(/title:\s*(.+)/);
+                                if (nextTitleMatch) {
+                                    viewTitle = nextTitleMatch[1].replace(/['"]/g, '');
+                                }
+                            }
+                        }
+                        
+                        console.log(`📄 View ${currentViewIndex}: "${viewTitle}" - ${targetViewActive ? 'IMPORTING' : 'SKIPPING'}`);
+                        
+                        // Reset deepest cards indent for new view
+                        if (targetViewActive) {
+                            deepestCardsIndent = -1;
+                        }
+                        continue;
+                    }
+                    
+                    // Only process lines if we're in the target view
+                    if (!targetViewActive) continue;
+                    
                     // Detect sections (these are view definitions, not cards!)
                     if (trimmed === 'sections:') {
                         inSections = true;
@@ -4258,11 +4612,9 @@ views:
                     
                     // Find cards arrays - we want the DEEPEST one (actual display cards)
                     if (trimmed === 'cards:') {
-                        // This is a cards array - could be at view level or section level
-                        // The DEEPEST cards array is where actual display cards live
                         if (deepestCardsIndent === -1 || indent > deepestCardsIndent) {
                             deepestCardsIndent = indent;
-                            console.log(`📦 Found cards array at line ${i}, indent: ${indent} (deepest so far: ${deepestCardsIndent})`);
+                            console.log(`📦 Found cards array at line ${i}, indent: ${indent} (deepest: ${deepestCardsIndent})`);
                         }
                         continue;
                     }
@@ -4278,39 +4630,29 @@ views:
                         // SMART FILTERING: Skip container types regardless of mode
                         const containerTypes = ['sections', 'grid', 'heading'];
                         if (containerTypes.includes(cardType)) {
-                            console.log(`⏭️  Skipping container/label: "${cardType}" at line ${i}`);
+                            console.log(`⏭️  Skipping container: "${cardType}"`);
                             currentCard = null;
                             continue;
                         }
                         
                         // VISUAL MODE: Only import cards at the deepest cards array level
                         if (mode === 'visual') {
-                            // Cards should be indented 2 spaces more than the "cards:" line
                             const expectedCardIndent = deepestCardsIndent + 2;
                             
-                            // If this card is NOT at the expected depth, skip it
                             if (deepestCardsIndent !== -1 && cardIndent !== expectedCardIndent) {
-                                console.log(`⏭️  VISUAL MODE: Skipping card "${cardType}" at wrong depth (indent ${cardIndent}, expected ${expectedCardIndent})`);
+                                console.log(`⏭️  VISUAL: Skipping "${cardType}" at wrong depth`);
                                 currentCard = null;
                                 continue;
                             }
                         }
                         
-                        // FULL MODE: Skip cards that are inside other cards (nested in vertical-stack, etc.)
-                        if (mode === 'full') {
-                            // If we're already inside a card and we find another "cards:" array,
-                            // those nested cards should be part of the parent card, not separate
-                            // This is handled by the depth tracking above
-                        }
-                        
                         // Save previous card if exists
                         if (currentCard && currentCard.type) {
                             cards.push(currentCard);
-                            console.log(`✅ Imported card: ${currentCard.type} (${currentCard.properties.title || currentCard.properties.name || 'untitled'})`);
+                            console.log(`✅ Imported: ${currentCard.type} (${currentCard.properties.title || currentCard.properties.name || 'untitled'})`);
                         }
                         
                         // Start new card
-                        console.log(`🎴 Creating new card: "${cardType}" at line ${i}, indent ${cardIndent}`);
                         currentCard = {
                             id: Date.now().toString() + Math.random(),
                             type: cardType,
@@ -4320,10 +4662,7 @@ views:
                     }
                     // Parse properties for current card
                     else if (currentCard && trimmed && !trimmed.startsWith('-')) {
-                        // Only parse properties that are indented MORE than the card itself
-                        if (indent <= currentCardIndent) {
-                            continue;
-                        }
+                        if (indent <= currentCardIndent) continue;
                         
                         const colonIndex = trimmed.indexOf(':');
                         if (colonIndex > 0) {
@@ -4331,14 +4670,11 @@ views:
                             let value = trimmed.substring(colonIndex + 1).trim();
                             
                             // Skip structural keywords
-                            if (key === 'views' || key === 'sections' || key === 'cards') {
-                                continue;
-                            }
+                            if (key === 'views' || key === 'sections' || key === 'cards') continue;
                             
-                            // Handle entities array (the entities inside an entities card)
+                            // Handle entities array (IMPROVED - keeps ALL entities)
                             if (key === 'entity' || key === 'entities') {
                                 if (value === '' || value === '[]') {
-                                    // Start collecting array items
                                     const arrayItems = [];
                                     let j = i + 1;
                                     while (j < lines.length) {
@@ -4346,19 +4682,16 @@ views:
                                         const nextTrimmed = nextLine.trim();
                                         const nextIndent = nextLine.search(/\S/);
                                         
-                                        // Check if this line is part of the entities array
                                         if (nextIndent > indent && (nextTrimmed.startsWith('-') || nextTrimmed.startsWith('entity:'))) {
                                             if (nextTrimmed.startsWith('- entity:')) {
                                                 arrayItems.push(nextTrimmed.substring(9).trim());
                                             } else if (nextTrimmed.startsWith('entity:')) {
                                                 arrayItems.push(nextTrimmed.substring(7).trim());
                                             } else if (nextTrimmed.startsWith('- ')) {
-                                                // Simple entity ID
                                                 arrayItems.push(nextTrimmed.substring(2).trim());
                                             }
                                             j++;
                                         } else if (nextIndent <= indent) {
-                                            // Back to same level or less - done with array
                                             break;
                                         } else {
                                             j++;
@@ -4368,11 +4701,10 @@ views:
                                     if (arrayItems.length > 0) {
                                         currentCard.properties[key] = arrayItems;
                                         i = j - 1;
-                                        console.log(`  📋 Added ${arrayItems.length} entities to card`);
+                                        console.log(`  📋 Loaded ${arrayItems.length} entities`);
                                         continue;
                                     }
                                 } else {
-                                    // Single entity value
                                     currentCard.properties[key] = value;
                                 }
                             }
@@ -4385,22 +4717,21 @@ views:
                 }
                 
                 // Don't forget the last card
-                if (currentCard && currentCard.type) {
+                if (currentCard && currentCard.type && targetViewActive) {
                     cards.push(currentCard);
                     console.log(`✅ Imported final card: ${currentCard.type}`);
                 }
                 
                 console.log(`\n🎉 SMART PARSER COMPLETE!`);
-                console.log(`Mode: ${mode.toUpperCase()}`);
+                console.log(`Mode: ${mode.toUpperCase()}, View: ${viewIndex === 'all' ? 'ALL' : viewIndex}`);
                 console.log(`Total cards imported: ${cards.length}`);
-                console.log(`Card types: ${cards.map(c => c.type).join(', ')}`);
                 
                 if (cards.length === 0) {
-                    showToast('⚠️ No cards found. Make sure you pasted a complete dashboard YAML.', 'warning');
+                    showToast('⚠️ No cards found in selected view.', 'warning');
                     return [{
                         id: Date.now().toString(),
                         type: 'entities',
-                        properties: { title: 'No cards found - check your YAML' }
+                        properties: { title: 'No cards found' }
                     }];
                 }
                 
@@ -4411,7 +4742,7 @@ views:
                 return [{
                     id: Date.now().toString(),
                     type: 'entities',
-                    properties: { title: 'Parse Error - check console (F12)' }
+                    properties: { title: 'Parse Error - check console' }
                 }];
             }
         }
@@ -7658,6 +7989,15 @@ views:
             loadCustomShortcuts();
             loadInstalledPlugins();
             setupCardResizing();
+            
+            // Add event listener to YAML import textarea for auto-view detection
+            const yamlInput = document.getElementById('importYamlInput');
+            if (yamlInput) {
+                yamlInput.addEventListener('input', updateViewSelector);
+                yamlInput.addEventListener('paste', () => {
+                    setTimeout(updateViewSelector, 100); // Small delay to let paste complete
+                });
+            }
             
             // Add welcome notification
             setTimeout(() => {
