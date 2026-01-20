@@ -4220,87 +4220,111 @@ views:
         }
         
         function parseYAML(yaml, mode = 'visual') {
-            // Enhanced YAML parser with Visual Mode (WYSIWYG) and Full Mode
+            // SMART YAML parser that understands Home Assistant dashboard structure
             try {
                 const cards = [];
                 const lines = yaml.split('\n');
-                let currentCard = null;
-                let inSections = false;
-                let inCards = false;
-                let indent = 0;
-                let cardCount = 0;
-                let depth = 0; // Track nesting depth
-                let cardsArrayDepth = -1; // Track which depth level has the main cards array
                 
-                console.log(`parseYAML: Starting parse in ${mode.toUpperCase()} mode with ${lines.length} lines`);
+                // Track structure as we parse
+                let inViews = false;
+                let inSections = false;
+                let deepestCardsIndent = -1; // The indent level of the ACTUAL cards array
+                let currentCard = null;
+                let currentCardIndent = -1;
+                
+                console.log(`🧠 SMART PARSER: Starting in ${mode.toUpperCase()} mode with ${lines.length} lines`);
                 
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i];
                     const trimmed = line.trim();
-                    const currentIndent = line.search(/\S/);
+                    const indent = line.search(/\S/);
                     
-                    // Detect sections layout
-                    if (trimmed === 'sections:') {
-                        inSections = true;
-                        console.log('Found sections layout at line', i);
+                    // Skip empty lines and comments
+                    if (!trimmed || trimmed.startsWith('#')) continue;
+                    
+                    // Detect views array (top level)
+                    if (trimmed === 'views:') {
+                        inViews = true;
+                        console.log('📋 Found views array at line', i);
                         continue;
                     }
                     
-                    // Detect cards array within sections - this is our target depth in visual mode
+                    // Detect sections (these are view definitions, not cards!)
+                    if (trimmed === 'sections:') {
+                        inSections = true;
+                        console.log('📂 Found sections array at line', i, 'indent:', indent);
+                        continue;
+                    }
+                    
+                    // Find cards arrays - we want the DEEPEST one (actual display cards)
                     if (trimmed === 'cards:') {
-                        inCards = true;
-                        if (cardsArrayDepth === -1) {
-                            cardsArrayDepth = currentIndent;
-                            console.log('Found PRIMARY cards array at line', i, 'with indent', currentIndent);
+                        // This is a cards array - could be at view level or section level
+                        // The DEEPEST cards array is where actual display cards live
+                        if (deepestCardsIndent === -1 || indent > deepestCardsIndent) {
+                            deepestCardsIndent = indent;
+                            console.log(`📦 Found cards array at line ${i}, indent: ${indent} (deepest so far: ${deepestCardsIndent})`);
                         }
                         continue;
                     }
                     
-                    // Look for card type - ONLY "- type:" creates a new card!
+                    // Look for card definitions: "- type: something"
                     if (trimmed.startsWith('- type:')) {
                         const typeMatch = trimmed.match(/- type:\s*(.+)/);
                         if (!typeMatch) continue;
                         
                         const cardType = typeMatch[1].trim();
+                        const cardIndent = indent;
                         
-                        // Skip "heading" type as it's usually just section labels
-                        if (cardType === 'heading') {
-                            console.log('Skipping heading card at line', i);
+                        // SMART FILTERING: Skip container types regardless of mode
+                        const containerTypes = ['sections', 'grid', 'heading'];
+                        if (containerTypes.includes(cardType)) {
+                            console.log(`⏭️  Skipping container/label: "${cardType}" at line ${i}`);
                             currentCard = null;
                             continue;
                         }
                         
-                        // VISUAL MODE: Only import cards at the PRIMARY cards array level
-                        // Skip cards nested inside vertical-stacks, grids, etc.
+                        // VISUAL MODE: Only import cards at the deepest cards array level
                         if (mode === 'visual') {
-                            // If this card is indented MORE than the primary cards array,
-                            // it's nested inside another card (like vertical-stack)
-                            if (cardsArrayDepth !== -1 && currentIndent > cardsArrayDepth + 2) {
-                                console.log(`Skipping nested card "${cardType}" at line ${i} (indent ${currentIndent} > ${cardsArrayDepth + 2})`);
+                            // Cards should be indented 2 spaces more than the "cards:" line
+                            const expectedCardIndent = deepestCardsIndent + 2;
+                            
+                            // If this card is NOT at the expected depth, skip it
+                            if (deepestCardsIndent !== -1 && cardIndent !== expectedCardIndent) {
+                                console.log(`⏭️  VISUAL MODE: Skipping card "${cardType}" at wrong depth (indent ${cardIndent}, expected ${expectedCardIndent})`);
                                 currentCard = null;
                                 continue;
                             }
                         }
                         
+                        // FULL MODE: Skip cards that are inside other cards (nested in vertical-stack, etc.)
+                        if (mode === 'full') {
+                            // If we're already inside a card and we find another "cards:" array,
+                            // those nested cards should be part of the parent card, not separate
+                            // This is handled by the depth tracking above
+                        }
+                        
                         // Save previous card if exists
                         if (currentCard && currentCard.type) {
                             cards.push(currentCard);
-                            cardCount++;
-                            if (cardCount <= 5) {
-                                console.log('Saved card #' + cardCount + ':', currentCard.type);
-                            }
+                            console.log(`✅ Imported card: ${currentCard.type} (${currentCard.properties.title || currentCard.properties.name || 'untitled'})`);
                         }
                         
                         // Start new card
+                        console.log(`🎴 Creating new card: "${cardType}" at line ${i}, indent ${cardIndent}`);
                         currentCard = {
                             id: Date.now().toString() + Math.random(),
                             type: cardType,
                             properties: {}
                         };
-                        indent = currentIndent;
-                    } 
+                        currentCardIndent = cardIndent;
+                    }
                     // Parse properties for current card
-                    else if (currentCard && trimmed && !trimmed.startsWith('-') && !trimmed.startsWith('#')) {
+                    else if (currentCard && trimmed && !trimmed.startsWith('-')) {
+                        // Only parse properties that are indented MORE than the card itself
+                        if (indent <= currentCardIndent) {
+                            continue;
+                        }
+                        
                         const colonIndex = trimmed.indexOf(':');
                         if (colonIndex > 0) {
                             const key = trimmed.substring(0, colonIndex).trim();
@@ -4311,7 +4335,7 @@ views:
                                 continue;
                             }
                             
-                            // Handle entities array
+                            // Handle entities array (the entities inside an entities card)
                             if (key === 'entity' || key === 'entities') {
                                 if (value === '' || value === '[]') {
                                     // Start collecting array items
@@ -4320,26 +4344,35 @@ views:
                                     while (j < lines.length) {
                                         const nextLine = lines[j];
                                         const nextTrimmed = nextLine.trim();
-                                        if (nextTrimmed.startsWith('- ')) {
-                                            const item = nextTrimmed.substring(2).trim();
-                                            if (item.startsWith('entity:')) {
-                                                arrayItems.push(item.substring(7).trim());
-                                            } else {
-                                                arrayItems.push(item);
+                                        const nextIndent = nextLine.search(/\S/);
+                                        
+                                        // Check if this line is part of the entities array
+                                        if (nextIndent > indent && (nextTrimmed.startsWith('-') || nextTrimmed.startsWith('entity:'))) {
+                                            if (nextTrimmed.startsWith('- entity:')) {
+                                                arrayItems.push(nextTrimmed.substring(9).trim());
+                                            } else if (nextTrimmed.startsWith('entity:')) {
+                                                arrayItems.push(nextTrimmed.substring(7).trim());
+                                            } else if (nextTrimmed.startsWith('- ')) {
+                                                // Simple entity ID
+                                                arrayItems.push(nextTrimmed.substring(2).trim());
                                             }
                                             j++;
-                                        } else if (nextTrimmed && !nextTrimmed.startsWith(' ') && !nextTrimmed.startsWith('-')) {
+                                        } else if (nextIndent <= indent) {
+                                            // Back to same level or less - done with array
                                             break;
                                         } else {
                                             j++;
                                         }
                                     }
+                                    
                                     if (arrayItems.length > 0) {
                                         currentCard.properties[key] = arrayItems;
                                         i = j - 1;
+                                        console.log(`  📋 Added ${arrayItems.length} entities to card`);
                                         continue;
                                     }
                                 } else {
+                                    // Single entity value
                                     currentCard.properties[key] = value;
                                 }
                             }
@@ -4354,20 +4387,32 @@ views:
                 // Don't forget the last card
                 if (currentCard && currentCard.type) {
                     cards.push(currentCard);
-                    cardCount++;
+                    console.log(`✅ Imported final card: ${currentCard.type}`);
                 }
                 
-                console.log(`parseYAML: Finished ${mode.toUpperCase()} mode - Parsed ${cards.length} cards total`);
-                console.log('Card types found:', cards.map(c => c.type).slice(0, 10));
+                console.log(`\n🎉 SMART PARSER COMPLETE!`);
+                console.log(`Mode: ${mode.toUpperCase()}`);
+                console.log(`Total cards imported: ${cards.length}`);
+                console.log(`Card types: ${cards.map(c => c.type).join(', ')}`);
                 
-                return cards.length > 0 ? cards : [{ 
-                    id: Date.now().toString(), 
-                    type: 'entities', 
-                    properties: { title: 'Empty Card' } 
-                }];
+                if (cards.length === 0) {
+                    showToast('⚠️ No cards found. Make sure you pasted a complete dashboard YAML.', 'warning');
+                    return [{
+                        id: Date.now().toString(),
+                        type: 'entities',
+                        properties: { title: 'No cards found - check your YAML' }
+                    }];
+                }
+                
+                return cards;
             } catch (error) {
-                console.error('YAML parse error:', error);
-                throw new Error('Failed to parse YAML: ' + error.message);
+                console.error('❌ YAML parse error:', error);
+                showToast('Error parsing YAML: ' + error.message, 'error');
+                return [{
+                    id: Date.now().toString(),
+                    type: 'entities',
+                    properties: { title: 'Parse Error - check console (F12)' }
+                }];
             }
         }
         
