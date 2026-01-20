@@ -4313,15 +4313,38 @@
                 const data = await dashResponse.json();
                 const importedCards = [];
                 
+                // Handle both old and new dashboard formats
                 if (data.views) {
                     data.views.forEach(view => {
-                        if (view.cards) {
+                        // Old format: cards directly in view
+                        if (view.cards && Array.isArray(view.cards)) {
                             view.cards.forEach(card => {
                                 importedCards.push({
                                     id: Date.now().toString() + Math.random(),
-                                    type: card.type,
+                                    type: card.type || 'custom',
                                     properties: { ...card }
                                 });
+                            });
+                        }
+                        
+                        // New format: sections with cards
+                        if (view.sections && Array.isArray(view.sections)) {
+                            view.sections.forEach(section => {
+                                if (section.cards && Array.isArray(section.cards)) {
+                                    section.cards.forEach(card => {
+                                        // Skip heading cards unless user wants them
+                                        if (card.type === 'heading') {
+                                            // You can optionally skip these or convert them
+                                            // For now, we'll import them
+                                        }
+                                        
+                                        importedCards.push({
+                                            id: Date.now().toString() + Math.random(),
+                                            type: card.type || 'custom',
+                                            properties: { ...card }
+                                        });
+                                    });
+                                }
                             });
                         }
                     });
@@ -4335,7 +4358,13 @@
                 
                 renderEntities();
                 closeModal('importModal');
-                showToast(`✅ Imported ${importedCards.length} cards from HA dashboard`, 'success');
+                
+                const message = importedCards.length > 0 
+                    ? `✅ Imported ${importedCards.length} cards from HA dashboard!` 
+                    : `✅ Connected! No cards found in dashboard, but ${entities.length} entities loaded.`;
+                    
+                showToast(message, 'success');
+                addNotification(message, 'success');
                 
             } catch (error) {
                 console.error('HA Import error:', error);
