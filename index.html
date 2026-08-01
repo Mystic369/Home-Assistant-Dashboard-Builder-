@@ -4135,6 +4135,23 @@ views:
                 return;
             }
             
+            // CANVAS MODE FIX: Ensure ALL cards have a position, even if added/imported
+            // after the mode was toggled. Prevents cards stacking at (0,0).
+            if (canvasMode) {
+                let needsPosition = 0;
+                cards.forEach((card, index) => {
+                    if (!card.position) {
+                        const col = needsPosition % 4;
+                        const row = Math.floor(needsPosition / 4);
+                        card.position = {
+                            x: 40 + col * 350,
+                            y: 40 + row * 250
+                        };
+                        needsPosition++;
+                    }
+                });
+            }
+            
             grid.innerHTML = cards.map(card => {
                 // Calculate style for canvas mode positioning
                 const positionStyle = canvasMode && card.position 
