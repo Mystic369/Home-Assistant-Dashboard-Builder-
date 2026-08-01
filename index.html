@@ -50,97 +50,6 @@
             height: 100vh;
         }
         
-        /* ============================================
-           RESPONSIVE DESIGN - Window Resize Support
-           ============================================ */
-        
-        /* Large screens - full 3 column layout */
-        @media (min-width: 1200px) {
-            .app-container {
-                grid-template-columns: 280px 1fr 320px;
-            }
-        }
-        
-        /* Medium screens - compress sidebars */
-        @media (max-width: 1199px) and (min-width: 900px) {
-            .app-container {
-                grid-template-columns: 220px 1fr 280px;
-            }
-            .header-actions .btn span:not(.version-badge) {
-                display: none; /* Hide button text, keep icons */
-            }
-            .header-actions .btn {
-                padding: 8px 10px;
-            }
-        }
-        
-        /* Small screens - hide right panel, compress left */
-        @media (max-width: 899px) and (min-width: 600px) {
-            .app-container {
-                grid-template-columns: 200px 1fr 0px;
-            }
-            .properties-panel {
-                display: none;
-            }
-            .header-actions .btn span {
-                display: none;
-            }
-            .header-actions .btn {
-                padding: 8px 10px;
-            }
-            .canvas-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            }
-        }
-        
-        /* Mobile screens - single column */
-        @media (max-width: 599px) {
-            .app-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: 60px auto 1fr 40px;
-            }
-            .sidebar {
-                display: none; /* Hidden by default on mobile */
-            }
-            .properties-panel {
-                display: none;
-            }
-            .header {
-                padding: 0 12px;
-            }
-            .header-actions .btn span {
-                display: none;
-            }
-            .header-actions .btn {
-                padding: 8px 8px;
-                font-size: 12px;
-            }
-            .logo-text {
-                display: none;
-            }
-            .canvas-grid {
-                grid-template-columns: 1fr;
-                padding: 10px;
-            }
-            .card-preview {
-                width: 100% !important;
-            }
-        }
-        
-        /* Make header wrap on small screens */
-        @media (max-width: 800px) {
-            .header {
-                flex-wrap: wrap;
-                height: auto;
-                padding: 8px 12px;
-                gap: 8px;
-            }
-            .header-actions {
-                flex-wrap: wrap;
-                gap: 4px;
-            }
-        }
-        
         /* Main Layout */
         .app-container {
             display: grid;
@@ -397,12 +306,22 @@
         }
         
         .canvas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
+            /* In Grid Mode this just stacks sections vertically. */
+            display: block;
             max-width: 1400px;
             margin: 0 auto;
             transition: all 0.3s ease;
+        }
+        
+        /* Each HA "section" (a row that was `- type: grid` in the YAML) becomes
+           its own real 12-column CSS Grid. Cards span N of 12 columns, and when
+           a span changes, the OTHER cards in that section genuinely reflow -
+           this is what makes resize/move behave like it will in real HA. */
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
         }
         
         /* Canvas Mode - Free Positioning */
@@ -447,6 +366,7 @@
             transition: all var(--transition-base);
             cursor: pointer;
             min-height: 120px;
+            min-width: 0; /* allow grid items to shrink below content size */
         }
         
         .card-preview:hover {
@@ -1183,6 +1103,79 @@
             font-size: 14px;
             max-width: 400px;
             margin: 0 auto;
+        }
+        
+        /* ============================================================
+           RESPONSIVE DESIGN - placed LAST so these rules win the
+           cascade over earlier same-specificity selectors like .header
+           ============================================================ */
+        
+        /* Header always allowed to wrap so it never gets clipped */
+        .header {
+            flex-wrap: wrap;
+            height: auto;
+            min-height: 60px;
+            row-gap: 8px;
+        }
+        .header-actions {
+            flex-wrap: wrap;
+        }
+        
+        /* Medium screens (900-1199px): compress sidebars, icon-only buttons */
+        @media (max-width: 1199px) {
+            .app-container {
+                grid-template-columns: 220px 1fr 280px;
+            }
+            .header-actions .btn span {
+                display: none;
+            }
+            .header-actions .btn {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Small screens (600-899px): hide right properties panel */
+        @media (max-width: 899px) {
+            .app-container {
+                grid-template-columns: 200px 1fr 0px;
+            }
+            .properties-panel {
+                display: none;
+            }
+            .canvas-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+        
+        /* Mobile screens (under 600px): single column, minimal chrome */
+        @media (max-width: 599px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr 40px;
+            }
+            .sidebar {
+                display: none;
+            }
+            .properties-panel {
+                display: none;
+            }
+            .header {
+                padding: 8px 12px;
+            }
+            .header-actions .btn {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+            .logo-text, .version-badge {
+                display: none;
+            }
+            .canvas-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+            .card-preview {
+                width: 100% !important;
+            }
         }
     </style>
 </head>
@@ -4076,10 +4069,16 @@ views:
         
         // Card Management
         function addCard(type) {
+            // Manually added cards go into their own new section at the end,
+            // with a sensible default width, so the section-grid layout works
+            // consistently whether cards come from import or the sidebar.
+            const maxSection = cards.reduce((max, c) => Math.max(max, c.sectionIndex ?? 0), -1);
             const card = {
                 id: Date.now().toString(),
                 type: type,
-                properties: getDefaultProperties(type)
+                properties: getDefaultProperties(type),
+                sectionIndex: maxSection + 1,
+                gridColumns: (type === 'tile' || type === 'button') ? 3 : 4
             };
             
             cards.push(card);
@@ -4135,6 +4134,16 @@ views:
                 return;
             }
             
+            // Ensure every card has a gridColumns span (older/edited cards may lack one)
+            cards.forEach(card => {
+                if (card.gridColumns === null || card.gridColumns === undefined) {
+                    card.gridColumns = 4;
+                }
+                if (card.sectionIndex === null || card.sectionIndex === undefined) {
+                    card.sectionIndex = 0;
+                }
+            });
+            
             // CANVAS MODE FIX: Ensure ALL cards have a position, even if added/imported
             // after the mode was toggled. Prevents cards stacking at (0,0).
             if (canvasMode) {
@@ -4152,16 +4161,15 @@ views:
                 });
             }
             
-            grid.innerHTML = cards.map(card => {
-                // Calculate style for canvas mode positioning
+            const renderCardHTML = (card) => {
+                const widthStyle = card.properties.style?.width ? `width: ${card.properties.style.width};` : '';
                 const positionStyle = canvasMode && card.position 
                     ? `left: ${card.position.x}px; top: ${card.position.y}px;` 
                     : '';
+                // GRID MODE: span N of 12 columns - real CSS Grid reflow, not a guess
+                const spanStyle = !canvasMode ? `grid-column: span ${card.gridColumns || 4};` : '';
+                const combinedStyle = positionStyle + widthStyle + spanStyle;
                 
-                const widthStyle = card.properties.style?.width ? `width: ${card.properties.style.width};` : '';
-                const combinedStyle = positionStyle + widthStyle;
-                
-                // In canvas mode, use different drag handler
                 const dragHandlers = canvasMode 
                     ? `onmousedown="startCanvasDrag(event, '${card.id}')"`
                     : `draggable="true"
@@ -4174,6 +4182,7 @@ views:
                 return `
                 <div class="card-preview ${selectedCardId === card.id ? 'selected' : ''} ${selectedCards.has(card.id) ? 'selected' : ''}" 
                      data-card-id="${card.id}"
+                     data-grid-columns="${card.gridColumns || 4}"
                      style="${combinedStyle}"
                      onclick="${multiSelectMode ? '' : `selectCard('${card.id}')`}"
                      ${dragHandlers}>
@@ -4203,7 +4212,31 @@ views:
                     </div>
                 </div>
             `;
-            }).join('');
+            };
+            
+            if (canvasMode) {
+                // Canvas Mode: free positioning, no sections, exactly as before
+                grid.innerHTML = cards.map(renderCardHTML).join('');
+            } else {
+                // GRID MODE: group cards into their real HA "sections" and lay each
+                // section out as a true 12-column CSS Grid. Resizing a card changes
+                // its column span and the OTHER cards genuinely reflow around it,
+                // just like Home Assistant's own sections/grid layout does.
+                const sectionMap = new Map();
+                cards.forEach(card => {
+                    const s = card.sectionIndex || 0;
+                    if (!sectionMap.has(s)) sectionMap.set(s, []);
+                    sectionMap.get(s).push(card);
+                });
+                const sortedSections = [...sectionMap.keys()].sort((a, b) => a - b);
+                
+                grid.innerHTML = sortedSections.map(sIdx => {
+                    const sectionCards = sectionMap.get(sIdx);
+                    return `<div class="section-grid" data-section-index="${sIdx}">
+                        ${sectionCards.map(renderCardHTML).join('')}
+                    </div>`;
+                }).join('');
+            }
             
             // Initialize resize handlers for all cards
             setTimeout(() => {
@@ -4812,6 +4845,7 @@ views:
                 let deepestCardsIndent = -1;
                 let currentCard = null;
                 let currentCardIndent = -1;
+                let sectionIndex = -1; // Which visual "section" (row/grid) a card belongs to
                 
                 console.log(`🧠 SMART PARSER: Mode=${mode.toUpperCase()}, View=${viewIndex === 'all' ? 'ALL PAGES' : 'Page ' + (parseInt(viewIndex) + 1)}`);
                 
@@ -4863,6 +4897,7 @@ views:
                         // Reset deepest cards indent for new view
                         if (targetViewActive) {
                             deepestCardsIndent = -1;
+                            sectionIndex = -1;
                         }
                         continue;
                     }
@@ -4897,7 +4932,12 @@ views:
                         // SMART FILTERING: Skip container types regardless of mode
                         const containerTypes = ['sections', 'grid', 'heading'];
                         if (containerTypes.includes(cardType)) {
-                            console.log(`⏭️  Skipping container: "${cardType}"`);
+                            // Each "- type: grid" is a new visual SECTION in HA's sections layout.
+                            // Track this so cards can be grouped/laid out the same way HA does.
+                            if (cardType === 'grid') {
+                                sectionIndex++;
+                            }
+                            console.log(`⏭️  Skipping container: "${cardType}"${cardType === 'grid' ? ' (section ' + sectionIndex + ')' : ''}`);
                             currentCard = null;
                             continue;
                         }
@@ -4923,7 +4963,9 @@ views:
                         currentCard = {
                             id: Date.now().toString() + Math.random(),
                             type: cardType,
-                            properties: {}
+                            properties: {},
+                            sectionIndex: Math.max(0, sectionIndex), // Which section/row this belongs to
+                            gridColumns: null // Filled in from grid_options.columns if present, else defaulted later
                         };
                         currentCardIndent = cardIndent;
                     }
@@ -4938,6 +4980,38 @@ views:
                             
                             // Skip structural keywords
                             if (key === 'views' || key === 'sections' || key === 'cards') continue;
+                            
+                            // Handle grid_options (columns/rows) - tells us how HA actually sizes this card
+                            if (key === 'grid_options' && (value === '' || value === undefined)) {
+                                let j = i + 1;
+                                let cols = null, rows = null;
+                                while (j < lines.length) {
+                                    const nextLine = lines[j];
+                                    const nextTrimmed = nextLine.trim();
+                                    const nextIndent = nextLine.search(/\S/);
+                                    if (nextIndent > indent) {
+                                        const colMatch = nextTrimmed.match(/^columns:\s*(.+)/);
+                                        const rowMatch = nextTrimmed.match(/^rows:\s*(.+)/);
+                                        if (colMatch) cols = colMatch[1].trim();
+                                        if (rowMatch) rows = rowMatch[1].trim();
+                                        j++;
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (cols !== null || rows !== null) {
+                                    currentCard.properties.grid_options = { columns: cols, rows: rows };
+                                    // "full" means span all 12 columns; numeric = that many of 12
+                                    if (cols === 'full') {
+                                        currentCard.gridColumns = 12;
+                                    } else if (cols && !isNaN(parseInt(cols))) {
+                                        currentCard.gridColumns = Math.min(12, Math.max(1, parseInt(cols)));
+                                    }
+                                    i = j - 1;
+                                    console.log(`  📐 grid_options: columns=${cols}, rows=${rows}`);
+                                    continue;
+                                }
+                            }
                             
                             // Handle entities array (IMPROVED - keeps ALL entities)
                             if (key === 'entity' || key === 'entities') {
@@ -4988,6 +5062,23 @@ views:
                     cards.push(currentCard);
                     console.log(`✅ Imported final card: ${currentCard.type}`);
                 }
+                
+                // Assign sensible default column spans (out of 12) for cards that
+                // didn't specify grid_options in the YAML, so the layout still looks
+                // reasonable and can be resized from a real starting point.
+                const fullWidthTypes = ['weather-forecast', 'history-graph', 'markdown', 
+                    'vertical-stack', 'horizontal-stack', 'calendar', 'todo-list'];
+                cards.forEach(card => {
+                    if (card.gridColumns === null || card.gridColumns === undefined) {
+                        if (card.type.startsWith('custom:') || fullWidthTypes.includes(card.type)) {
+                            card.gridColumns = 6; // Half-width by default for feature cards
+                        } else if (card.type === 'tile' || card.type === 'button') {
+                            card.gridColumns = 3; // Small cards, 4 per row
+                        } else {
+                            card.gridColumns = 4; // Standard entities-style card, 3 per row
+                        }
+                    }
+                });
                 
                 console.log(`\n🎉 SMART PARSER COMPLETE!`);
                 console.log(`Mode: ${mode.toUpperCase()}, View: ${viewIndex === 'all' ? 'ALL' : viewIndex}`);
@@ -5851,13 +5942,21 @@ views:
             
             if (draggedIndex === -1 || targetIndex === -1) return;
             
-            // Reorder cards
-            const [draggedCard] = cards.splice(draggedIndex, 1);
-            cards.splice(targetIndex, 0, draggedCard);
+            // If dropped onto a card in a DIFFERENT section, move it into that
+            // section too - so the card genuinely becomes part of that row/grid,
+            // not just visually reordered in the underlying array.
+            const targetCard = cards[targetIndex];
+            const draggedCard = cards[draggedIndex];
+            const movedToNewSection = draggedCard.sectionIndex !== targetCard.sectionIndex;
+            
+            cards.splice(draggedIndex, 1);
+            const newTargetIndex = cards.findIndex(c => c.id === targetCardId);
+            draggedCard.sectionIndex = targetCard.sectionIndex;
+            cards.splice(newTargetIndex, 0, draggedCard);
             
             saveState();
             renderCards();
-            showToast('Card reordered', 'success');
+            showToast(movedToNewSection ? 'Card moved to that section' : 'Card reordered', 'success');
         }
         
         // Dashboard Manager
@@ -8342,6 +8441,8 @@ views:
         let resizingCard = null;
         let startX = 0;
         let startWidth = 0;
+        let startColumns = 4;
+        let sectionColumnWidth = 100; // px per grid column, measured at resize start
         
         function setupCardResizing() {
             // Setup will be called when cards are rendered
@@ -8377,16 +8478,29 @@ views:
             startX = e.clientX;
             startWidth = cardElement.offsetWidth;
             
+            const card = cards.find(c => c.id === cardId);
+            startColumns = (card && card.gridColumns) ? card.gridColumns : 4;
+            
+            if (!canvasMode) {
+                // Measure the real column width of this card's section so we can
+                // translate mouse movement into an accurate column-span change.
+                const section = cardElement.closest('.section-grid');
+                if (section) {
+                    const sectionWidth = section.getBoundingClientRect().width;
+                    const gap = 16; // matches .section-grid gap
+                    sectionColumnWidth = (sectionWidth - gap * 11) / 12;
+                }
+            }
+            
             cardElement.classList.add('resizing');
             
-            // Add or update width badge
             let badge = cardElement.querySelector('.card-width-badge');
             if (!badge) {
                 badge = document.createElement('div');
                 badge.className = 'card-width-badge';
                 cardElement.appendChild(badge);
             }
-            badge.textContent = `${Math.round(startWidth)}px`;
+            badge.textContent = canvasMode ? `${Math.round(startWidth)}px` : `${startColumns}/12 columns`;
             
             document.addEventListener('mousemove', handleResize);
             document.addEventListener('mouseup', stopResizing);
@@ -8399,14 +8513,22 @@ views:
             if (!isResizing || !resizingCard) return;
             
             const delta = e.clientX - startX;
-            const newWidth = Math.max(200, Math.min(800, startWidth + delta));
-            
-            resizingCard.style.width = newWidth + 'px';
-            
-            // Update badge
             const badge = resizingCard.querySelector('.card-width-badge');
-            if (badge) {
-                badge.textContent = `${Math.round(newWidth)}px`;
+            
+            if (canvasMode) {
+                // Canvas Mode: free pixel width, as before
+                const newWidth = Math.max(200, Math.min(800, startWidth + delta));
+                resizingCard.style.width = newWidth + 'px';
+                if (badge) badge.textContent = `${Math.round(newWidth)}px`;
+            } else {
+                // GRID MODE: convert pixel drag into a real column-span change.
+                // This is what makes resizing genuinely reflow the OTHER cards -
+                // it's a real CSS Grid span, not a guessed pixel width.
+                const columnDelta = Math.round(delta / (sectionColumnWidth + 16));
+                const newColumns = Math.max(1, Math.min(12, startColumns + columnDelta));
+                resizingCard.style.gridColumn = `span ${newColumns}`;
+                resizingCard.dataset.pendingColumns = newColumns;
+                if (badge) badge.textContent = `${newColumns}/12 columns`;
             }
         }
         
@@ -8418,16 +8540,21 @@ views:
             if (resizingCard) {
                 resizingCard.classList.remove('resizing');
                 
-                // Save the width to the card's properties
                 const cardId = resizingCard.dataset.cardId;
                 const card = cards.find(c => c.id === cardId);
+                
                 if (card) {
-                    if (!card.properties.style) card.properties.style = {};
-                    card.properties.style.width = resizingCard.style.width;
+                    if (canvasMode) {
+                        if (!card.properties.style) card.properties.style = {};
+                        card.properties.style.width = resizingCard.style.width;
+                        showToast(`Card resized to ${resizingCard.style.width}`, 'success');
+                    } else {
+                        const newColumns = parseInt(resizingCard.dataset.pendingColumns) || startColumns;
+                        card.gridColumns = newColumns;
+                        showToast(`Card resized to ${newColumns}/12 columns - layout reflowed`, 'success');
+                    }
                     saveState();
                 }
-                
-                showToast(`Card resized to ${resizingCard.style.width}`, 'success');
             }
             
             resizingCard = null;
@@ -8436,6 +8563,11 @@ views:
             
             // Re-enable text selection
             document.body.style.userSelect = '';
+            
+            // Re-render so the whole section reflows cleanly around the new span
+            if (!canvasMode) {
+                renderCards();
+            }
         }
         
         // Toast Notifications
