@@ -1179,7 +1179,7 @@
                     <i class="fas fa-th" id="canvasModeIcon"></i>
                     <span id="canvasModeText">Canvas Mode</span>
                 </button>
-                <button class="btn btn-success" onclick="connectHA()">
+                <button class="btn btn-success" onclick="showConnectDialog()">
                     <i class="fas fa-plug"></i>
                     Connect HA
                 </button>
@@ -1458,6 +1458,63 @@
         </div>
     </div>
     
+    <!-- Connect HA Dialog -->
+    <div class="modal" id="connectHAModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-plug" style="color: var(--accent-success);"></i>
+                    Connect to Home Assistant
+                </h2>
+                <button class="modal-close" onclick="closeModal('connectHAModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 16px; padding: 12px; background: rgba(16,185,129,0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-success);">
+                    <div style="font-size: 13px; color: var(--text-secondary);">
+                        <strong>💡 Requirements:</strong><br>
+                        • Add <code>cors_allowed_origins</code> to your HA <code>http:</code> config<br>
+                        • Use your external URL (no port for Cloudflare)<br>
+                        • Create a Long-Lived Access Token in your HA Profile
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 6px; font-weight: 600;">Home Assistant URL</label>
+                    <input type="text" 
+                           id="haConnectUrl" 
+                           class="prop-input" 
+                           placeholder="https://ha.traciaaron.com"
+                           style="width: 100%; padding: 10px; font-size: 14px;"
+                           value="https://ha.traciaaron.com">
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">No :8123 needed if using Cloudflare tunnel!</div>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 6px; font-weight: 600;">Long-Lived Access Token</label>
+                    <textarea id="haConnectToken" 
+                              class="prop-input" 
+                              placeholder="Paste your entire token here..."
+                              style="width: 100%; padding: 10px; font-size: 12px; height: 80px; resize: vertical; font-family: monospace;"></textarea>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                        Create in HA → Your Profile → Long-Lived Access Tokens → Create Token
+                    </div>
+                </div>
+                
+                <div id="connectStatus" style="display: none; padding: 10px; border-radius: var(--radius-md); margin-bottom: 12px;"></div>
+                
+                <button class="btn btn-success" onclick="connectHA()" style="width: 100%; padding: 12px; font-size: 15px;">
+                    <i class="fas fa-plug"></i> Connect to Home Assistant
+                </button>
+                
+                <div style="margin-top: 16px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-md);">
+                    <div style="font-size: 12px; color: var(--text-muted);">
+                        <strong>After connecting:</strong> Your entities will load in the sidebar and you can drag them onto cards!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Import Modal -->
     <div class="modal" id="importModal">
         <div class="modal-content" style="width: 800px;">
@@ -4814,24 +4871,71 @@ views:
         }
         
         // HA Connection
+        function showConnectDialog() {
+            // Pre-fill URL if we have a saved connection
+            const saved = localStorage.getItem('ha_connection');
+            if (saved) {
+                try {
+                    const conn = JSON.parse(saved);
+                    document.getElementById('haConnectUrl').value = conn.url || 'https://ha.traciaaron.com';
+                } catch(e) {}
+            }
+            showModal('connectHAModal');
+        }
+        
         async function connectHA() {
-            const url = prompt('Enter your Home Assistant URL:', 'http://homeassistant.local:8123');
+            const url = document.getElementById('haConnectUrl')?.value?.trim() || 
+                        prompt('Enter your Home Assistant URL (no port needed for Cloudflare):', 'https://ha.traciaaron.com');
             if (!url) return;
             
-            const token = prompt('Enter your Long-Lived Access Token:');
+            const token = document.getElementById('haConnectToken')?.value?.trim() ||
+                          prompt('Enter your Long-Lived Access Token:');
             if (!token) return;
             
+            const baseUrl = url.replace(/\/$/, '');
+            
+            console.log('🔌 Attempting connection to:', baseUrl);
+            console.log('🔑 Token length:', token.length, 'chars');
+            console.log('🔑 Token starts with:', token.substring(0, 20) + '...');
+            
+            showToast('🔌 Connecting to Home Assistant...', 'info');
+            
             try {
-                const response = await fetch(`${url}/api/states`, {
+                const response = await fetch(`${baseUrl}/api/states`, {
+                    method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
+                        'Authorization': `Bearer ${token.trim()}`,
                         'Content-Type': 'application/json'
                     }
                 });
                 
-                if (!response.ok) throw new Error('Failed to connect');
+                console.log('📡 Response status:', response.status);
+                console.log('📡 Response ok:', response.ok);
+                console.log('📡 Response headers:', [...response.headers.entries()]);
+                
+                if (response.status === 401) {
+                    showToast('❌ Token rejected (401) - please create a new token in your HA profile', 'error');
+                    alert('❌ TOKEN REJECTED (401 Unauthorized)\n\nYour token is not being accepted.\n\nTo fix:\n1. Go to HA → Your Profile (bottom left)\n2. Scroll to Long-Lived Access Tokens\n3. Click Create Token\n4. Copy the ENTIRE token\n5. Try again');
+                    return;
+                }
+                
+                if (response.status === 403) {
+                    showToast('❌ Forbidden (403) - CORS or permission issue', 'error');
+                    alert('❌ FORBIDDEN (403)\n\nCORS may not be fully applied yet.\n\nTry:\n1. Restart HA Core again\n2. Wait 1 minute\n3. Try connecting again');
+                    return;
+                }
+                
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error('❌ Error response:', text);
+                    showToast(`❌ Connection failed: HTTP ${response.status}`, 'error');
+                    alert(`❌ CONNECTION FAILED\n\nStatus: ${response.status}\nResponse: ${text}\n\nURL: ${baseUrl}/api/states`);
+                    return;
+                }
                 
                 const states = await response.json();
+                console.log('✅ Got', states.length, 'entities!');
+                
                 entities = states.map(state => ({
                     entity_id: state.entity_id,
                     name: state.attributes.friendly_name || state.entity_id,
@@ -4839,10 +4943,24 @@ views:
                 }));
                 
                 renderEntities();
-                haConnection = { url, token };
-                showToast('Connected to Home Assistant', 'success');
+                haConnection = { url: baseUrl, token: token.trim() };
+                localStorage.setItem('ha_connection', JSON.stringify(haConnection));
+                
+                showToast(`✅ Connected! Found ${entities.length} entities`, 'success');
+                addNotification(`Connected to Home Assistant - ${entities.length} entities loaded`, 'success');
+                
             } catch (error) {
-                showToast('Failed to connect to Home Assistant', 'error');
+                console.error('❌ Connection error:', error);
+                console.error('❌ Error type:', error.constructor.name);
+                console.error('❌ Error message:', error.message);
+                
+                if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                    showToast('❌ Network Error - CORS is blocking the request', 'error');
+                    alert('❌ NETWORK/CORS ERROR\n\nThe browser is blocking the request.\n\nThis means:\n1. CORS is not yet active in HA\n2. Make sure cors_allowed_origins is saved in configuration.yaml\n3. Make sure HA Core was restarted AFTER saving\n4. Check Studio Code Server that the change is actually saved\n\nError: ' + error.message);
+                } else {
+                    showToast('❌ Failed to connect: ' + error.message, 'error');
+                    alert('❌ CONNECTION ERROR\n\n' + error.message);
+                }
             }
         }
         
