@@ -50,6 +50,97 @@
             height: 100vh;
         }
         
+        /* ============================================
+           RESPONSIVE DESIGN - Window Resize Support
+           ============================================ */
+        
+        /* Large screens - full 3 column layout */
+        @media (min-width: 1200px) {
+            .app-container {
+                grid-template-columns: 280px 1fr 320px;
+            }
+        }
+        
+        /* Medium screens - compress sidebars */
+        @media (max-width: 1199px) and (min-width: 900px) {
+            .app-container {
+                grid-template-columns: 220px 1fr 280px;
+            }
+            .header-actions .btn span:not(.version-badge) {
+                display: none; /* Hide button text, keep icons */
+            }
+            .header-actions .btn {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Small screens - hide right panel, compress left */
+        @media (max-width: 899px) and (min-width: 600px) {
+            .app-container {
+                grid-template-columns: 200px 1fr 0px;
+            }
+            .properties-panel {
+                display: none;
+            }
+            .header-actions .btn span {
+                display: none;
+            }
+            .header-actions .btn {
+                padding: 8px 10px;
+            }
+            .canvas-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+        
+        /* Mobile screens - single column */
+        @media (max-width: 599px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 60px auto 1fr 40px;
+            }
+            .sidebar {
+                display: none; /* Hidden by default on mobile */
+            }
+            .properties-panel {
+                display: none;
+            }
+            .header {
+                padding: 0 12px;
+            }
+            .header-actions .btn span {
+                display: none;
+            }
+            .header-actions .btn {
+                padding: 8px 8px;
+                font-size: 12px;
+            }
+            .logo-text {
+                display: none;
+            }
+            .canvas-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+            .card-preview {
+                width: 100% !important;
+            }
+        }
+        
+        /* Make header wrap on small screens */
+        @media (max-width: 800px) {
+            .header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 8px 12px;
+                gap: 8px;
+            }
+            .header-actions {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+        }
+        
         /* Main Layout */
         .app-container {
             display: grid;
@@ -1449,15 +1540,117 @@
                     <span id="lastSaved">Not saved</span>
                 </div>
             </div>
-            <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
                 <span>Made with ❤️ for the Home Assistant community</span>
-                <button class="btn btn-icon" onclick="showShortcuts()" title="Keyboard Shortcuts" style="margin-left: 12px;">
+                <button class="btn btn-icon" onclick="showSupportModal()" title="Help & Support" style="background: rgba(99,102,241,0.2); color: #a5b4fc;">
+                    <i class="fas fa-life-ring"></i>
+                </button>
+                <button class="btn btn-icon" onclick="showShortcuts()" title="Keyboard Shortcuts">
                     <i class="fas fa-keyboard"></i>
                 </button>
             </div>
         </div>
     </div>
     
+    <!-- Support / Contact Modal -->
+    <div class="modal" id="supportModal">
+        <div class="modal-content" style="max-width: 560px;">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-life-ring" style="color: #a5b4fc;"></i>
+                    Help & Support
+                </h2>
+                <button class="modal-close" onclick="closeModal('supportModal')">×</button>
+            </div>
+            <div class="modal-body">
+            
+                <!-- About -->
+                <div style="text-align: center; padding: 16px 0; margin-bottom: 20px; border-bottom: 1px solid var(--border-primary);">
+                    <div style="font-size: 32px; margin-bottom: 8px;">🏠</div>
+                    <div style="font-size: 18px; font-weight: 700; color: var(--text-primary);">HA Dashboard Builder</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">v5.0 Ultimate · Built by Mystic369</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Free & Open Source · Made for the HA Community</div>
+                </div>
+                
+                <!-- Contact Options -->
+                <div style="font-weight: 600; margin-bottom: 12px; color: var(--text-primary);">📬 Get Help & Report Issues:</div>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                
+                    <!-- GitHub Issues -->
+                    <a href="https://github.com/Mystic369/Home-Assistant-Dashboard-Builder-/issues" 
+                       target="_blank"
+                       style="display: flex; align-items: center; gap: 16px; padding: 14px 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary); text-decoration: none; color: var(--text-primary); transition: all 0.2s ease;">
+                        <div style="font-size: 24px;">🐛</div>
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 2px;">Report a Bug on GitHub</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">github.com/Mystic369/Home-Assistant-Dashboard-Builder-/issues</div>
+                        </div>
+                        <i class="fas fa-external-link-alt" style="margin-left: auto; color: var(--text-muted);"></i>
+                    </a>
+                    
+                    <!-- GitHub Discussions -->
+                    <a href="https://github.com/Mystic369/Home-Assistant-Dashboard-Builder-/discussions" 
+                       target="_blank"
+                       style="display: flex; align-items: center; gap: 16px; padding: 14px 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary); text-decoration: none; color: var(--text-primary); transition: all 0.2s ease;">
+                        <div style="font-size: 24px;">💬</div>
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 2px;">Ask a Question / Get Help</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">GitHub Discussions - community support</div>
+                        </div>
+                        <i class="fas fa-external-link-alt" style="margin-left: auto; color: var(--text-muted);"></i>
+                    </a>
+                    
+                    <!-- HA Community -->
+                    <a href="https://community.home-assistant.io" 
+                       target="_blank"
+                       style="display: flex; align-items: center; gap: 16px; padding: 14px 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary); text-decoration: none; color: var(--text-primary); transition: all 0.2s ease;">
+                        <div style="font-size: 24px;">🏘️</div>
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 2px;">Home Assistant Community</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">community.home-assistant.io</div>
+                        </div>
+                        <i class="fas fa-external-link-alt" style="margin-left: auto; color: var(--text-muted);"></i>
+                    </a>
+                    
+                    <!-- GitHub Profile -->
+                    <a href="https://github.com/Mystic369" 
+                       target="_blank"
+                       style="display: flex; align-items: center; gap: 16px; padding: 14px 16px; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-primary); text-decoration: none; color: var(--text-primary); transition: all 0.2s ease;">
+                        <div style="font-size: 24px;">👩‍💻</div>
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 2px;">Developer Profile</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">github.com/Mystic369</div>
+                        </div>
+                        <i class="fas fa-external-link-alt" style="margin-left: auto; color: var(--text-muted);"></i>
+                    </a>
+                </div>
+                
+                <!-- Quick Tips -->
+                <div style="padding: 14px; background: rgba(99,102,241,0.1); border-radius: var(--radius-md); border-left: 3px solid var(--accent-primary);">
+                    <div style="font-weight: 600; margin-bottom: 8px; color: var(--accent-primary);">💡 Quick Tips:</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.8;">
+                        • Press <kbd style="background: var(--bg-elevated); padding: 2px 6px; border-radius: 4px; font-size: 11px;">?</kbd> for keyboard shortcuts<br>
+                        • Use <strong>Import → YAML</strong> to load your dashboard<br>
+                        • Select a page from the dropdown before importing<br>
+                        • Try <strong>Canvas Mode</strong> for free card positioning<br>
+                        • <strong>Clear All</strong> button resets everything safely
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('supportModal')">Close</button>
+                <a href="https://github.com/Mystic369/Home-Assistant-Dashboard-Builder-" 
+                   target="_blank" 
+                   class="btn btn-primary">
+                    <i class="fab fa-github"></i>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Connect HA Dialog -->
     <div class="modal" id="connectHAModal">
         <div class="modal-content" style="max-width: 500px;">
@@ -4871,6 +5064,10 @@ views:
         }
         
         // HA Connection
+        function showSupportModal() {
+            document.getElementById('supportModal').classList.add('show');
+        }
+        
         function showConnectDialog() {
             // Pre-fill URL if we have a saved connection
             const saved = localStorage.getItem('ha_connection');
@@ -4880,7 +5077,7 @@ views:
                     document.getElementById('haConnectUrl').value = conn.url || 'https://ha.traciaaron.com';
                 } catch(e) {}
             }
-            showModal('connectHAModal');
+            document.getElementById('connectHAModal').classList.add('show');
         }
         
         async function connectHA() {
